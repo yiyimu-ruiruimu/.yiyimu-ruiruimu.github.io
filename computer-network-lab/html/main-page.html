@@ -1,0 +1,2475 @@
+<!DOCTYPE html>
+<!-- saved from url=(0253)file:///E:/%E6%95%99%E7%A7%91%E7%A0%94/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80%E8%AF%BE%E6%94%B9/%E5%AE%9E%E8%B7%B5%E6%95%99%E5%AD%A6%E5%B9%B3%E5%8F%B01123/%E6%99%BA%E8%83%BD%E5%AE%9E%E8%B7%B5%E5%B9%B3%E5%8F%B0-%E5%8A%A0vlan.html -->
+<html lang="zh-CN"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>计算机网络智能实践教学平台 - 极客科技有限公司网络演进</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #1a6bc4 0%, #0d4d9c 100%);
+            color: white;
+            padding: 30px 40px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+        
+        .timeline {
+            display: flex;
+            justify-content: space-between;
+            background: #eef2f7;
+            padding: 15px 30px;
+            border-bottom: 1px solid #dde4ec;
+            position: relative;
+        }
+        
+        .timeline-item {
+            text-align: center;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+            font-size: 0.95rem;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .timeline-item.active {
+            background: #1a6bc4;
+            color: white;
+            box-shadow: 0 3px 8px rgba(26, 107, 196, 0.3);
+        }
+        
+        .timeline-item:hover:not(.active) {
+            background: #d4e3f7;
+        }
+        
+        .timeline-progress {
+            position: absolute;
+            height: 4px;
+            background: #1a6bc4;
+            top: 50%;
+            left: 30px;
+            transform: translateY(-50%);
+            z-index: 1;
+            transition: width 0.5s ease;
+        }
+        
+        .content {
+            display: flex;
+            min-height: 600px;
+        }
+        
+        .network-display {
+            flex: 7;
+            padding: 30px;
+            background: #f9fbfd;
+            position: relative;
+            min-height: 500px;
+        }
+        
+        .explanation {
+            flex: 5;
+            padding: 30px;
+            background: white;
+            border-left: 1px solid #eaeef2;
+            overflow-y: auto;
+        }
+        
+        .network-stage {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .network-stage.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        h2 {
+            color: #1a6bc4;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #eaeef2;
+        }
+        
+        h3 {
+            color: #2c3e50;
+            margin: 25px 0 15px;
+        }
+        
+        p {
+            margin-bottom: 15px;
+        }
+        
+        .highlight {
+            background: #e8f4ff;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #1a6bc4;
+            margin: 20px 0;
+        }
+        
+        .concept-box {
+            background: #f0f7ff;
+            border: 1px solid #c2dcff;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .concept-title {
+            font-weight: bold;
+            color: #1a6bc4;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .concept-title i {
+            margin-right: 8px;
+            font-size: 1.2em;
+        }
+        
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px 30px;
+            border-top: 1px solid #eaeef2;
+            background: #f9fbfd;
+        }
+        
+        button {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1rem;
+        }
+        
+        .btn-prev {
+            background: #eef2f7;
+            color: #5a6c7d;
+        }
+        
+        .btn-prev:hover {
+            background: #dfe6ee;
+        }
+        
+        .btn-next {
+            background: #1a6bc4;
+            color: white;
+        }
+        
+        .btn-next:hover {
+            background: #1559a3;
+            box-shadow: 0 4px 8px rgba(26, 107, 196, 0.3);
+        }
+        
+        /* 网络拓扑图样式 */
+        .network-topology {
+            position: relative;
+            height: 400px;
+            background: #f9fbfd;
+            border: 1px dashed #c2d1e0;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        .node {
+            position: absolute;
+            width: 70px;
+            height: 70px;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-size: 0.8rem;
+            font-weight: 500;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+            z-index: 2;
+        }
+        
+        .node:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 12px rgba(0,0,0,0.15);
+            z-index: 10;
+        }
+        
+        .node-pc {
+            background: #e1f5fe;
+            border: 2px solid #4fc3f7;
+            color: #0277bd;
+        }
+        
+        .node-server {
+            background: #f3e5f5;
+            border: 2px solid #ba68c8;
+            color: #7b1fa2;
+        }
+        
+        .node-switch {
+            background: #e8f5e9;
+            border: 2px solid #66bb6a;
+            color: #2e7d32;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+        }
+        
+        .node-router {
+            background: #fff3e0;
+            border: 2px solid #ffb74d;
+            color: #ef6c00;
+            width: 80px;
+            height: 50px;
+        }
+        
+        .node-cloud {
+            background: #fce4ec;
+            border: 2px solid #f06292;
+            color: #c2185b;
+            width: 100px;
+            height: 60px;
+            border-radius: 20px;
+        }
+        
+        .connection {
+            position: absolute;
+            background: #78909c;
+            z-index: 1;
+        }
+        
+        .connection-horizontal {
+            height: 3px;
+        }
+        
+        .connection-vertical {
+            width: 3px;
+        }
+        
+        .connection-diagonal {
+            height: 3px;
+            transform-origin: 0 0;
+        }
+        
+        .protocol-badge {
+            position: absolute;
+            background: #ff5722;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            z-index: 5;
+        }
+        
+        .network-label {
+            position: absolute;
+            background: rgba(255,255,255,0.9);
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            z-index: 3;
+        }
+        
+        .lan {
+            position: absolute;
+            border: 2px dashed #1a6bc4;
+            border-radius: 8px;
+            background: rgba(26, 107, 196, 0.05);
+        }
+        
+        .lan-label {
+            position: absolute;
+            top: -25px;
+            left: 10px;
+            background: #1a6bc4;
+            color: white;
+            padding: 3px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        .as-box {
+            position: absolute;
+            border: 3px solid #7e57c2;
+            border-radius: 10px;
+            background: rgba(126, 87, 194, 0.05);
+        }
+        
+        .as-label {
+            position: absolute;
+            top: -20px;
+            left: 10px;
+            background: #7e57c2;
+            color: white;
+            padding: 3px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        .stage-explanation {
+            display: none;
+        }
+        
+        .stage-explanation.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .info-link {
+            color: #1a6bc4;
+            text-decoration: none;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            margin: 5px 0;
+        }
+        
+        .info-link:hover {
+            text-decoration: underline;
+        }
+        
+        .info-link::before {
+            content: "🔗";
+            margin-right: 5px;
+        }
+        
+        .command-example {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 10px 15px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            margin: 10px 0;
+            overflow-x: auto;
+        }
+        
+        .protocol-comparison {
+            display: flex;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .protocol-card {
+            flex: 1;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+        
+        .protocol-card.rip {
+            border-top: 4px solid #e74c3c;
+            background: #fdedec;
+        }
+        
+        .protocol-card.ospf {
+            border-top: 4px solid #27ae60;
+            background: #eafaf1;
+        }
+        
+        .protocol-card h4 {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .protocol-card.rip h4 {
+            color: #e74c3c;
+        }
+        
+        .protocol-card.ospf h4 {
+            color: #27ae60;
+        }
+        
+        /* 路由表样式 */
+        .routing-table-container {
+            margin: 20px 0;
+            overflow-x: auto;
+        }
+        
+        .routing-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+        
+        .routing-table th {
+            background: #1a6bc4;
+            color: white;
+            padding: 10px;
+            text-align: left;
+        }
+        
+        .routing-table td {
+            padding: 8px 10px;
+            border-bottom: 1px solid #eaeef2;
+        }
+        
+        .routing-table tr:nth-child(even) {
+            background: #f5f9ff;
+        }
+        
+        .routing-table tr:hover {
+            background: #e8f4ff;
+        }
+        
+        .interface-ip {
+            position: absolute;
+            font-size: 0.7rem;
+            font-weight: bold;
+            color: #2c3e50;
+            z-index: 4;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        
+        .interface-ip.left {
+            left: -70px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        
+        .interface-ip.right {
+            right: -70px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        
+        .interface-ip.top {
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .interface-ip.bottom {
+            bottom: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .command-display {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+        
+        .command-display h4 {
+            color: #1a6bc4;
+            margin-bottom: 10px;
+        }
+        
+        .connection-label {
+            position: absolute;
+            font-size: 0.7rem;
+            font-weight: bold;
+            color: #2c3e50;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 2px 5px;
+            border-radius: 3px;
+            z-index: 4;
+        }
+        
+        .node-info {
+            font-size: 0.7rem;
+            margin-top: 3px;
+            color: #555;
+        }
+        
+        /* 自测链接样式 */
+        .self-test-link {
+            display: inline-block;
+            margin: 15px 0;
+            padding: 10px 15px;
+            background-color: #1a6bc4;
+            color: white !important;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .self-test-link:hover {
+            background-color: #1559a3;
+            text-decoration: none;
+            box-shadow: 0 3px 8px rgba(26, 107, 196, 0.3);
+        }
+        
+        .self-test-link::before {
+            content: "📝";
+            margin-right: 8px;
+        }
+ 
+        /* 开启实践旅程按钮样式 */
+        .start-practice-btn {
+            margin-top: 30px;
+            padding: 15px 30px;
+            background: linear-gradient(135deg, #1a6bc4 0%, #0d4d9c 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(26, 107, 196, 0.2);
+        }
+        .start-practice-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(26, 107, 196, 0.3);
+            background: linear-gradient(135deg, #1559a3 0%, #0b3d7a 100%);
+        }
+
+
+        /* 命令示例样式（保留黑底） */
+        .command-example {
+            background-color: #333; /* 黑底 */
+            color: #fff; /* 白字 */
+            padding: 5px 10px;
+            margin: 3px 0;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+
+        /* 注释样式（无黑底，灰色字体） */
+        .command-comment {
+            color: #666; /* 灰色字体 */
+            padding: 5px 10px;
+            margin: 3px 0;
+            font-family: monospace;
+            /* 取消黑底：不设置background-color */
+        }
+
+        /* VLAN相关样式 */
+        .vlan-color-10 {
+            stroke: #e74c3c;
+            color: #e74c3c;
+        }
+        .vlan-color-20 {
+            stroke: #1a6bc4;
+            color: #1a6bc4;
+        }
+        .vlan-color-30 {
+            stroke: #27ae60;
+            color: #27ae60;
+        }
+        /* 子阶段按钮样式 */
+            .substage-btn {
+                padding: 6px 15px;
+                margin-right: 10px;
+                background: #eef2f7;
+                color: #5a6c7d;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+            }
+            .substage-btn.active {
+                background: #1a6bc4;
+                color: white;
+            }
+            /* 动态路由子项样式 */
+            .dynamic-btn {
+                padding: 4px 10px;
+                margin-right: 8px;
+                background: #f0f7ff;
+                color: #1a6bc4;
+                border: 1px solid #c2dcff;
+                border-radius: 3px;
+                cursor: pointer;
+                font-size: 0.9rem;
+            }
+            .dynamic-btn.active {
+                background: #1a6bc4;
+                color: white;
+            }
+            /* 子内容区域样式 */
+            .substage, .dynamic-content {
+                display: none;
+            }
+            .substage.active, .dynamic-content.active {
+                display: block;
+                animation: fadeIn 0.5s ease;
+            }
+            /* 说明区域样式：主阶段说明默认隐藏，仅激活状态显示 */
+            .exp-stage {
+                display: none;
+            }
+            .exp-stage.active {
+                display: block;
+            }
+
+            /* 网络互联子阶段说明：默认隐藏，仅激活状态显示 */
+            .exp-substage {
+                display: none;
+            }
+            .exp-substage.active {
+                display: block;
+            }
+
+            /* 动态路由子说明：默认隐藏，仅激活状态显示 */
+            .exp-dynamic {
+                display: none;
+            }
+            .exp-dynamic.active {
+                display: block;
+            }
+            /* 应用配置子项目内容样式（新增，关键修复） */
+            .app-content {
+                display: none; /* 默认隐藏所有应用子项目 */
+            }
+            .app-content.active {
+                display: block; /* 仅激活的子项目显示 */
+                animation: fadeIn 0.5s ease; /* 保持和其他子阶段一致的淡入动画 */
+            }
+            /* 说明区域标题和段落样式（可选，优化显示效果） */
+            .explanation h3 {
+                color: #1a6bc4;
+                margin: 10px 0;
+                font-size: 1.1rem;
+            }
+            .explanation p {
+                margin: 8px 0;
+                line-height: 1.5;
+                color: #333;
+            }
+
+
+            /* 首页样式 */
+            .homepage {
+                padding: 40px;
+                min-height: 600px;
+                background-image: url('本地图片路径'); /* 保留本地图片引用 */
+                background-size: cover;
+                background-position: center;
+                background-repeat: no-repeat;
+                position: relative;
+            }
+
+            /* 半透明遮罩增强文字可读性 */
+            .homepage::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: rgba(255, 255, 255, 0.85);
+                z-index: 1;
+            }
+
+            .homepage-content {
+                position: relative;
+                z-index: 2;
+                max-width: 800px;
+                margin: 0 auto;
+            }
+
+            .homepage h2 {
+                color: #1a6bc4;
+                margin-bottom: 25px;
+                border-bottom: 2px solid #eaeef2;
+                padding-bottom: 10px;
+            }
+
+            .homepage h3 {
+                color: #2c3e50;
+                margin: 20px 0 15px;
+            }
+
+            .homepage p {
+                margin-bottom: 15px;
+                line-height: 1.7;
+            }
+
+            .homepage ul {
+                margin: 15px 0 20px 30px;
+            }
+
+            .homepage li {
+                margin-bottom: 10px;
+                line-height: 1.6;
+            }
+    </style>
+
+
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>计算机网络智能实践教学平台</h1>
+            <div class="subtitle">极客科技有限公司网络演进历程</div>
+        </header>
+
+
+        <div class="timeline">
+            <div class="timeline-progress" id="timelineProgress" style="width: 0%;"></div>
+            <div class="timeline-item" data-stage="1">局域网</div>
+            <div class="timeline-item" data-stage="2">虚拟局域网</div>
+            <div class="timeline-item" data-stage="3">网络互联</div>
+            <div class="timeline-item" data-stage="4">广域网PPP</div> 
+            <div class="timeline-item" data-stage="5">应用配置</div>
+            <!-- 新增网络安全时间线项 -->
+            <div class="timeline-item" data-stage="6">网络安全</div>
+            <div class="timeline-item" data-stage="7">数据流分析</div>    
+            <div class="timeline-item" data-stage="8">综合实践</div> <!-- 确保此项存在 -->    
+        
+        </div>
+        
+        <div class="content">
+            <div class="network-display">
+                <!-- 智能答疑助手链接（所有阶段可见） -->
+                <a href="https://yuanqi.tencent.com/webim/#/chat/udxvye?appid=1995850920620303616&experience=true" class="info-link" target="_blank" position: relative; z-index: 10; display: inline-block; margin-bottom: 15px;">
+                    智能助教（所有阶段通用）</a>             
+
+                <!-- 添加阶段1自测链接 -->
+                <a href="./self-test-page.html" class="self-test-link" target="_blank">智能自测</a>
+
+
+                <!-- 阶段1: 局域网 -->
+                <div class="network-stage" id="stage1">
+                    <div class="network-topology" id="topology1" style="display: flex; align-items: center; justify-content: center;">
+                        <!-- 嵌入自定义图片 -->
+                         <img src="./fig/bjlan.png" alt="阶段一网络拓扑图" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+                    </div>
+                           
+                    <a href="./operation_tutorial_video/局域网孤岛的配置.mp4" class="info-link" target="_blank">点击查看阶段一配置讲解</a>
+                </div>
+
+                <!-- 新增阶段2: 虚拟局域网(VLAN) -->
+                <div class="network-stage" id="stage2">
+                    <div class="network-topology" id="topology2" style="display: flex; align-items: center; justify-content: center;">
+                    <img src="./fig/vlan_topo.png" alt="虚拟局域网拓扑图" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+                    </div>
+                    <a href="./pkt/vlan.pkt" class="info-link" target="_blank">点击下载VLAN配置拓扑</a>
+                    <a href="./operation_tutorial_video/VLAN-config and test.mp4" class="info-link" target="_blank">点击查看VLAN配置讲解</a>
+                    
+                    <div class="command-display">
+                        <h4>VLAN配置命令</h4>
+                        <div class="command-comment">// 创建VLAN并命名</div>
+                        <div class="command-example">Switch: conf t</div>
+                        <div class="command-example">Switch(config): vlan 10</div>
+                        <div class="command-example">Switch(config-vlan): name yanfabu</div>
+                        <div class="command-example">Switch(config-vlan): exit</div>
+                        <div class="command-example">Switch(config): vlan 20</div>
+                        <div class="command-example">Switch(config-vlan): name shichangbu</div>
+                        <div class="command-example">Switch(config-vlan): exit</div>
+                        <div class="command-example">Switch(config): vlan 30</div>
+                        <div class="command-example">Switch(config-vlan): name caiwubu</div>
+                        <div class="command-example">Switch(config-vlan): exit</div>
+                        
+                        <div class="command-comment">// 将接口划分到VLAN（接入模式）</div>
+                        <div class="command-example">Switch(config): interface fastethernet 0/1</div>
+                        <div class="command-example">Switch(config-if): switchport mode access</div>
+                        <div class="command-example">Switch(config-if): switchport access vlan 10</div>
+                        <div class="command-example">Switch(config-if): exit</div>
+                        
+                        <div class="command-comment">// 配置中继链路（交换机互联接口）</div>
+                        <div class="command-example">Switch(config): interface fastethernet 0/24</div>
+                        <div class="command-example">Switch(config-if): switchport mode trunk</div>
+                        <div class="command-example">Switch(config-if): switchport trunk allowed vlan all</div>
+                    </div>
+                </div>
+
+                <!-- 阶段3: 网络互联（包含子项目） -->
+                <div class="network-stage" id="stage3">
+
+                    <!-- 3.1 单臂路由（原stage1.8内容） -->
+                    <div class="substage active" id="substage3.1">
+                                                                                      
+                        <div class="highlight">
+                                <p><strong>问题导入：</strong> "划分vlan后，不同部门（不同VLAN）的电脑的设备仍然需要相互通信（如研发部需要访问财务部服务器），如何让不同VLAN的设备跨网通信呢？"</p>
+                                <p><strong>答案：</strong>"配置单臂路由"</p> 
+                        </div>
+
+                        <div class="concept-box">
+                                    <div class="concept-title">🚀 关键概念：单臂路由</div>
+                                    <p>如图所示，通过路由器的一个物理接口，使用子接口（逻辑接口,如图中f0/0.1）实现多个VLAN之间的通信。路由器与交换机之间通过 trunk 链路连接，承载所有VLAN的数据。</p>
+                        </div>
+
+                        <div class="network-topology" id="topology3.1">
+
+                            <!-- 粘贴原单臂路由的拓扑图代码（如<img>标签） -->
+                            <img src="./fig/single-arm-routing.png" alt="单臂路由拓扑图" style="max-width: 100%; max-height: 100%; object-fit: contain;">                              
+                        </div>
+                     
+                        <!-- 粘贴原单臂路由的链接和配置命令 -->
+                        <a href="./pkt/single-arm.pkt" class="info-link">点击下载单臂路由配置拓扑</a>
+                        <a href="./operation_tutorial_video/single-arm-config.mp4" class="info-link" target="_blank">点击查看单臂路由配置讲解</a>
+                        <a href="./operation_tutorial_video/single-arm-connectivity-test.mp4" class="info-link" target="_blank">点击查看单臂路由连通性测试讲解</a>
+                      
+                    </div>
+
+                    <!-- 3.2 静态路由（原stage2内容） -->
+                    <div class="substage" id="substage3.2">
+                        <div>    
+                                
+                                <div class="highlight">
+                                    <p><strong>问题导入：</strong> "随着公司的发展，极客公司在总部的基础上，创办了分部，总部和分部分属两个网络，如何实现两个网络的互连互通呢?"</p>
+                                    <div class="concept-title">⚙️ 答案：路由转发</div>
+                                    <p>如图所示，总部和分部通过网关路由器相互连接，网关路由器通过查询路由转发表，根据目标IP地址，对接收到的IP数据分组进行转发，实现两个网络之间的数据通信</p>
+                                    <p><strong>路由转发表的建立方式：</strong>静态方式、动态方式</p>
+                                    <p><strong>静态方式：</strong>"由管理员手动在路由器上配置、更新和维护路由条目。"</p>
+                                    <p><strong>动态方式：</strong>"由路由器执行路由协议自动进行路由条目的建立、更新和维护"</p>
+
+                                </div>
+                        </div>
+                        <div class="network-topology" id="topology3.2">
+                           
+                            <!-- 粘贴原静态路由的拓扑图代码 -->
+                            <img src="./fig/static-routing.png" alt="静态路由拓扑图" style="max-width: 100%; max-height: 120%; object-fit: contain;">
+
+                        </div>
+                        <!-- 粘贴原静态路由的链接和配置命令 -->
+                        <a href="./pkt/static-routing.pkt" class="info-link">点击下载静态路由配置拓扑</a>
+
+                        
+                        <div class="command-display">
+                            <h4>静态路由配置命令</h4>
+                            <div class="command-comment">// 总部路由器配置去往上海网络的静态路由</div>
+                            <div class="command-example">Router0: conf t</div>
+                            <div class="command-example">Router0(config): ip route 192.168.2.0 255.255.255.0 20.0.0.2</div>
+                            
+                            <div class="command-comment">// 分部路由器配置去往北京网络的静态路由</div>
+                            <div class="command-example">Router1: conf t</div>
+                            <div class="command-example">Router1(config): ip route 192.168.1.0 255.255.255.0 20.0.0.1</div>
+                            
+                            <div class="command-comment">// 配置默认路由（所有未知网络都发往指定网关）</div>
+                            <div class="command-example">Router1(config): ip route 0.0.0.0 0.0.0.0 20.0.0.1</div>
+                        </div>
+
+                        <a href="./operation_tutorial_video/router-interface-config.mp4" class="info-link" target="_blank">点击查看路由接口配置讲解</a>                        
+                        <a href="./operation_tutorial_video/static routing.mp4" class="info-link" target="_blank">点击查看静态路由配置讲解</a>
+                        <a href="./homework/routing-config and static routing.docx" class="info-link">点击查看静态路由实验作业</a>
+                    </div>
+
+                    <!-- 3.3 动态路由（包含IGP和EGP） -->
+                    <div class="substage" id="substage3.3">
+                        <!-- 动态路由子项按钮 -->
+                        <!-- 动态路由协议 说明 -->
+                        <div>
+                                                   
+                            <div class="highlight">
+                                <p><strong>问题导入：</strong> "公司规模进一步扩大，增加了多个分部，网络拓扑变得复杂，链路增减成为常态。手动维护路由表已不现实。怎么办？"</p>
+                                <div class="concept-title">🔄 答案：动态路由协议</div>
+                                <p>路由器通过运行路由协议自动交换路由信息，计算并维护路由表。</p>
+                                <p><strong>分类：</strong>"根据作用范围的不同，分为内部网关协议（IGP)和外部网关协议(EGP)"</p>
+                                                    
+                            </div>
+
+                        </div>
+                        
+                        
+                        <!-- IGP内容（原stage4：内部网关协议） -->
+                        <div class="dynamic-content active" id="igp-content">
+                            <div class="network-topology" id="topology-igp">
+                                <!-- 粘贴原IGP的拓扑图代码 -->
+                                <img src="./fig/dynamic-routing.png" alt="IGP协议拓扑图" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+                            </div>
+                            <!-- 粘贴原IGP的链接和配置命令 -->
+                            <a href="./fig/dynamic-routing.png" class="info-link">点击下载动态路由配置拓扑</a>
+                            <div class="command-display">
+                                <h4>RIP协议配置命令</h4>
+                                <div class="command-comment">// 进入全局配置模式</div>
+                                <div class="command-example">BJ-路由器: conf t</div>
+                                <div class="command-comment">// 进入RIP配置模式</div>
+                                <div class="command-example">BJ-路由器: router rip</div>
+                                <div class="command-comment">// 指定RIP版本（v2支持无类路由和子网掩码传递）</div>
+                                <div class="command-example">BJ-路由器: version 2</div>
+                                <div class="command-comment">// 宣告直连网络（仅需宣告主网络号）</div>
+                                <div class="command-example">BJ-路由器: network 192.168.1.0</div>
+                                <div class="command-example">BJ-路由器: network 20.0.0.0</div>
+                                <div class="command-example">BJ-路由器: network 20.0.1.0</div>
+                            </div>
+
+                            <a href="./operation_tutorial_video/RIP-config.mp4" class="info-link" target="_blank">点击查看RIP动态路由协议配置讲解</a>      
+                            <a href="./homework/RIP-dynamic routing experiment.docx" class="info-link">点击RIP动态路由配置实验作业（选做）</a>
+                            
+                            <div class="command-display">
+                                <h4>OSPF协议配置命令</h4>
+                                <div class="command-comment">// 进入全局配置模式</div>
+                                <div class="command-example">BJ-路由器: conf t</div>                            
+                                <div class="command-comment">// 进入OSPF进程（进程号仅本地有效，可自定义）</div>
+                                <div class="command-example">BJ-路由器: router ospf 100</div>
+                                <div class="command-comment">// 配置路由器ID（可选，建议手动指定以避免冲突）</div>
+                                <div class="command-example">BJ-路由器: router-id 1.1.1.1</div>
+                                <div class="command-comment">// 宣告直连网络（格式：network 网络地址 反掩码 area 区域号）</div>
+                                <div class="command-example">BJ-路由器: network 192.168.1.0 0.0.0.255 area 0</div>
+                                <div class="command-example">BJ-路由器: network 20.0.0.0 0.0.0.3 area 0</div>
+                            </div>
+                            <a href="./operation_tutorial_video/OSPF config and connectivity test.mp4" class="info-link" target="_blank">点击查看OSPF动态路由协议配置讲解</a>      
+                            <a href="./homework/OSPF-dynamic routing experiment.docx" class="info-link">点击OSPF动态路由配置实验作业</a>
+
+                        </div>
+                        
+                        <!-- EGP内容（原stage5：外部网关协议） -->
+                        <div class="dynamic-content" id="egp-content">
+                            <div class="network-topology" id="topology-egp">
+                                <!-- 粘贴原EGP的拓扑图代码 -->
+                                 <svg width="700" height="400" xmlns="http://www.w3.org/2000/svg">
+                                <!-- AS区域框 -->
+                                <rect x="50" y="100" width="250" height="200" stroke="#4285F4" stroke-width="2" stroke-dasharray="5,3" fill="none"></rect>
+                                <rect x="380" y="100" width="250" height="200" stroke="#34A853" stroke-width="2" stroke-dasharray="5,3" fill="none"></rect>
+                                
+                                <!-- AS区域标题 -->
+                                <text x="175" y="90" font-family="Arial" font-size="14" text-anchor="middle" fill="#333">AS 100（北京核心区）</text>
+                                <text x="505" y="90" font-family="Arial" font-size="14" text-anchor="middle" fill="#333">AS 200（上海分区）</text>
+                                
+                                <!-- 路由器（矩形表示） -->
+                                <!-- AS 100（北京） -->
+                                <rect x="100" y="150" width="80" height="40" rx="5" fill="#e8f0fe" stroke="#4285F4" stroke-width="2"></rect>
+                                <text x="140" y="175" font-family="Arial" font-size="12" text-anchor="middle" fill="#333">BJ-Core</text>
+                                <text x="140" y="195" font-family="Arial" font-size="10" text-anchor="middle" fill="#666">核心路由器</text>
+                                
+                                <rect x="100" y="250" width="80" height="40" rx="5" fill="#e8f0fe" stroke="#4285F4" stroke-width="2"></rect>
+                                <text x="140" y="275" font-family="Arial" font-size="12" text-anchor="middle" fill="#333">BJ-Edge</text>
+                                <text x="140" y="295" font-family="Arial" font-size="10" text-anchor="middle" fill="#666">边界路由器</text>
+                                
+                                <!-- AS 200（上海） -->
+                                <rect x="500" y="150" width="80" height="40" rx="5" fill="#e6f4ea" stroke="#34A853" stroke-width="2"></rect>
+                                <text x="540" y="175" font-family="Arial" font-size="12" text-anchor="middle" fill="#333">SH-Core</text>
+                                <text x="540" y="195" font-family="Arial" font-size="10" text-anchor="middle" fill="#666">核心路由器</text>
+                                
+                                <rect x="500" y="250" width="80" height="40" rx="5" fill="#e6f4ea" stroke="#34A853" stroke-width="2"></rect>
+                                <text x="540" y="275" font-family="Arial" font-size="12" text-anchor="middle" fill="#333">SH-Edge</text>
+                                <text x="540" y="295" font-family="Arial" font-size="10" text-anchor="middle" fill="#666">边界路由器</text>
+                                
+                                <!-- 链路（直线） -->
+                                <!-- AS 100内部IBGP -->
+                                <line x1="140" y1="190" x2="140" y2="250" stroke="#333" stroke-width="2"></line>
+                                <text x="150" y="220" font-family="Arial" font-size="10" fill="#333">IBGP</text>
+                                <text x="120" y="220" font-family="Arial" font-size="10" fill="#666">192.168.1.0/24</text>
+                                
+                                <!-- AS 200内部IBGP -->
+                                <line x1="540" y1="190" x2="540" y2="250" stroke="#333" stroke-width="2"></line>
+                                <text x="550" y="220" font-family="Arial" font-size="10" fill="#333">IBGP</text>
+                                <text x="520" y="220" font-family="Arial" font-size="10" fill="#666">192.168.2.0/24</text>
+                                
+                                <!-- AS 100-AS 200 EBGP（跨AS核心链路） -->
+                                <line x1="180" y1="270" x2="500" y2="270" stroke="#ea4335" stroke-width="2"></line>
+                                <text x="340" y="265" font-family="Arial" font-size="11" fill="#ea4335" font-weight="bold">EBGP（跨AS互联）</text>
+                                <text x="340" y="285" font-family="Arial" font-size="10" fill="#666">10.0.0.0/30</text>
+                                
+                                <!-- 接口IP标注 -->
+                                <text x="185" y="270" font-family="Arial" font-size="10" fill="#666">10.0.0.1</text>
+                                <text x="495" y="270" font-family="Arial" font-size="10" fill="#666">10.0.0.2</text>
+                                 </svg>
+                            </div>
+                            <!-- 粘贴原EGP的链接和配置命令 -->
+
+                            <a href="file:///E:/%E6%95%99%E7%A7%91%E7%A0%94/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80%E8%AF%BE%E6%94%B9/%E5%AE%9E%E8%B7%B5%E6%95%99%E5%AD%A6%E5%B9%B3%E5%8F%B01123/BGP%E5%8D%8F%E8%AE%AE%E5%AE%9E%E9%AA%8C.pdf" class="info-link">点击进行BGP协议实验</a>
+
+                            <div class="command-display">
+                                <h4>BGP协议配置命令（双AS跨部门场景）</h4>
+                                <div class="command-comment">// 一、AS 100（北京）配置</div>
+                                <div class="command-comment">// 1. 北京边界路由器（BJ-Edge）配置EBGP邻居（上海SH-Edge）</div>
+                                <div class="command-example">BJ-Edge: router bgp 100</div>
+                                <div class="command-example">BJ-Edge: neighbor 20.0.0.2 remote-as 200</div> <!-- 邻居AS为200（上海） -->
+                                <div class="command-example">BJ-Edge: neighbor 20.0.0.2 update-source GigabitEthernet0/0</div> <!-- 指定互联接口 -->
+                                <div class="command-example">BJ-Edge: network 192.168.1.0 mask 255.255.255.0</div> <!-- 宣告北京内部网段 -->
+                                
+                                <div class="command-comment">// 2. 北京核心路由器（BJ-Core）配置IBGP邻居（同AS内部）</div>
+                                <div class="command-example">BJ-Core: router bgp 100</div>
+                                <div class="command-example">BJ-Core: neighbor 192.168.1.2 remote-as 100</div> <!-- 邻居为BJ-Edge的内部IP -->
+                                
+                                <div class="command-comment">// 二、AS 200（上海）配置</div>
+                                <div class="command-comment">// 1. 上海边界路由器（SH-Edge）配置EBGP邻居（北京BJ-Edge）</div>
+                                <div class="command-example">SH-Edge: router bgp 200</div>
+                                <div class="command-example">SH-Edge: neighbor 20.0.0.1 remote-as 100</div> <!-- 邻居AS为100（北京） -->
+                                <div class="command-example">SH-Edge: neighbor 20.0.0.1 update-source GigabitEthernet0/0</div> <!-- 指定互联接口 -->
+                                <div class="command-example">SH-Edge: network 192.168.2.0 mask 255.255.255.0</div> <!-- 宣告上海内部网段 -->
+                                
+                                <div class="command-comment">// 2. 上海核心路由器（SH-Core）配置IBGP邻居（同AS内部）</div>
+                                <div class="command-example">SH-Core: router bgp 200</div>
+                                <div class="command-example">SH-Core: neighbor 192.168.2.2 remote-as 200</div> <!-- 邻居为SH-Edge的内部IP -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 新增阶段4: 广域网PPP -->
+                <div class="network-stage" id="stage4">
+                    <!-- 极客公司场景需求（与其他阶段一致的highlight样式） -->
+                    <div class="highlight" style="margin-bottom:20px;">
+                        <p><strong>极客科技场景需求：</strong>北京总部（192.168.1.0/24）与上海分部（192.168.2.0/24）需跨地域联网，租用运营商的专线（如SDH），但普通路由接口无法直接适配专线链路，且需要验证双方身份避免链路被冒用，如何实现安全、稳定的跨地域连接？</p>
+                        <p><strong>答案：</strong>配置广域网PPP协议（点到点协议），支持专线链路适配+身份验证（PAP/CHAP），保障跨地域连接安全。</p>
+                    </div>
+                    
+                    <!-- 拓扑图（与其他阶段一致的显示方式，替换src为实际图片路径） -->
+                    <div class="network-topology" id="topology4" style="display: flex; align-items: center; justify-content: center;">
+                        <img src="./fig/ppp.png" alt="广域网PPP拓扑图" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+                        <!-- 若暂无图片，可先使用占位图：src="https://via.placeholder.com/600x300?text=PPP%E6%8B%93%E6%89%91%E5%9B%BE" -->
+                    </div>
+
+                    <!-- 资源链接（与其他阶段一致的info-link样式） -->
+                    <a href="./pkt/ppp.pkt" class="info-link">点击下载PPP配置拓扑</a>
+                    <a href="./operation_tutorial_video/ppp.mp4" class="info-link" target="_blank">点击查看PPP配置讲解</a>
+                    
+                    
+                    <!-- 配置命令（与其他阶段一致的command-display样式） -->
+                    <div class="command-display">
+                        <h4>PPP协议核心配置命令（总部路由器）</h4>
+                        <div class="command-comment">// 1. 进入连接专线的物理接口（如Serial 2/0）</div>
+                        <div class="command-example">BJ-Router(config)# interface serial 2/0</div>
+                        <div class="command-comment">// 2. 配置接口IP（与分部路由器互联网段，如20.0.0.1/30）</div>
+                        <div class="command-example">BJ-Router(config-if)# ip address 20.0.0.1 255.255.255.252</div>
+                          <div class="command-comment">// 3. 配置接口时钟频率，取640000</div>
+                        <div class="command-example">BJ-Router(config-if)# clock rate 64000</div>
+                        <div class="command-comment">// 3. 启用PPP封装（替换默认的HDLC，适配专线）</div>
+                        <div class="command-example">BJ-Router(config-if)# encapsulation ppp</div>
+                        <div class="command-comment">// 4. 配置CHAP身份验证（更安全，替代PAP）</div>
+                        <div class="command-example">BJ-Router(config-if)# ppp authentication chap</div>
+                        <div class="command-comment">// 5. 配置CHAP认证的用户名和密码（分部需相同）</div>
+                        <div class="command-example">BJ-Router(config)# username SH-Router password ppp123</div>
+                        
+                        <div class="command-comment">// 分部路由器对应配置（仅需修改IP和用户名）</div>
+                        <div class="command-example">SH-Router(config)# interface serial 3/0</div>
+                        <div class="command-example">SH-Router(config-if)# ip address 20.0.0.2 255.255.255.252</div>
+                        <div class="command-example">SH-Router(config-if)# encapsulation ppp</div>
+                        <div class="command-example">SH-Router(config-if)# ppp authentication chap</div>
+                        <div class="command-example">SH-Router(config)# username BJ-Router password ppp123</div>
+                    </div>
+                </div>
+
+                <!-- 阶段5: 应用服务配置 -->
+                <div class="network-stage" id="stage5">
+                     <div class="highlight" style="margin-bottom:20px;"><p><strong>极客科技场景需求：</strong>随着公司员工增加，IT部门每天要处理3类高频问题：①新员工电脑需手动配置IP、网关，耗时且易出错；②研发部需要上传代码到服务器，市场部需要下载宣传素材，缺乏统一文件传输工具；③员工记不住“192.168.1.100”这种IP地址，访问公司官网（内部版）时经常输错。如何通过网络应用配置解决这些问题？</p><p><strong>答案：</strong>部署DHCP、FTP、DNS、Web、Email 5类核心应用服务，实现“自动配网、高效传文件、易记地址访问”。</p></div>
+                    
+                    <div class="network-topology" id="topology5" style="display: flex; align-items: center; justify-content: center;">
+                        <img src="./fig/appconfig.png" alt="应用服务配置拓扑图" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+                    </div>
+                
+                    <a href="./pkt/appconfig.pkt" class="info-link">点击下载应用服务配置拓扑</a>
+                    <a href="operation_tutorial_video/dhcp.mp4" class="info-link" target="_blank">点击查看DHCP应用服务配置讲解</a>
+                    <a href="operation_tutorial_video/dhcp_on_router.mp4" class="info-link" target="_blank">点击查看路由器的DHCP配置讲解</a>
+                    <a href="./operation_tutorial_video/app-server-config.mp4" class="info-link" target="_blank">点击查看DNS、WWW、FTP、Email应用服务配置讲解</a>
+                    <div class="highlight">
+                    <p><strong>应用配置阶段实验作业（必做）：</strong>完成上图拓扑中应用配置，撰写实验报告，并从优慕课-课程活动-课程作业中，找到对应作业提交，点击下面的链接下载实验报告模版</p>
+                    <a href="./homework/experimnt-report model of appconfig.docx" class="info-link" target="_blank">点击下载应用配置实验报告模版</a>
+                    <p><strong>作业实验报告提交方式：</strong>优慕课-计算机网络基础（张玉）-单元学习-实验-实验十</p>
+                    </div>
+
+                </div>
+
+                <!-- 阶段6: 网络安全（新增） -->
+                <div class="network-stage" id="stage6">
+                    
+                    <!-- 6.1 防火墙ACL（访问控制） -->
+                    <div class="substage active" id="substage6.1">
+                        <div class="highlight">
+                            <p><strong>问题导入：</strong> "极客公司的财务服务器（192.168.30.10）存储敏感数据，需要禁止市场部（192.168.20.0/24）访问，但允许研发部（192.168.10.0/24）和总部管理端(192.168.1.0/24)访问，如何实现？"</p>
+                            <p><strong>答案：</strong>"配置ACL（访问控制列表），按源IP/目标IP限制网络访问"</p>
+                        </div>
+
+                        <div class="network-topology" id="topology6.1">
+                            <!-- 嵌入ACL拓扑图 -->
+                            <img src="./fig/acl.png" alt="防火墙ACL拓扑图" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+                        </div>
+                        <!-- 相关文件和视频链接 -->
+                        <a href="./pkt/acl.pkt" class="info-link">点击下载ACL配置拓扑</a>
+                        <a href="./operation_tutorial_video/pre_acl.mp4" class="info-link" target="_blank">点击查看ACL配置前网络准备工作</a>
+                        <a href="./operation_tutorial_video/standar-acl.mp4" class="info-link" target="_blank">点击查看标准ACL配置讲解</a>
+                        <a href="./operation_tutorial_video/extended-acl.mp4" class="info-link" target="_blank">点击查看扩展ACL配置讲解</a>
+
+                        <div class="concept-box">
+                            <div class="concept-title">📚 ACL通用配置格式</div>
+                            <!-- 标准ACL格式 -->
+                            <div class="command-display">
+                                <h4>1. 标准ACL配置格式（控制源IP）</h4>
+                                <div class="command-comment">// 全局模式创建标准ACL（编号1-99）</div>
+                                <div class="command-example">Router(config)# access-list [编号] permit/deny [源IP地址] [反掩码]</div>
+                                <div class="command-comment">// 应用到路由器接口（inbound=入站，outbound=出站）</div>
+                                <div class="command-example">Router(config)# interface [接口名称]（如fastethernet 0/1）</div>
+                                <div class="command-example">Router(config-if)# ip access-group [编号] in/out</div>
+                            </div>
+                            <!-- 扩展ACL格式 -->
+                            <div class="command-display">
+                                <h4>2. 扩展ACL配置格式（控制源IP+目标IP+端口）</h4>
+                                <div class="command-comment">// 全局模式创建扩展ACL（编号100-199）</div>
+                                <div class="command-example">Router(config)# access-list [编号] permit/deny [协议类型] [源IP] [反掩码] [目标IP] [反掩码] eq [端口号]</div>
+                                <div class="command-comment">// 应用到路由器接口</div>
+                                <div class="command-example">Router(config)# interface [接口名称]</div>
+                                <div class="command-example">Router(config-if)# ip access-group [编号] in/out</div>
+                            </div>
+                            <p><strong>关键说明：</strong>反掩码与子网掩码互补（如/24子网的反掩码为0.0.0.255），eq表示“等于某个端口”（如eq 80对应HTTP服务）。</p>
+                        </div>
+<!-- ACL配置命令 -->
+                        <div class="command-display">
+                            <h4>示例1：标准ACL配置（禁止市场部访问财务网段）</h4>
+                            <div class="command-comment">// 1. 创建标准ACL（编号10，属于标准ACL范围1-99）</div>
+                            <div class="command-example">Router(config)# access-list 10 permit 192.168.10.0 0.0.0.255</div> <!-- 允许研发部VLAN10 -->
+                            <div class="command-example">Router(config)# access-list 10 permit 192.168.1.0 0.0.0.255</div> <!-- 允许总部网络 -->
+                            <div class="command-example">Router(config)# access-list 10 deny 192.168.20.0 0.0.0.255</div> <!-- 拒绝市场部VLAN20 -->
+                            <div class="command-example">Router(config)# access-list 10 deny any</div> <!-- 拒绝其他所有IP -->
+                            
+                            <div class="command-comment">// 2. 应用到路由器连接财务网段的接口（假设为fastethernet 6/0，出站方向）</div>
+                            <div class="command-example">Router(config)# interface fastethernet 6/0</div> <!-- 连接财务网段的接口（需按实际拓扑调整） -->
+                            <div class="command-example">Router(config-if)# ip access-group 10 out</div> <!-- 入站流量应用ACL规则（靠近目标，符合标准ACL原则） -->
+                            
+                            <h4>示例2：扩展ACL配置（不允许市场部访问财务服务器）</h4>
+                            <div class="command-comment">// 1. 创建扩展ACL（编号100，属于扩展ACL范围100-199）</div>
+                            <div class="command-example">Router(config)# access-list 100 deny ip any host 192.168.30.10</div> <!-- 不允许访问财务服务器，其中host 192.168.30.10 完全等价于 192.168.30.10 0.0.0.0-->
+                            <div class="command-example">Router(config)# access-list 100 permit ip any any</div> <!-- 允许访问财务其他设备 -->
+                            
+                            <div class="command-comment">// 2. 应用到路由器连接市场网段的接口（假设为fastethernet 7/0，入站方向）</div>
+                            <div class="command-example">Router(config)# interface fastethernet 7/0</div> <!-- 连接研发网段的接口（靠近源，符合扩展ACL原则） -->
+                            <div class="command-example">Router(config-if)# ip access-group 100 in</div> <!-- 入站流量应用ACL规则 -->
+                            <div class="command-comment">// 3. 验证ACL配置</div>
+                            <div class="command-example">Router# show access-lists</div> <!-- 查看所有ACL规则及命中次数 -->
+                            <div class="command-example">Router# show ip access-group</div> <!-- 查看ACL应用的接口和方向 -->
+                        </div>  
+                    </div>
+                                      
+                    <!-- 5.2 VPN虚拟专用网络 -->
+                    <div class="substage" id="substage6.2">
+                        <div class="highlight">
+                            <p><strong>问题导入：</strong> "极客公司员工需要在家远程办公，需访问公司内部服务器（192.168.1.100/24），但互联网传输数据不安全，如何实现安全的远程访问？"</p>
+                            <p><strong>答案：</strong>"配置VPN（虚拟专用网络），在公网中建立加密隧道，实现安全远程连接"</p>
+                        </div>
+                        <div class="concept-box">
+                            <div class="concept-title">🔐 关键概念：VPN（虚拟专用网络）</div>
+                            <p>通过公网（如互联网）建立的"加密专用通道"，让远程设备（如家庭电脑）像在公司内部网络一样访问资源，数据传输全程加密，防止泄露。</p>
+                            <p><strong>本实验采用：</strong>IPsec VPN（企业常用，基于IP层加密）</p>
+                        </div>
+                        <div class="network-topology" id="topology6.2">
+                            <!-- 嵌入VPN拓扑图 -->
+                            <img src="./fig/vpn.png" alt="VPN拓扑图" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+                        </div>
+                        <!-- 相关文件和视频链接 -->
+                        <a href="./pkt/vpn.pkt" class="info-link">点击下载VPN配置拓扑</a>
+                       <!-- <a href="operation_tutorial_video/VPN配置讲解.mp4" class="info-link" target="_blank">点击查看VPN配置讲解</a>
+                        <a href="operation_tutorial_video/VPN连接测试.mp4" class="info-link" target="_blank">点击查看VPN连接测试讲解</a>-->
+                        
+                        <div class="command-display">
+                            <h4>IPsec VPN配置命令（公司出口路由器：bj-路由器，适配拓扑）</h4>
+                            
+                            <!-- 1：进入路由器配置模式 -->
+                            <div class="command-comment">【1：进入配置模式】获取路由器的配置权限，准备执行VPN配置命令</div>
+                            <div class="command-example">bj-路由器> enable                                  // 进入路由器特权模式，获取配置权限</div>
+                            <div class="command-example">bj-路由器# configure terminal                     // 进入全局配置模式，后续所有配置命令都在该模式下执行</div>
+
+
+                            <!-- 2：配置ISAKMP策略（密钥协商规则） -->
+                            <div class="command-comment">【2：配置ISAKMP策略】定义VPN密钥的协商方式（加密、认证、密钥有效期等）</div>
+                            <div class="command-example">bj-路由器(config)# crypto isakmp policy 10         // 创建编号为10的ISAKMP策略（编号越小优先级越高）</div>
+                            <div class="command-example">bj-路由器(config-isakmp)# authentication pre-share // 配置VPN的认证方式为“预共享密钥”（简单易部署）</div>
+                            <div class="command-example">bj-路由器(config-isakmp)# encryption aes-256       // 配置加密算法为AES-256（企业级高安全性）</div>
+                            <div class="command-example">bj-路由器(config-isakmp)# hash sha256             // 配置哈希算法为SHA-256（验证数据完整性）</div>
+                            <div class="command-example">bj-路由器(config-isakmp)# group 5                 // 配置密钥交换的DH组为Group5（保障密钥安全）</div>
+                            <div class="command-example">bj-路由器(config-isakmp)# lifetime 3600           // 配置密钥生存期为1小时（到期自动更新）</div>
+                            <div class="command-example">bj-路由器(config-isakmp)# exit                    // 退出ISAKMP策略配置模式</div>
+
+
+                            <!-- 3：设置预共享密钥（VPN连接密码） -->
+                            <div class="command-comment">【3：设置预共享密钥】配置远程设备连接VPN时需要输入的“密码”，两端需一致</div>
+                            <div class="command-example">bj-路由器(config)# crypto isakmp key geektech123 address 20.0.1.2 255.255.255.252  // 密钥设为“geektech123”，绑定远程路由器公网IP（20.0.1.2）</div>
+
+
+                            <!-- 4：配置IPsec转换集（数据加密规则） -->
+                            <div class="command-comment">【4：配置IPsec转换集】定义实际传输数据的加密、验证规则</div>
+                            <div class="command-example">bj-路由器(config)# crypto ipsec transform-set VPN-SET esp-aes-256 esp-sha256-hmac  // 创建转换集“VPN-SET”，指定加密用AES-256、验证用SHA-256</div>
+                            <div class="command-example">bj-路由器(config-crypto-trans)# mode tunnel        // 配置为“隧道模式”（公网传输时加密整个数据包）</div>
+                            <div class="command-example">bj-路由器(config-crypto-trans)# exit               // 退出转换集配置模式</div>
+
+
+                            <!-- 5：配置加密映射（绑定所有规则） -->
+                            <div class="command-comment">【5：配置加密映射】将前面的策略、密钥、规则绑定到一起，形成完整的VPN规则</div>
+                            <div class="command-example">bj-路由器(config)# crypto map VPN-MAP 10 ipsec-isakmp  // 创建编号为10的加密映射</div>
+                            <div class="command-example">bj-路由器(config-crypto-map)# set peer 20.0.1.2    // 绑定远程路由器的公网IP</div>
+                            <div class="command-example">bj-路由器(config-crypto-map)# set transform-set VPN-SET  // 关联之前配置的转换集</div>
+                            <div class="command-example">bj-路由器(config-crypto-map)# match address 100    // 绑定需要加密的流量规则（后续通过ACL定义）</div>
+                            <div class="command-example">bj-路由器(config-crypto-map)# exit               // 退出加密映射配置模式</div>
+
+
+                            <!-- 6：定义内网网段（允许访问的资源） -->
+                            <div class="command-comment">【6：定义内网网段】指定允许远程设备通过VPN访问的公司内网资源</div>
+                            <div class="command-example">bj-路由器(config)# access-list 100 permit ip 192.168.1.0 0.0.0.255 any  // 允许内网192.168.1.0/24网段的流量通过VPN传输</div>
+
+
+                            <!-- 7：启用VPN（应用到公网接口） -->
+                            <div class="command-comment">【7：启用VPN】将配置好的VPN规则应用到路由器的公网接口，使VPN生效</div>
+                            <div class="command-example">bj-路由器(config)# interface Serial2/0             // 进入bj-路由器的公网接口（拓扑中对应Serial2/0）</div>
+                            <div class="command-example">bj-路由器(config-if)# crypto map VPN-MAP          // 将加密映射应用到公网接口（关键步骤）</div>
+                            <div class="command-example">bj-路由器(config-if)# no shutdown                // 确保公网接口处于开启状态</div>
+                            <div class="command-example">bj-路由器(config-if)# exit                       // 退出接口配置模式</div>
+
+
+                            <!-- 8：验证VPN配置 -->
+                            <div class="command-comment">【8：验证配置】检查VPN是否成功配置并生效</div>
+                            <div class="command-example">bj-路由器# show crypto isakmp sa                 // 查看密钥协商状态，出现“ACTIVE”表示成功</div>
+                            <div class="command-example">bj-路由器# show crypto ipsec sa                  // 查看加密通道状态，出现“ESP SAs”表示通道已建立</div>
+                        </div>
+                    </div>
+                </div>
+
+               
+                <!-- 阶段8: 综合实践（修改后，含基础实践/进阶实践） -->
+                <div class="network-stage" id="stage8">
+                    <!-- 综合实践统一拓扑图（基础实践用原有拓扑，进阶实践用场景拓扑） -->
+                    <div class="network-topology" id="topology8-base" style="display: flex; align-items: center; justify-content: center;">
+                        <img src="./fig/comprehensive-basic-net.png" alt="基础实践统一拓扑图" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+                    </div>
+
+                    <!-- 基础实践资源链接（默认显示） -->
+                    <div id="resource8-base">
+                        <a href="./pkt/phase2-assessment-simulation.pka" class="info-link">点击下载基础实践统一拓扑</a>
+                        <a href="./operation_tutorial_video/basic-netconfig without ACL.mp4" class="info-link" target="_blank">点击查看基础网络配置讲解</a>
+                        <a href="./operation_tutorial_video/basic-netconfig -ACL.mp4" class="info-link" target="_blank">点击查看安全增强配置讲解</a>
+                    </div>
+
+                    <!-- 进阶实践文字内容（转移自右侧，无拓扑无链接） -->
+                    <div id="content8-advanced" style="display: none; padding: 20px; background: #f9fbfd; border-radius: 8px; margin-top: 20px;">
+                        <div class="highlight">
+                            <p><strong>场景需求：</strong>某连锁酒店需搭建内部网络，覆盖3类区域（客房区、前台办公区、机房服务器区），要求：</p>
+                            <ul>
+                                <li>1. 客房区：供住客上网，需自动获取IP，禁止访问办公区和服务器区</li>
+                                <li>2. 前台办公区：员工办公，可访问服务器区（如入住系统服务器）和互联网</li>
+                                <li>3. 服务器区：部署入住系统服务器、WiFi认证服务器，仅允许办公区访问</li>
+                                <li>4. 全网需支持PPP广域网接入（对接运营商），部分远程管理人员需通过VPN接入办公</li>
+                            </ul>
+                        </div>
+                        
+                        <h3 style="color: #1a6bc4; margin: 20px 0 15px;">一、设计案例具体流程</h3>
+                        <div class="concept-box">
+                            <div class="concept-title">🚀 步骤1：需求分析与网络规划</div>
+                            <ul>
+                                <li>网段规划：客房区（192.168.10.0/24）、办公区（192.168.20.0/24）、服务器区（192.168.30.0/24）、广域网互联段（20.0.0.0/30）</li>
+                                <li>VLAN规划：VLAN10（客房）、VLAN20（办公）、VLAN30（服务器）</li>
+                                <li>设备规划：核心路由器1台（对接PPP广域网+VPN）、接入交换机2台（客房/办公）、服务器2台（入住系统+认证）</li>
+                            </ul>
+                            
+                            <div class="concept-title">🚀 步骤2：拓扑设计与设备连接</div>
+                            <ol>
+                                <li>核心路由器：FastEthernet0/0连接办公交换机（Trunk）、FastEthernet0/1连接客房交换机（Trunk）、Serial2/0对接运营商PPP链路</li>
+                                <li>办公交换机：Access接口连接办公PC和服务器区设备，Trunk接口连接路由器</li>
+                                <li>客房交换机：Access接口连接客房PC，Trunk接口连接路由器</li>
+                            </ol>
+                            
+                            <div class="concept-title">🚀 步骤3：设备配置实施</div>
+                            <ul>
+                                <li>交换机配置：VLAN创建、Access/Trunk接口划分</li>
+                                <li>路由器配置：子接口（单臂路由）、PPP协议（Serial2/0）、OSPF动态路由、ACL规则、IPsec VPN</li>
+                                <li>服务器配置：入住系统服务器（Web/80端口）、WiFi认证服务器（FTP/21端口）</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>   
+
+                <!-- 阶段7: 数据流分析（新增） -->
+                <div class="network-stage" id="stage7">
+                    <div class="network-topology" id="topology7" style="display: flex; align-items: center; justify-content: center;">
+                        <svg width="100%" height="100%" viewBox="0 0 900 400" xmlns="http://www.w3.org/2000/svg">
+                            <!-- 背景说明 -->
+                            <rect x="50" y="20" width="800" height="40" fill="#f0f7ff" stroke="#1a6bc4" stroke-width="2" rx="4"/>
+                            <text x="450" y="45" font-family="Arial" font-size="14" font-weight="bold" text-anchor="middle" fill="#1a6bc4">数据流分析拓扑：研发部PC（VLAN10）→ 财务服务器（VLAN30）</text>
+                            
+                            <!-- 研发部PC -->
+                            <rect x="80" y="150" width="120" height="80" rx="4" fill="#e1f5fe" stroke="#4fc3f7" stroke-width="2"/>
+                            <text x="140" y="175" font-family="Arial" font-size="12" font-weight="bold" text-anchor="middle" fill="#0277bd">研发部PC</text>
+                            <text x="140" y="195" font-family="Arial" font-size="10" text-anchor="middle" fill="#555">IP：192.168.10.5</text>
+                            <text x="140" y="215" font-family="Arial" font-size="10" text-anchor="middle" fill="#555">MAC：00-0C-29-33-44-55</text>
+                            <text x="140" y="235" font-family="Arial" font-size="10" text-anchor="middle" fill="#e74c3c" font-weight="bold">VLAN10</text>
+                            
+                            <!-- 接入交换机 -->
+                            <ellipse cx="280" cy="190" rx="50" ry="30" fill="#e8f5e9" stroke="#66bb6a" stroke-width="2"/>
+                            <text x="280" y="185" font-family="Arial" font-size="12" font-weight="bold" text-anchor="middle" fill="#2e7d32">接入交换机</text>
+                            <text x="280" y="205" font-family="Arial" font-size="10" text-anchor="middle" fill="#555">端口1：Access(VLAN10)</text>
+                            <text x="280" y="220" font-family="Arial" font-size="10" text-anchor="middle" fill="#555">端口24：Trunk</text>
+                            
+                            <!-- 单臂路由器 -->
+                            <rect x="420" y="170" width="120" height="60" rx="4" fill="#fff3e0" stroke="#ffb74d" stroke-width="2"/>
+                            <text x="480" y="190" font-family="Arial" font-size="12" font-weight="bold" text-anchor="middle" fill="#ef6c00">单臂路由器</text>
+                            <text x="480" y="210" font-family="Arial" font-size="10" text-anchor="middle" fill="#555">f0/0.10：192.168.10.1</text>
+                            <text x="480" y="225" font-family="Arial" font-size="10" text-anchor="middle" fill="#555">f0/0.30：192.168.30.1</text>
+                            
+                            <!-- 财务交换机 -->
+                            <ellipse cx="620" cy="190" rx="50" ry="30" fill="#e8f5e9" stroke="#66bb6a" stroke-width="2"/>
+                            <text x="620" y="185" font-family="Arial" font-size="12" font-weight="bold" text-anchor="middle" fill="#2e7d32">财务交换机</text>
+                            <text x="620" y="205" font-family="Arial" font-size="10" text-anchor="middle" fill="#555">端口5：Access(VLAN30)</text>
+                            <text x="620" y="220" font-family="Arial" font-size="10" text-anchor="middle" fill="#555">端口24：Trunk</text>
+                            
+                            <!-- 财务服务器 -->
+                            <rect x="750" y="150" width="120" height="80" rx="4" fill="#f3e5f5" stroke="#ba68c8" stroke-width="2"/>
+                            <text x="810" y="175" font-family="Arial" font-size="12" font-weight="bold" text-anchor="middle" fill="#7b1fa2">财务服务器</text>
+                            <text x="810" y="195" font-family="Arial" font-size="10" text-anchor="middle" fill="#555">IP：192.168.30.10</text>
+                            <text x="810" y="215" font-family="Arial" font-size="10" text-anchor="middle" fill="#555">MAC：00-0C-29-99-AA-BB</text>
+                            <text x="810" y="235" font-family="Arial" font-size="10" text-anchor="middle" fill="#e74c3c" font-weight="bold">VLAN30</text>
+                            
+                            <!-- 链路标注 -->
+                            <text x="190" y="140" font-family="Arial" font-size="11" fill="#333" font-weight="bold">Access链路</text>
+                            <text x="350" y="140" font-family="Arial" font-size="11" fill="#ea4335" font-weight="bold">Trunk链路（带VLAN标签）</text>
+                            <text x="550" y="140" font-family="Arial" font-size="11" fill="#ea4335" font-weight="bold">Trunk链路（带VLAN标签）</text>
+                            <text x="685" y="140" font-family="Arial" font-size="11" fill="#333" font-weight="bold">Access链路</text>
+                            
+                            <!-- 请求数据流箭头（PC→服务器） -->
+                            <line x1="200" y1="190" x2="230" y2="190" stroke="#333" stroke-width="2" stroke-dasharray="0"/>
+                            <polygon points="230,187 220,190 230,193" fill="#333"/>
+                            
+                            <line x1="330" y1="190" x2="420" y2="190" stroke="#333" stroke-width="2" stroke-dasharray="0"/>
+                            <polygon points="420,187 410,190 420,193" fill="#333"/>
+                            
+                            <line x1="540" y1="190" x2="570" y2="190" stroke="#333" stroke-width="2" stroke-dasharray="0"/>
+                            <polygon points="570,187 560,190 570,193" fill="#333"/>
+                            
+                            <line x1="670" y1="190" x2="750" y2="190" stroke="#333" stroke-width="2" stroke-dasharray="0"/>
+                            <polygon points="750,187 740,190 750,193" fill="#333"/>
+                            
+                            <!-- 响应数据流箭头（服务器→PC） -->
+                            <line x1="750" y1="210" x2="670" y2="210" stroke="#e74c3c" stroke-width="2" stroke-dasharray="3,3"/>
+                            <polygon points="670,207 680,210 670,213" fill="#e74c3c"/>
+                            
+                            <line x1="570" y1="210" x2="540" y2="210" stroke="#e74c3c" stroke-width="2" stroke-dasharray="3,3"/>
+                            <polygon points="540,207 550,210 540,213" fill="#e74c3c"/>
+                            
+                            <line x1="420" y1="210" x2="330" y2="210" stroke="#e74c3c" stroke-width="2" stroke-dasharray="3,3"/>
+                            <polygon points="330,207 340,210 330,213" fill="#e74c3c"/>
+                            
+                            <line x1="230" y1="210" x2="200" y2="210" stroke="#e74c3c" stroke-width="2" stroke-dasharray="3,3"/>
+                            <polygon points="200,207 210,210 200,213" fill="#e74c3c"/>
+                            
+                            <!-- 数据流说明 -->
+                            <rect x="350" y="280" width="200" height="60" fill="#f9fbe7" stroke="#827717" stroke-width="1" rx="4"/>
+                            <text x="450" y="295" font-family="Arial" font-size="11" font-weight="bold" text-anchor="middle" fill="#333">数据流说明</text>
+                            <text x="380" y="315" font-family="Arial" font-size="10" fill="#333">● 黑色实线：请求数据流（HTTP/80）</text>
+                            <text x="380" y="335" font-family="Arial" font-size="10" fill="#e74c3c">● 红色虚线：响应数据流（HTTP/200）</text>
+                        </svg>
+
+                    </div>
+                    <a href="./pkt/dataflow.pkt" class="info-link">点击下载数据流分析配置拓扑</a>
+                    <a href="./operation_tutorial_video/dataflow-analysis.mp4" class="info-link" target="_blank">点击查看数据流分析讲解</a>
+                    
+                    <div class="command-display">
+                        <h4>数据流分析工具命令</h4>
+                        <div class="command-comment">// 在路由器/交换机上抓包（Cisco设备）</div>
+                        <div class="command-example">Router# debug ip packet detail</div>
+                        <div class="command-example">Switch# debug mac address-table</div>
+                        <div class="command-comment">// 查看路由表（验证转发路径）</div>
+                        <div class="command-example">Router# show ip route</div>
+                        <div class="command-comment">// 查看MAC表（验证二层转发）</div>
+                        <div class="command-example">Switch# show mac address-table</div>
+
+                        <!-- 新增：Wireshark抓包工具（终端侧分析） -->
+                        <h4 style="margin-top: 20px; border-top: 1px solid #eee; padding-top: 10px;">Wireshark抓包分析命令/操作</h4>
+                        <div class="command-comment">// Wireshark过滤规则（定位HTTP流量）</div>
+                        <div class="command-example">http // 仅显示HTTP协议流量</div>
+                        <div class="command-example">ip.addr == 192.168.10.5 && ip.addr == 192.168.30.10 // 仅显示PC与服务器的IP通信</div>
+                        <div class="command-example">tcp.port == 80 // 仅显示TCP 80端口（HTTP）流量</div>
+                        <div class="command-comment">// Wireshark核心操作</div>
+                        <div class="command-example">捕获接口：选择PC的网卡（如Ethernet0）</div>
+                        <div class="command-example">停止捕获：点击工具栏“停止”按钮</div>
+                        <div class="command-example">保存数据包：文件 → 保存（.pcap格式）</div>
+                    </div>
+                    <a href="./tutorial/Wireshark-user-guide.pdf" class="info-link" target="_blank">点击下载Wireshark使用说明（含抓包实战步骤）</a>
+                </div>
+            </div>
+            
+            <div class="explanation">
+                <!-- 阶段1：组件局域网 说明 -->
+                <div class="exp-stage" id="exp-stage1">
+                    <h2>局域网孤岛</h2>
+                    <p>极客公司创建初期，规模小巧，仅在城市一角设一间简约办公室。几名核心成员怀揣技术理想，无明确分工、并肩协作，在此开启逐梦之路。</p>
+                    
+                    <div class="highlight">
+                        <p><strong>问题导入：</strong> "办公室内的员工的电脑需要互联互通，怎么办？"</p>
+                    </div>
+                    
+                    <div class="concept-box">
+                        <div class="concept-title">💡 关键概念：交换机</div>
+                        <p>通过交换机组建局域网，实现网内电脑设备的互联互通。交换机依据MAC地址进行数据包的转发。</p>
+                        <a href="./PPT/MAC -address and frame format.pptx" class="info-link" target="_blank">点击查看MAC地址与MAC帧格式介绍介绍</a>
+                    </div>
+                    
+                    <div class="concept-box">
+                        <div class="concept-title">🗺️ 关键概念：MAC表</div>
+                        <p>交换机的"导航地图"，告诉它去往某个设备，从哪个接口转发出去。</p>
+                        <a href="https://www.bilibili.com/video/BV1yY411b753/?vd_source=67a412c416b4717fee360508599d6de5" class="info-link" target="_blank">点击查看交换机的转发原理</a>
+                    </div>
+                </div>
+
+                <!-- 阶段2：虚拟局域网 说明 -->
+                <div class="exp-stage" id="exp-stage2">
+                    <h2>虚拟局域网(VLAN)</h2>
+                    <p>随着公司规模扩大，北京总部办公室人员增多，部门划分更细致（研发部、市场部、财务部），所有设备连接在同一台交换机上导致广播风暴和安全隐患。</p>
+                    
+                    <div class="highlight">
+                        <p><strong>问题导入：</strong> "如何在同一台物理交换机上，将不同部门的设备隔离开，就像它们在不同的物理网络中一样？同时又能让部门内部通信不受影响？"</p>
+                    </div>
+                    
+                    <div class="concept-box">
+                        <div class="concept-title">🔒 关键概念：虚拟局域网(VLAN)</div>
+                        <p>将一个物理局域网在逻辑上划分成多个不同的广播域（子网络），实现隔离广播、增强网络安全性、提高带宽利用率的技术。</p>
+                    </div>
+                    
+                    <h3>VLAN的核心作用</h3>
+                    <ul>
+                        <li><strong>广播控制</strong>：限制广播帧只在本VLAN内传播，避免广播风暴</li>
+                        <li><strong>安全隔离</strong>：不同VLAN设备默认无法直接通信，保护敏感部门数据</li>
+                        <li><strong>灵活管理</strong>：设备可以根据部门需求划分到不同VLAN，不受物理位置限制</li>
+                    </ul>
+                    
+                    <h3>VLAN类型</h3>
+                    <div class="protocol-comparison">
+                        <div class="protocol-card">
+                            <h4>静态VLAN</h4>
+                            <p>由管理员手动将交换机接口分配给特定VLAN</p>
+                            <p>优点：安全可靠，易于监控</p>
+                            <p>缺点：设备移动时需要重新配置</p>
+                        </div>
+                        <div class="protocol-card">
+                            <h4>动态VLAN</h4>
+                            <p>基于MAC地址、IP地址或用户账号自动分配VLAN</p>
+                            <p>优点：设备移动时自动适应</p>
+                            <p>缺点：配置复杂，需要额外服务器支持</p>
+                        </div>
+                    </div>
+                    
+                    <h3>VLAN间通信</h3>
+                    <p>不同VLAN之间默认无法通信，需要通过路由器或三层交换机实现互通，这一过程称为"VLAN间路由"。</p>
+                     <p><strong>具体配置方法查看下一阶段“网络互联”中的"单臂路由"</strong></p>
+
+                </div>
+
+                <!-- 阶段3：网络互联 说明（包含子阶段说明） -->
+                <div class="exp-stage" id="exp-stage3">
+                    <h2>网络互联</h2> 
+                    <!-- 网络互联子项目切换按钮（迁移到右侧） -->
+                    <div style="margin-bottom: 15px; border-bottom: 1px solid #eaeef2; padding-bottom: 10px;">
+                        <button class="substage-btn active" data-substage="3.1">单臂路由</button>
+                        <button class="substage-btn" data-substage="3.2">静态路由</button>
+                        <button class="substage-btn" data-substage="3.3">动态路由</button>
+                    </div>
+                    <!-- 3.1 单臂路由 说明 -->
+                    <div class="exp-substage active" id="exp-substage3.1">
+                    
+                    <h3>单臂路由</h3>
+
+                    <div class="highlight">
+                        <p>单臂路由工作原理</p>
+                        <ol>
+                            <li>交换机通过 trunk 链路将带有VLAN标签的数据发送到路由器</li>
+                            <li>路由器的子接口根据VLAN标签识别不同网络</li>
+                            <li>路由器进行路由转发，实现不同VLAN间的数据交换</li>
+                            <li>返回数据通过原路径发送回对应VLAN的设备</li>
+                        </ol>
+                    </div>
+                    <div class="command-display">
+                            <h4>单臂路由配置命令</h4>
+                            <div class="command-comment">// 路由器子接口配置（对应VLAN 10）</div>
+                            <div class="command-example">Router&gt; enable</div>
+                            <div class="command-example">Router# configure terminal</div>
+                            <div class="command-example">Router(config)# interface fastethernet 0/0.10</div>
+                            <div class="command-example">Router(config-subif)# encapsulation dot1q 10</div>
+                            <div class="command-example">Router(config-subif)# ip address 192.168.10.1 255.255.255.0</div>
+                            
+                            <div class="command-comment">// 路由器子接口配置（对应VLAN 20）</div>
+                            <div class="command-example">Router(config-subif)# interface fastethernet 0/0.20</div>
+                            <div class="command-example">Router(config-subif)# encapsulation dot1q 20</div>
+                            <div class="command-example">Router(config-subif)# ip address 192.168.20.1 255.255.255.0</div>
+                            
+                            <div class="command-comment">// 启用物理接口</div>
+                            <div class="command-example">Router(config-subif)# interface fastethernet 0/0</div>
+                            <div class="command-example">Router(config-if)# no shutdown</div>
+                    </div>  
+
+
+                    </div>
+
+                    <!-- 3.2 静态路由 说明 -->
+                    <div class="exp-substage" id="exp-substage3.2">
+                    <h3>静态路由</h3>
+                    
+                    <div class="concept-box">
+ 
+                        <div class="concept-title">⚙️静态路由配置命令格式</div>
+                        
+                        <div class="command-example">ip route [目标网络] [子网掩码] [下一跳IP/出口]</div>
+                    </div>
+                    
+                    <div class="concept-box">
+                        <div class="concept-title">🌐 特殊静态路由：默认路由</div>
+                        <p>当路由表中没有匹配的具体路由条目时，用于转发数据包的路由（通配符0.0.0.0 0.0.0.0）。</p>
+                    </div>
+                    
+                    <h3>总部路由器路由表示例</h3>
+                    <div class="routing-table-container">
+                        <table class="routing-table">
+                            <thead>
+                                <tr>
+                                    <th>目标网络</th>
+                                    <th>子网掩码</th>
+                                    <th>下一跳</th>
+                                    <th>出口接口</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>192.168.1.0</td>
+                                    <td>255.255.255.0</td>
+                                    <td>直接连接</td>
+                                    <td>Fa0/0</td>
+                                </tr>
+                                <tr>
+                                    <td>192.168.2.0</td>
+                                    <td>255.255.255.0</td>
+                                    <td>20.0.0.2</td>
+                                    <td>Fa0/1</td>
+                                </tr>
+                                <tr>
+                                    <td>0.0.0.0</td>
+                                    <td>0.0.0.0</td>
+                                    <td>20.0.0.2</td>
+                                    <td>Fa0/1</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <h3>静态路由特点</h3>
+                    <p><strong>优点：</strong> 简单、精确、不占用网络资源、安全。</p>
+                    <p><strong>缺点：</strong> <span style="color: #e74c3c;">不能自动适应网络变化</span>。</p>
+                    </div>
+
+
+                    <!-- 3.3 动态路由 说明（包含IGP/EGP子说明） -->
+                    <div class="exp-substage" id="exp-substage3.3">
+                        <!-- 动态路由子项按钮（迁移到右侧，放在动态路由说明下方） -->
+                        <div style="margin-bottom: 10px; padding-bottom: 5px; border-bottom: 1px dashed #eaeef2;">
+                            <button class="dynamic-btn active" data-dynamic="igp">IGP协议</button>
+                            <button class="dynamic-btn" data-dynamic="egp">EGP协议</button>
+                        </div>   
+                        <!-- IGP协议 说明 -->
+                        <div class="exp-dynamic active" id="exp-igp">
+                                <h2>内部网关协议(IGP)</h2>
+                                                             
+                                <div class="highlight">
+                                    <p>用于在同一个<strong>自治系统内部(AS)</strong>交换路由信息的动态路由协议</p>
+                                </div>
+                                
+                                <div class="concept-box">
+                                    <div class="concept-title">🏢 关键概念：自治系统(AS)</div>
+                                    <p><strong>网络世界的 “独立行政区”</strong></p>
+                                    <p>自治系统（Autonomous System，简称 AS）是互联网中由单一机构（如企业、运营商、高校）管理、遵循统一路由策略的独立网络集合，可以通俗理解为网络世界里的 “独立行政区”—— 有自己的 “管理规则” 和 “对外联络方式”，内部自主管理，外部通过固定 “接口” 与其他 “行政区”（其他 AS）互联互通。</p>
+                                </div>
+                                
+                                <h3>常见IGP协议对比</h3>
+                                <div class="protocol-comparison">
+                                    <div class="protocol-card rip">
+                                        <h4>RIP (路由信息协议)</h4>
+                                        <p><strong>类型：</strong> 距离矢量协议</p>
+                                        <p><strong>工作原理：</strong> 像"传话游戏"，每个路由器只告诉邻居自己到各网络的距离（跳数）</p>
+                                        <p><strong>优点：</strong> 配置简单，易于理解</p>
+                                        <p><strong>缺点：</strong> 最大跳数15跳，收敛速度慢，可能产生路由环路</p>
+                                        <p><strong>适用场景：</strong> 小型网络，拓扑简单</p>
+                                        <a href="https://www.bilibili.com/video/BV1oJ411e7q5/?vd_source=67a412c416b4717fee360508599d6de5" target="_blank" class="info-link">RIP协议详细介绍</a>
+                                    </div>
+                                    <div class="protocol-card ospf">
+                                        <h4>OSPF (开放最短路径优先)</h4>
+                                        <p><strong>类型：</strong> 链路状态协议</p>
+                                        <p><strong>工作原理：</strong> 像"实时共享的电子地图"，所有路由器有相同的全网拓扑图</p>
+                                        <p><strong>优点：</strong> 收敛速度快，无跳数限制，支持分层设计</p>
+                                        <p><strong>缺点：</strong> 配置复杂，资源消耗较大</p>
+                                        <p><strong>适用场景：</strong> 大型复杂网络</p>
+                                        <a href="https://www.bilibili.com/video/BV1ZJ411k744?spm_id_from=333.788.recommend_more_video.-1&amp;trackid=web_related_0.router-related-2206146-j2qzm.1762754331703.183&amp;vd_source=67a412c416b4717fee360508599d6de5" target="_blank" class="info-link">OSPF协议详细介绍</a>
+                                    </div>
+                                </div>
+                                
+                                <h3>总部网关路由器路由表 (OSPF)</h3>
+                                <div class="routing-table-container">
+                                 <img src="./fig/OSPF-routing-table.png" alt="总部网关路由器路由表" style="max-width: 100%; max-height: 100%; object-fit: contain;">   
+                                </div>
+                        </div>
+
+                        <!-- EGP协议 说明 -->
+                        <div class="exp-dynamic" id="exp-egp">
+                            <h3>外部网关协议(EGP)</h3>
+                            <div class="highlight">
+                                <div class="topology-intro" style="margin: 15px 0; line-height: 1.6; color: #333;">
+                                    当总部和分部属于不同的AS时，需要使用EGP类协议才能进行互联互通。如左图所示，北京核心区属于AS 100，上海分区属于AS 200，两部门因组织架构或网络管理边界划分为不同AS。每个AS内部通过IGP（黑色链路）实现核心路由互通，AS之间通过边界路由器（BJ-Edge与SH-Edge）建立EGP邻居关系（红色链路），核心目的是安全、可控地实现跨部门（跨AS）的业务路由传递，适配不同部门的独立网络管理需求。
+                                </div>
+                            </div>
+                            <p><strong>BGP协议是典型的EGP类协议。</strong></p>
+                             <a href="https://www.bilibili.com/video/BV1c4411d7jb?vd_source=67a412c416b4717fee360508599d6de5&spm_id_from=333.788.videopod.episodes&p=53" target="_blank" class="info-link">BGP协议详细介绍</a>                            
+                            <div class="concept-box">
+                                <div class="concept-title">⚙️ BGP协议核心配置命令格式</div>
+                                <div class="command-comment">// 1. 进入BGP进程（AS号为自治系统编号，如100/200）</div>
+                                <div class="command-example">Router(config)# router bgp [AS号]</div>
+                                
+                                <div class="command-comment">// 2. 配置BGP邻居（remote-as后接邻居所属AS号）</div>
+                                <div class="command-example">Router(config-router)# neighbor [邻居IP] remote-as [邻居AS号]</div>
+                                
+                                <div class="command-comment">// 3. （可选）指定邻居互联接口（避免接口IP变化导致邻居断开）</div>
+                                <div class="command-example">Router(config-router)# neighbor [邻居IP] update-source [接口名称]</div>
+                                
+                                <div class="command-comment">// 4. 宣告本AS内的直连网段（mask后接子网掩码）</div>
+                                <div class="command-example">Router(config-router)# network [网段地址] mask [子网掩码]</div>
+                            </div>
+                             <h3>动态路由（EGP协议）核心说明</h3>
+                            <p><strong>核心目标：</strong>理解外部网关协议（EGP）的跨自治系统路由传递原理，了解BGP协议基础配置。</p>
+                            <p><strong>关键知识点：</strong>EGP适用场景（不同自治系统之间）、BGP（边界网关协议）、AS号（自治系统号）、BGP邻居（对等体）。</p>
+                            <p><strong>操作要点：</strong>配置BGP进程和AS号，建立BGP邻居关系，宣告本自治系统的网段，验证BGP路由传递。</p>
+                            <p><strong>特点：</strong>BGP是路径矢量协议，注重路由的“可达性”而非“最短路径”，适用于互联网级路由。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 新增阶段4：广域网PPP 说明 -->
+                <div class="exp-stage" id="exp-stage4">
+                    <h2>广域网PPP协议</h2>
+                    <p>极客公司规模扩大后，北京总部与上海分部需跨地域传输业务数据（如研发部代码、市场部素材），但互联网传输不稳定，因此租用运营商的“专线链路”（如SDH/DDN）。普通路由器默认使用HDLC封装，无法适配专线，且缺乏身份验证，存在链路被冒用的风险——PPP协议正是解决这两个问题的核心技术。</p>
+                    
+                    <!-- 关键概念（与其他阶段一致的concept-box样式） -->
+                    <div class="concept-box">
+                        <div class="concept-title">📚 关键概念：PPP协议</div>
+                        <p>PPP（Point-to-Point Protocol，点到点协议）是广域网中常用的链路层协议，核心作用：</p>
+                        <ul>
+                            <li><strong>链路适配</strong>：支持专线、拨号等多种广域网链路，替代路由器默认的HDLC（仅支持同品牌设备）；</li>
+                            <li><strong>身份验证</strong>：提供PAP（明文验证，简单）和CHAP（加密验证，安全），防止链路被非法设备接入；</li>
+                            
+                        </ul>
+                    </div>
+                    
+                    <!-- 与静态路由对比（帮助理解逻辑衔接） -->
+                    <h3>PPP与网络互联的逻辑关系</h3>
+                    <p>在极客公司场景中，PPP是“网络互联”的<strong>链路基础</strong>：</p>
+                    <ol>
+                        <li>第一步：通过PPP配置专线链路（北京总部Serial 2/0 ↔ 上海分部Serial 2/0），确保物理链路能通；</li>
+                        <li>第二步：在PPP链路基础上，配置动态路由（如OSPF），实现总部192.168.1.0与分部192.168.2.0的互通；</li>
+                        <li>简单说：PPP解决“链路能不能通”，路由解决“数据往哪传”。</li>
+                    </ol>
+                    
+                    <!-- 验证方法（与其他阶段一致的highlight样式） -->
+                    <div class="highlight">
+                        <p><strong>验证方法：</strong></p>
+                        <ul>
+                            <li>1. 接口状态验证：执行 <code>show ip interface brief</code>，查看Serial接口状态为“up/up”（表示PPP链路已建立）；</li>
+                            <li>2. 身份验证：执行 <code>show ppp authentication</code>，查看CHAP验证状态为“SUCCEEDED”（表示验证通过）；</li>
+                            <li>3. 连通性验证：总部路由器ping分部路由器互联IP（20.0.0.2），能通则PPP链路正常。</li>
+                        </ul>
+                    </div>
+                    <div class="highlight">
+                        <p><strong>实践要求：</strong>结合讲解视频，完成左侧网络中北京总部与深圳分部、上海分部与深圳分部的PPP配置。</p>    
+                        <p><strong>验证方法：</strong>用不同网络中的主机进行互ping操作，看是否能够ping通。</p>
+                    </div>                    
+                </div>
+
+                <!-- 阶段5：应用配置 说明 -->
+                <div class="exp-stage" id="exp-stage5">
+                    
+                   
+                    <h2>应用配置</h2>
+                    <!-- 应用配置子项目切换按钮 -->
+                    <div style="margin-bottom: 15px; border-bottom: 1px solid #eaeef2; padding-bottom: 10px;">
+                        <button class="substage-btn active" data-app="dhcp">DHCP服务</button>
+                        <button class="substage-btn" data-app="dns">DNS服务</button>
+                        <button class="substage-btn" data-app="ftp">FTP服务</button>
+                        <button class="substage-btn" data-app="web">WWW服务</button>
+                        <button class="substage-btn" data-app="email">Email服务</button>
+                    </div>               
+                    <!-- DHCP服务说明（默认显示） -->
+                    <div class="app-content active" id="app-dhcp">
+                        <h3>DHCP服务配置</h3>
+                        <a href="https://www.bilibili.com/video/BV1n7411s7cB/?vd_source=67a412c416b4717fee360508599d6de5" target="_blank" class="info-link">DHCP协议详细介绍</a>
+                        <div class="concept-box">
+                            <div class="concept-title">📚 核心知识点</div>
+                            <ul>
+                                <li>作用：自动给电脑分配IP、网关、DNS，无需手动配置</li>
+                                <li>关键参数：IP地址池、子网掩码、默认网关、DNS服务器、租约时间</li>
+                                <li>核心工作机制：</li>
+                                <img src="./fig/dhcp.png" alt="DHCP工作机制" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+                            </ul>
+                        </div>
+                        <div class="concept-box">
+                            <div class="concept-title">📚 DHCP服务器部署原则</div>
+                            <ul>
+                                <li>单一服务器部署：适用于单个物理子网的小型局域网。部署简单，但存在单点故障风险。</li>
+                                <li>多服务器高可用部署：对于中大型网络或要求高可用的环境，建议至少部署两台DHCP服务器。</li>
+                            </ul>
+                        </div>
+                        <div class="concept-box">
+                            <div class="concept-title">🌐 网络架构适应</div>
+                            <p>要使DHCP服务覆盖多个子网，需要特殊配置。</p>
+                            <ul>
+                                <li>使用DHCP中继代理：当DHCP服务器与客户端位于不同子网时，需要在客户端所在子网的路由器或特定服务器上配置DHCP中继代理（也称IP帮助地址）。中继代理负责转发DHCP广播报文，使其能够到达另一子网的DHCP服务器。</li>
+
+                            </ul>
+                        </div>
+
+                        <div class="command-display">
+                            
+                            <h4>路由器DHCP配置</h4>
+                            <div>
+                            <p>🌐路由器完全可以配置DHCP服务。这实际上是现代路由器一项非常核心且常用的功能，它能自动为网络中的设备分配IP地址</p>
+                            </div>
+                            <div class="command-comment">// 配置DHCP池</div>
+                            <div class="command-example">Router(config)# ip dhcp pool LAN1  //创建地址池</div>
+                            <div class="command-example">Router(dhcp-config)# network 192.168.1.0 255.255.255.0 //定义地址池网段</div>
+                            <div class="command-example">Router(dhcp-config)# default-router 192.168.1.254   //定义默认网关</div>
+                            <div class="command-example">Router(dhcp-config)# dns-server 192.168.1.101  //如果没有DNS服务器可以省略此步</div>
+
+                        </div>
+                        <div class="highlight">
+                            <p><strong>实践要求：</strong>结合讲解视频，完成左侧网络的DHCP服务器配置，实现分部1中主机IP的自动配置。</p>    
+                            <p><strong>验证方法：</strong>电脑设置“自动获取IP”，查看是否拿到配置的IP地址。</p>
+                        </div>
+                    </div>
+
+                    <!-- DNS服务说明 -->
+                    <div class="app-content" id="app-dns">
+                        <h3>DNS服务配置</h3>
+                        <a href="https://www.bilibili.com/video/BV1Y741187JH/?vd_source=67a412c416b4717fee360508599d6de5" target="_blank" class="info-link">DNS协议详细介绍</a>
+                        <div class="concept-box">
+                            <div class="concept-title">📚 核心知识点</div>
+                            <ul>
+                                <li>作用：将易记的域名（如www.geektech.com）转换成IP地址</li>
+                                <li>关键操作：配置域名与IP的映射关系</li>
+                            </ul>
+                        </div>
+                        <div class="command-display">
+                            <h4>DNS配置命令</h4>
+                            <div class="command-comment">// DNS服务器基本配置</div>
+                            <div class="command-example">DNS-Server(config)# ip domain-lookup</div>
+                            <div class="command-example">DNS-Server(config)# ip name-server 192.168.1.254</div>
+                            <div class="command-example">DNS-Server(config)# ip host www.geektech.com 192.168.1.100</div>
+                            <div class="command-example">DNS-Server(config)# ip host mail.geektech.com 192.168.1.101</div>
+                        </div>
+                        <div class="highlight">
+                        <p><strong>实践要求：</strong>结合讲解视频，完成左侧网络的DNS服务器配置，具体参数如下：</p>
+                        <p>总部-www服务器的域名：www.jike.com</p>
+                        <p>EMAIL服务器的域名：email.jike.com</p>
+                        <p>FTP服务器的域名：ftp.jike.com</p>
+                        <p>分部1-www服务器的域名：www.fenbu1.jike.com</p>
+                        <p>分部2-www服务器的域名：www.fenbu2.jike.com</p>
+
+                        <p><strong>验证方法：</strong>网络中任意主机通过ping域名都可以访问到对应IP的服务器设备。</p>
+                        </div>
+                    </div>
+
+                    <!-- FTP服务说明 -->
+                    <div class="app-content" id="app-ftp">
+                        <h3>FTP服务配置</h3>
+                        <a href="https://www.bilibili.com/video/av88451984/?vd_source=67a412c416b4717fee360508599d6de5" target="_blank" class="info-link">FTP协议详细介绍</a>
+
+                        <div class="concept-box">
+                            <div class="concept-title">📚 核心知识点</div>
+                            <ul>
+                                <li>作用：实现文件上传、下载，方便部门间共享素材</li>
+                                <li>默认端口：21（控制端口）</li>
+                                <li>关键操作：启用FTP服务、创建登录账号密码</li>
+                            </ul>
+                        </div>
+                        <div class="command-display">
+                            <h4>FTP配置命令</h4>
+                            <div class="command-comment">// 配置FTP服务器</div>
+                            <div class="command-example">FTP-Server(config)# ip ftp server enable</div>
+                            <div class="command-example">FTP-Server(config)# username ftpuser password ftppass</div>
+                        </div>
+                        <div class="highlight">
+                        <p><strong>实践要求：</strong>结合讲解视频，完成左侧网络的FTP服务器配置，添加账户为个人姓名全拼，密码为学号后三位</p>
+                        <p><strong>验证方法：</strong>用FTP客户端输入服务器IP、账号密码，能上传/下载文件则成功。</p>
+                        </div>
+                    </div>
+
+                    <!-- WWW服务说明 -->
+                    <div class="app-content" id="app-web">
+                        <h3>WWW服务配置</h3>
+
+                        <a href="https://www.bilibili.com/video/BV1c4411d7jb?spm_id_from=333.788.videopod.episodes&vd_source=67a412c416b4717fee360508599d6de5&p=73" target="_blank" class="info-link">万维网www详细介绍</a>
+
+                        <div class="concept-box">
+                            <div class="concept-title">📚 核心知识点</div>
+                            <ul>
+                                <li>作用：搭建公司内部网站，展示信息或提供系统访问</li>
+                                <li>默认端口：80</li>
+                                <li>关键操作：启用HTTP服务、配置网站内容</li>
+                            </ul>
+                        </div>
+                        <div class="command-display">
+                            <h4>WWW配置命令</h4>
+                            <div class="command-comment">// 配置Web服务器</div>
+                            <div class="command-example">Web-Server(config)# ip http server</div>
+                            <div class="command-example">Web-Server(config)# ip http port 80</div>
+                        </div>
+                        <div class="highlight">
+                        <p><strong>实践要求：</strong>结合讲解视频，完成左侧网络的三个www服务器配置，并对各服务器首页内容进行更改，总部改为：welcome to jike's webset! 分部1改为：welcome to jike fenbu1's  webset! 分部2改为：welcome to jike fenbu2's  webset!</p>
+                        <p><strong>验证方法：</strong>浏览器输入http://服务器IP（如http://192.168.1.100）或者域名，能打开网页则成功。</p>
+                        </div>
+                    </div>
+
+                    <!-- Email服务说明 -->
+                    <div class="app-content" id="app-email">
+                        <h3>Email服务配置</h3>
+                        <a href="https://www.bilibili.com/video/BV1c4411d7jb?spm_id_from=333.788.videopod.episodes&vd_source=67a412c416b4717fee360508599d6de5&p=72" target="_blank" class="info-link">电子邮件详细介绍</a>
+
+
+                        <div class="concept-box">
+                            <div class="concept-title">📚 核心知识点</div>
+                            <ul>
+                                <li>作用：搭建公司内部邮箱系统，员工间发送邮件</li>
+                                <li>关键参数：域名（如geektech.com）、邮件服务器IP</li>
+                            </ul>
+                        </div>
+                        <div class="command-display">
+                            <h4>Email配置命令</h4>
+                            <div class="command-comment">// 基本邮件服务器配置</div>
+                            <div class="command-example">Mail-Server(config)# ip domain-name geektech.com</div>
+                            <div class="command-example">Mail-Server(config)# mail-server 192.168.1.101</div>
+                        </div>
+                        <div class="highlight">
+                        <p><strong>实践要求：</strong>结合讲解视频，完成左侧网络的EMAIL服务器配置，将服务器域名设置为jike.com,添加zhangsan@jike.com和lisi@jike.com两个账号,密码为学号后三位。选择两台电脑设置email client，进行账号和服务器设置</p>
+                        <p><strong>验证方法：</strong>用邮件客户端配置账号，能发送/接收内部邮件则成功。</p>
+                        </div>
+                    </div>            
+
+                </div>
+
+                <!-- 阶段6：网络安全 说明（新增） -->
+                <div class="exp-stage" id="exp-stage6">
+                    <h2> 网络安全</h2>
+                    <!-- 网络安全子项目切换按钮（右侧） -->
+                    <div style="margin-bottom: 15px; border-bottom: 1px solid #eaeef2; padding-bottom: 10px;">
+                        <button class="substage-btn active" data-substage="6.1">防火墙ACL</button>
+                        <button class="substage-btn" data-substage="6.2">VPN虚拟专用网络</button>
+                    </div>
+                    <!-- 6.1 ACL 说明 -->
+                    <div class="exp-substage active" id="exp-substage6.1">
+                        <h2> 防火墙ACL</h2>
+                        <a href="https://haokan.baidu.com/v?pd=wisenatural&vid=8055023036420748851" target="_blank" class="info-link">什么是ACL？</a>
+                        <div class="concept-box">
+                            <div class="concept-title">📚 核心知识点</div>
+                            <ul>
+                                <li>ACL分类：标准ACL（控制源IP）、扩展ACL（控制源IP+目标IP+端口）</li>
+                                <li>应用方向：inbound（入站，数据进入接口时检测）、outbound（出站，数据离开接口时检测）</li>
+                                <li>匹配顺序：ACL规则自上而下执行，一旦匹配立即生效，后续规则不再执行</li>
+                            </ul>
+                        </div>
+                        <div class="concept-box">
+                            <div class="concept-title">🚨 关键概念：路由器ACL（访问控制列表）</div>
+                            <p>路由器的"访问规则清单"，通过允许/拒绝特定IP、端口的数据包，控制不同网段间的访问权限，保护内部敏感资源（如财务服务器）。</p>
+                            <p><strong>核心原则：</strong>默认拒绝所有，只允许需要的访问（最小权限原则）</p>
+                            <p><strong>编号与ACL类型对应关系：</strong></p>
+                            <ul>
+                                <li>标准ACL（仅控制源IP）：编号 1-99 或 1300-1999</li>
+                                <li>扩展ACL（控制源IP+目标IP+端口）：编号 100-199 或 2000-2699</li>
+                            </ul>
+                            <p><strong>配置原则：</strong>标准ACL尽量靠近目标设备，扩展ACL尽量靠近源设备（减少无效数据传输）。</p>
+                        </div>
+                        
+                        <h3>实验设计</h3>
+                        <p>拓扑核心信息：路由器连接4个网段，财务服务器（192.168.30.10）需限制访问，禁止市场部访问。</p>
+                        <p>1. 方案1：禁止市场部（192.168.20.0/24）访问财务网段（192.168.30.0/24）→ 用标准ACL（仅控制源IP）。</p>
+                        <p>2. 方案2：禁止市场部（192.168.10.0/24）访问财务服务器 → 用扩展ACL（控制源IP+目标IP+端口）。</p>
+                        <h3>实验要求</h3>
+                        <p>下载拓扑，分别针对需求1和需求2进行ACL的配置。</p>
+                        <p>验证方法：</p>
+                        <ul>
+                            <li>用研发部电脑（192.168.10.5）ping财务服务器（192.168.30.10），应能通；访问http://192.168.30.10，应能打开。</li>
+                            <li>用市场部电脑（192.168.20.8）ping财务服务器，应不通；访问http://192.168.30.10，应拒绝。</li>
+                            <li>在路由器执行`show access-lists`，查看规则命中次数。</li>
+                        </ul>
+                        
+                        <div class="highlight">
+                            <p><strong>注意事项：</strong></p>
+                            <ul>
+                                <li>ACL编号决定类型：1-99/1300-1999是标准ACL（仅源IP），100-199/2000-2699是扩展ACL（源IP+目标IP+端口），不可混淆。</li>
+                                <li>规则顺序：自上而下执行，一旦匹配立即生效，需先配置“允许”规则，再配置“拒绝”规则（默认隐含“拒绝所有”）。</li>
+                                <li>接口方向：inbound是“数据进入接口时验证”，outbound是“数据离开接口时验证”，需根据ACL类型选择（标准ACL靠近目标，扩展ACL靠近源）。</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <!-- 5.2 VPN 说明 -->
+                    <div class="exp-substage" id="exp-substage6.2">
+                        <h2>VPN虚拟专用网络</h2>
+                        <div class="concept-box">
+                            <div class="concept-title">📚 核心知识点</div>
+                            <ul>
+                                <li>VPN核心价值：公网环境下的加密通信，保障远程访问安全</li>
+                                <li>IPsec VPN两个阶段：ISAKMP协商（建立安全通道）、IPsec加密（传输数据）</li>
+                                <li>预共享密钥：远程客户端和服务器必须使用相同密钥，简单易配置（适合小型企业）</li>
+                            </ul>
+                        </div>
+                        
+                        <h3>实验设计（极客公司场景）</h3>
+                        <p>1. 场景：员工在家用电脑（公网IP：123.123.123.123）远程访问公司内部服务器（192.168.1.100）</p>
+                        <p>2. 配置步骤：</p>
+                        <ul>
+                            <li>公司出口路由器IPsec VPN策略（预共享密钥、加密算法等）</li>
+                            <li>员工电脑（Windows）创建VPN连接，输入公司出口路由器IP和预共享密钥</li>
+                            <li>连接VPN后，验证是否能访问内部服务器（ping 192.168.1.100 或访问内网网站）</li>
+                        </ul>
+                        
+
+                    </div>
+                </div>
+
+                <!-- 阶段8：综合实践 说明（新增，含2个项目） -->
+                <!-- 阶段8：综合实践 说明（修改后） -->
+                <div class="exp-stage" id="exp-stage8">
+                    <!-- 子项目切换按钮（修改为基础实践/进阶实践） -->
+                    <div style="margin-bottom: 15px; border-bottom: 1px solid #eaeef2; padding-bottom: 10px;">
+                        <button class="substage-btn active" data-substage="8.1">基础实践</button>
+                        <button class="substage-btn" data-substage="8.2">进阶实践（酒店场景）</button>
+                    </div>
+                    <!-- 8.1 基础实践（整合原2个项目） -->
+                    <div class="exp-substage active" id="exp-substage8.1">
+                        <h2>综合实践 - 基础实践</h2>
+                        <div class="highlight">
+                            <p><strong>实践目标：</strong>整合前期所有基础技术，完成从VLAN划分、路由配置到应用部署、安全增强的全流程实践</p>
+                        </div>
+                        
+                        <h3>项目1：基础网络全流程实践</h3>
+                        <div class="concept-box">
+                            <div class="concept-title">📋 实践要求</div>
+                            <ul>
+                                <li>1. 创建VLAN10（研发部）、VLAN20（市场部），配置交换机Access接口和Trunk链路</li>
+                                <li>2. 配置单臂路由，实现VLAN10与VLAN20跨网通信</li>
+                                <li>3. 部署OSPF动态路由，实现总部（192.168.1.0）与分部（192.168.2.0）互通</li>
+                                <li>4. 搭建Web/FTP服务器，确保内网设备可正常访问</li>
+                                <li>5. 验证：跨VLAN、跨网段ping通，应用服务可访问</li>
+                            </ul>
+                        </div>
+                        
+                        <h3>项目2：安全增强型网络实践</h3>
+                        <div class="concept-box">
+                            <div class="concept-title">📋 实践要求</div>
+                            <ul>
+                                <li>1. 基于项目1的基础网络，配置ACL规则：禁止市场部访问研发部Web服务器</li>
+                                <li>2. 配置IPsec VPN，实现远程设备接入内网访问FTP服务器</li>
+                                <li>3. 验证：ACL拦截生效，VPN连接后可正常访问内网资源</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="concept-box">
+                            <div class="concept-title">📚 参考前期阶段</div>
+                            <ul>
+                                <li>VLAN配置：阶段2 | 单臂路由：阶段3.1 | OSPF路由：阶段3.3</li>
+                                <li>Web/FTP部署：阶段5 | ACL/VPN：阶段6</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <!-- 8.2 进阶实践（酒店场景网络设计） -->
+                    <div class="exp-substage" id="exp-substage8.2">
+                        <h2>综合实践 - 进阶实践（酒店场景）</h2>
+                        
+                        
+                        <h3>二、学生设计要求</h3>
+                        <div class="highlight">
+                            <ul>
+                                <li>1. 提交完整的网络拓扑图（需标注设备、接口、网段、VLAN）</li>
+                                <li>2. 编写详细配置命令（交换机+路由器+服务器）</li>
+                                <li>3. 设计3条核心ACL规则（禁止客房访问办公/服务器、允许办公访问服务器、允许VPN访问办公）</li>
+                                <li>4. 提交测试报告（含ping结果、应用访问截图、ACL/VPN验证结果）</li>
+                            </ul>
+                        </div>
+                        
+                        <h3>三、设计思路提示</h3>
+                        <div class="concept-box">
+                            <ul>
+                                <li>💡 网段规划：避免与公网IP冲突，建议使用192.168.0.0/16私有网段，每个区域子网掩码255.255.255.0</li>
+                                <li>💡 VLAN配置：交换机之间需配置Trunk链路，允许所有VLAN通过；接入端口配置为Access模式并划分到对应VLAN</li>
+                                <li>💡 PPP配置：参考阶段4，核心路由器Serial接口配置encapsulation ppp和CHAP认证，对接运营商侧IP（20.0.0.2）</li>
+                                <li>💡 ACL配置：扩展ACL（编号100-199）部署在路由器连接客房的子接口（入站方向），精准控制源IP+目标IP</li>
+                                <li>💡 VPN配置：参考阶段6，核心路由器配置ISAKMP策略和预共享密钥，远程设备连接时输入路由器公网IP（20.0.0.1）</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 阶段7：数据流分析 说明（新增） -->
+                <div class="exp-stage" id="exp-stage7">
+                    <h2>数据流分析与故障排查</h2>
+                    <p>极客公司网络建成后，出现各类通信问题：研发部能ping通财务服务器（192.168.30.10），但无法访问其Web服务；上海分部部分电脑跨网段通信中断。这些问题需通过分析数据流的封装、转发过程，定位是协议配置错误、路由缺失还是ACL拦截导致。</p>
+                    
+                    <div class="highlight">
+                        <p><strong>问题导入：</strong> "网络通信故障时，如何通过分析数据流的封装格式和转发路径，精准找到故障位置？"</p>
+                        <p><strong>答案：</strong> "拆解协议栈封装过程，追踪数据流在交换机、路由器中的转发逻辑，对比正常/异常数据流差异。"</p>
+                    </div>
+                    
+                    <div class="concept-box">
+                        <div class="concept-title">📚 关键概念：协议栈数据流封装</div>
+                        <p>数据从应用层到物理层的封装流程（自上而下）：</p>
+                        <ol>
+                            <li>应用层：HTTP/FTP等协议数据（如网页请求内容）；</li>
+                            <li>传输层：添加TCP/UDP头部（含源端口、目标端口，如HTTP默认80端口）；</li>
+                            <li>网络层：添加IP头部（含源IP、目标IP，如192.168.10.5→192.168.30.10）；</li>
+                            <li>数据链路层：添加以太网帧头部（含源MAC、目标MAC）和尾部校验码。</li>
+                        </ol>
+                        <img src="./fig/protocol-stack.png" alt="协议栈封装示意图" style="max-width: 100%; margin-top: 10px;">
+                    </div>
+                    
+                    <div class="concept-box">
+                        <div class="concept-title">🚀 关键概念：数据流转发流程</div>
+                        <p>以“研发部PC（192.168.10.5）访问财务Web服务器（192.168.30.10）”为例：</p>
+                        <ol>
+                            <li>PC封装数据帧（目标MAC为网关路由器子接口MAC），发送到交换机；</li>
+                            <li>交换机查询MAC表，将数据转发到连接路由器的Trunk接口；</li>
+                            <li>路由器接收数据，剥离以太网帧头，查询路由表，转发到财务网段接口；</li>
+                            <li>路由器重新封装以太网帧（目标MAC为财务服务器MAC），发送到财务网段交换机；</li>
+                            <li>交换机转发数据到财务服务器，服务器处理后按原路径返回响应。</li>
+                        </ol>
+                    </div>
+
+                    <!-- 新增：Wireshark在数据流分析中的作用与原理 -->
+                    <div class="concept-box">
+                        <div class="concept-title">🔧 核心工具：Wireshark数据流分析</div>
+                        <h4>一、Wireshark的重要作用（教学场景适配）</h4>
+                        <ol>
+                            <li><strong>可视化抓包分析</strong>：将底层二进制数据转换为可读的协议栈格式，直观查看HTTP/TCP/IP/以太网帧的封装内容，替代命令行的抽象输出；</li>
+                            <li><strong>故障定位核心工具</strong>：通过过滤规则快速定位异常流量（如HTTP请求发出但无响应、TCP三次握手失败），解决“能ping通但无法访问网页”等典型问题；</li>
+                            <li><strong>协议栈验证工具</strong>：验证数据从应用层到数据链路层的封装是否正确（如TCP端口是否为80、IP地址是否正确、MAC地址是否匹配网关）；</li>
+                            <li><strong>流量监控与对比</strong>：对比正常/异常场景的数据包差异，明确故障根因（如ACL拦截导致数据包丢失、路由错误导致数据包转发异常）。</li>
+                        </ol>
+
+                        <h4>二、Wireshark基本工作原理</h4>
+                        <ol>
+                            <li><strong>混杂模式捕获</strong>：Wireshark将网卡设置为“混杂模式”，可捕获经过网卡的所有数据包（而非仅目标为本机的数据包），这是抓包的基础；</li>
+                            <li><strong>数据包解析流程</strong>：
+                                <ul>
+                                    <li>第一步：捕获原始二进制数据包（物理层/数据链路层帧）；</li>
+                                    <li>第二步：按协议栈自上而下解析（先解以太网帧→IP包→TCP段→HTTP数据）；</li>
+                                    <li>第三步：将解析后的内容按列展示（如源IP、目标IP、协议类型、数据长度、内容摘要）；</li>
+                                </ul>
+                            </li>
+                            <li><strong>过滤与检索机制</strong>：通过语法规则（如协议名、IP地址、端口号）过滤数据包，仅显示目标流量，提升分析效率；</li>
+                            <li><strong>数据存储与复盘</strong>：支持将捕获的数据包保存为.pcap格式，可离线分析、复盘故障场景，适配教学实验的反复验证。</li>
+                        </ol>
+
+                        <div class="highlight" style="margin-top: 10px;">
+                            <p><strong>教学提示</strong>：在本次实验中，需用Wireshark捕获研发部PC的HTTP请求流量，验证是否存在“请求发出但无响应”，并结合路由器ACL规则定位故障。</p>
+                        </div>
+                    </div>
+                    
+                    <h3>案例分析：研发部访问财务Web服务器失败</h3>
+                    <div class="concept-box">
+                        <div class="concept-title">🔍 故障现象</div>
+                        <p>研发部PC（192.168.10.5）ping 192.168.30.10（财务服务器）能通，但浏览器输入http://192.168.30.10无法打开网页。</p>
+                        
+                        <div class="concept-title">🔍 数据流分析过程</div>
+                        <ol>
+                            <li>ping测试：ICMP协议（网络层）能通，说明IP路由、二层转发正常；</li>
+                            <li>抓包分析：在PC上抓包，发现HTTP请求（目标端口80）已发出，但无响应；</li>
+                            <li>路由器检查：执行`show access-lists`，发现ACL规则禁止源端口80的流量；</li>
+                            <li>故障定位：ACL规则配置错误，误拦截了HTTP服务端口。</li>
+                        </ol>
+                        
+                        <div class="concept-title">🔍 解决方案</div>
+                        <div class="command-example">Router(config)# no access-list 100 deny tcp any host 192.168.30.10 eq 80</div>
+                        <div class="command-example">Router(config)# access-list 100 permit tcp any host 192.168.30.10 eq 80</div>
+                    </div>
+                    
+                    <div class="highlight">
+                        <p><strong>实践要求：</strong>下载左侧拓扑，模拟“跨网段访问Web服务失败”故障，通过抓包、查看路由表/MAC表、ACL规则，完成故障定位与修复。</p>
+                        <p><strong>验证方法：</strong>修复后，PC能正常打开Web页面，抓包可见完整的HTTP请求-响应数据流。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="nav-buttons">
+            <button class="btn-prev" id="btnPrev">上一阶段</button>
+            <button class="btn-next" id="btnNext">下一阶段</button>
+        </div>
+    </div>
+
+    <script>
+        // 阶段导航功能
+        document.addEventListener('DOMContentLoaded', function() {
+            const timelineItems = document.querySelectorAll('.timeline-item');
+            const stages = document.querySelectorAll('.network-stage');
+            const explanations = document.querySelectorAll('.stage-explanation');
+            const btnPrev = document.getElementById('btnPrev');
+            const btnNext = document.getElementById('btnNext');
+            const timelineProgress = document.getElementById('timelineProgress');
+            let currentStage = 1;
+            const totalStages = timelineItems.length;
+            
+            // 更新进度条
+            function updateProgress() {
+                const progressWidth = ((currentStage - 1) / (totalStages - 1)) * (document.querySelector('.timeline').offsetWidth - 60);
+                timelineProgress.style.width = `${progressWidth}px`;
+            }
+            
+            // 切换到指定阶段
+            function goToStage(stage) {
+                // 隐藏首页（防止干扰）
+                const homepage = document.getElementById('homepage');
+                if (homepage) {
+                    homepage.style.display = 'none';
+                }
+
+                // 验证阶段编号有效性
+                const stageNumbers = Array.from(timelineItems).map(item => parseFloat(item.dataset.stage));
+                if (!stageNumbers.includes(stage)) return;
+
+                // 更新当前阶段
+                currentStage = stage;
+
+                // 1. 更新时间线激活状态
+                timelineItems.forEach((item) => {
+                    const itemStage = parseFloat(item.dataset.stage);
+                    item.classList.toggle('active', itemStage === currentStage);
+                });
+
+                // 2. 更新网络拓扑显示
+                stages.forEach((stageEl) => {
+                    const stageId = parseFloat(stageEl.id.replace('stage', ''));
+                    stageEl.classList.toggle('active', stageId === currentStage);
+                });
+
+                // 3. 更新说明区域显示（关键修复：同步说明文本）
+                document.querySelectorAll('.exp-stage').forEach((exp) => {
+                    const expId = parseFloat(exp.id.replace('exp-stage', ''));
+                    exp.classList.toggle('active', expId === currentStage);
+                });
+
+                // 4. 适配含子阶段的页面（默认激活第一个子阶段）
+                if (currentStage === 3) { // 网络互联阶段
+                    // 激活第一个子阶段（单臂路由）
+                    document.querySelectorAll('.substage-btn').forEach(btn => btn.classList.remove('active'));
+                    document.querySelector('.substage-btn[data-substage="3.1"]').classList.add('active');
+                    // 显示子阶段内容和说明
+                    document.querySelectorAll('.substage').forEach(s => s.classList.remove('active'));
+                    document.getElementById('substage3.1').classList.add('active');
+                    document.querySelectorAll('.exp-substage').forEach(es => es.classList.remove('active'));
+                    document.getElementById('exp-substage3.1').classList.add('active');
+                } else if (currentStage === 6) { // 网络安全阶段
+                    // 激活第一个子阶段（ACL）
+                    document.querySelectorAll('.substage-btn[data-substage^="6."]').forEach(btn => btn.classList.remove('active'));
+                    document.querySelector('.substage-btn[data-substage="6.1"]').classList.add('active');
+                    document.querySelectorAll('.substage[id^="substage6."]').forEach(s => s.classList.remove('active'));
+                    document.getElementById('substage6.1').classList.add('active');
+                    document.querySelectorAll('.exp-substage[id^="exp-substage6."]').forEach(es => es.classList.remove('active'));
+                    document.getElementById('exp-substage6.1').classList.add('active');
+                } else if (currentStage === 8) { // 综合实践阶段
+                    // 激活第一个项目（基础网络实践）
+                    document.querySelectorAll('.substage-btn[data-substage^="6."]').forEach(btn => btn.classList.remove('active'));
+                    document.querySelector('.substage-btn[data-substage="6.1"]').classList.add('active');
+                    document.querySelectorAll('.substage[id^="substage6."]').forEach(s => s.classList.remove('active'));
+                    document.getElementById('substage6.1').classList.add('active');
+                    document.querySelectorAll('.exp-substage[id^="exp-substage6."]').forEach(es => es.classList.remove('active'));
+                    document.getElementById('exp-substage6.1').classList.add('active');
+                }
+                else if (currentStage === 7) { // 数据流分析阶段
+                    // 激活数据流分析阶段内容和说明
+                    document.querySelectorAll('.substage').forEach(s => s.classList.remove('active'));
+                    document.querySelectorAll('.exp-substage').forEach(es => es.classList.remove('active'));
+                }
+
+                // 新增：切换阶段后同步按钮文本
+                if (currentStage === 8) {
+                    btnNext.textContent = '实践之旅结束';
+                } else {
+                    btnNext.textContent = '下一阶段';
+                }
+
+                // 5. 更新进度条
+                updateProgress();
+            }
+            // 时间线点击事件
+            timelineItems.forEach((item) => {
+                item.addEventListener('click', () => {
+                    goToStage(parseFloat(item.dataset.stage));
+                });
+            });
+            
+            // 导航按钮事件
+            // 上一阶段按钮事件
+
+            btnPrev.addEventListener('click', () => {
+                const stageNumbers = Array.from(timelineItems).map(item => parseFloat(item.dataset.stage)).sort((a, b) => a - b);
+                const currentIndex = stageNumbers.indexOf(currentStage);
+                
+                if (currentIndex > 0) {
+                    const prevStage = stageNumbers[currentIndex - 1];
+                    goToStage(prevStage);
+                    // 关键：从综合实践阶段返回时，恢复按钮文本
+                    if (prevStage < 8) {
+                        btnNext.textContent = '下一阶段';
+                    }
+                }
+            });
+
+            btnNext.addEventListener('click', () => {
+                const stageNumbers = Array.from(timelineItems).map(item => parseFloat(item.dataset.stage)).sort((a, b) => a - b);
+                const currentIndex = stageNumbers.indexOf(currentStage);
+                
+                // 关键：判断当前是否为综合实践阶段（stage8）
+                if (currentStage === 8) {
+                    // 弹出结束提示，不跳转
+                    alert('🎉 本次实践之旅结束！恭喜你完成所有网络实践阶段的学习～');
+                    return;
+                }
+                
+                // 其他阶段正常跳转
+                if (currentIndex < stageNumbers.length - 1) {
+                    const nextStage = stageNumbers[currentIndex + 1];
+                    goToStage(nextStage);
+                    // 跳转后若到综合实践阶段，修改按钮文本
+                    if (nextStage === 8) {
+                        btnNext.textContent = '实践之旅结束';
+                    } else {
+                        btnNext.textContent = '下一阶段';
+                    }
+                }
+            });
+
+
+
+            
+            // 初始化
+            updateProgress();
+        });
+    </script>
+
+
+
+    <script>
+    // 新增：页面加载后自动激活「局域网阶段」（核心代码）
+    window.onload = function() {
+        // （原有代码保留，不修改）
+        // 1. 激活时间线的“局域网”标签
+        document.querySelector('.timeline-item[data-stage="1"]').classList.add('active');
+        // 2. 显示局域网阶段的拓扑图和配置（stage1）
+        document.getElementById('stage1').classList.add('active');
+        // 3. 显示局域网阶段的说明文本（exp-stage1）
+        document.getElementById('exp-stage1').classList.add('active');
+        // 4. 更新进度条（显示第一阶段进度）
+        const totalStages = document.querySelectorAll('.timeline-item').length - 1;
+        document.getElementById('timelineProgress').style.width = `${(1 / totalStages) * 100}%`;
+
+        // 新增：初始化网络安全阶段左侧内容（默认显示ACL，隐藏VPN）
+        if (document.getElementById('stage6')) { // 确保网络安全阶段存在
+            document.querySelectorAll('.substage[id^="substage6."]').forEach(s => {
+                s.classList.remove('active');
+            });
+            document.getElementById('substage6.1').classList.add('active'); // 默认激活ACL左侧内容
+        }
+    };
+
+    // 主阶段切换（点击顶部4个主阶段按钮）
+    document.querySelectorAll('.timeline-item').forEach(item => {
+        item.addEventListener('click', function() {
+            // 1. 切换主阶段激活状态（原代码保留）
+            document.querySelectorAll('.timeline-item').forEach(i => i.classList.remove('active'));
+            this.classList.add('active');
+            
+            // 2. 切换内容区域主阶段（原代码保留）
+            const stage = this.getAttribute('data-stage');
+            document.querySelectorAll('.network-stage').forEach(s => s.classList.remove('active'));
+            document.getElementById(`stage${stage}`).classList.add('active');
+            
+            // 3. 同步切换说明区域主阶段（新增核心代码）
+            document.querySelectorAll('.exp-stage').forEach(e => e.classList.remove('active'));
+            document.getElementById(`exp-stage${stage}`).classList.add('active');
+
+            // 4. 若切换到「网络互联」阶段，默认激活第一个子阶段说明（新增）
+            if (stage === '3') {
+                document.querySelectorAll('.exp-substage').forEach(es => es.classList.remove('active'));
+                document.getElementById('exp-substage3.1').classList.add('active');
+                // 同时激活动态路由的IGP说明（防止子说明空白）
+                document.querySelectorAll('.exp-dynamic').forEach(ed => ed.classList.remove('active'));
+                document.getElementById('exp-igp').classList.add('active');
+            }
+            
+            // 5. 更新进度条（原代码保留）
+            const index = Array.from(document.querySelectorAll('.timeline-item')).indexOf(this);
+            const total = document.querySelectorAll('.timeline-item').length - 1;
+            document.getElementById('timelineProgress').style.width = `${(index / total) * 100}%`;
+        });
+    });
+
+    // 网络互联子阶段切换（单臂路由/静态路由/动态路由）
+    document.querySelectorAll('.substage-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            // 1. 切换内容区域子阶段（原代码保留）
+            document.querySelectorAll('.substage-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            const substage = this.getAttribute('data-substage');
+            document.querySelectorAll('.substage').forEach(s => s.classList.remove('active'));
+            document.getElementById(`substage${substage}`).classList.add('active');
+            
+            // 2. 同步切换说明区域子阶段（新增核心代码）
+            document.querySelectorAll('.exp-substage').forEach(es => es.classList.remove('active'));
+            document.getElementById(`exp-substage${substage}`).classList.add('active');
+
+            // 3. 若切换到「动态路由」子阶段，默认激活IGP说明（新增）
+            if (substage === '3.3') {
+                document.querySelectorAll('.exp-dynamic').forEach(ed => ed.classList.remove('active'));
+                document.getElementById('exp-igp').classList.add('active');
+            }
+        });
+    });
+
+    // 动态路由子项切换（IGP/EGP）
+    document.querySelectorAll('.dynamic-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            // 1. 切换内容区域动态路由子项（原代码保留）
+            document.querySelectorAll('.dynamic-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            const dynamic = this.getAttribute('data-dynamic');
+            document.querySelectorAll('.dynamic-content').forEach(c => c.classList.remove('active'));
+            document.getElementById(`${dynamic}-content`).classList.add('active');
+            
+            // 2. 同步切换说明区域动态路由子项（新增核心代码）
+            document.querySelectorAll('.exp-dynamic').forEach(ed => ed.classList.remove('active'));
+            document.getElementById(`exp-${dynamic}`).classList.add('active');
+        });
+    });
+
+    // 网络安全子阶段切换（ACL/VPN）- 修复左侧内容重叠问题
+    document.querySelectorAll('.substage-btn[data-substage^="6."]').forEach(btn => {
+        btn.addEventListener('click', function() {
+            // 1. 切换右侧按钮激活状态（变蓝/变灰）
+            document.querySelectorAll('.substage-btn[data-substage^="6."]').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            
+            // 2. 获取当前点击的子阶段编号（6.1=ACL，6.2=VPN）
+            const substage = this.getAttribute('data-substage');
+            
+            // 3. 关键修复：切换左侧子阶段内容（隐藏ACL，显示VPN；或反之）
+            document.querySelectorAll('.substage[id^="substage6."]').forEach(s => {
+                s.classList.remove('active'); // 先隐藏所有网络安全子阶段左侧内容
+            });
+            document.getElementById(`substage${substage}`).classList.add('active'); // 显示当前子阶段左侧内容
+            
+            // 4. 切换右侧说明内容（原有逻辑保留）
+            document.querySelectorAll('.exp-substage[id^="exp-substage6."]').forEach(es => {
+                es.classList.remove('active');
+            });
+            document.getElementById(`exp-substage${substage}`).classList.add('active');
+        });
+    });
+
+    // 综合实践项目切换（仅切换右侧说明，左侧固定不改变）
+    // 综合实践子项目切换（基础实践/进阶实践）
+    document.querySelectorAll('.substage-btn[data-substage^="8."]').forEach(btn => {
+        btn.addEventListener('click', function() {
+            // 1. 切换按钮激活状态（变蓝/变灰）
+            document.querySelectorAll('.substage-btn[data-substage^="8."]').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            
+            // 2. 切换右侧说明内容
+            const substage = this.getAttribute('data-substage');
+            document.querySelectorAll('.exp-substage[id^="exp-substage8."]').forEach(es => es.classList.remove('active'));
+            document.getElementById(`exp-substage${substage}`).classList.add('active');
+            
+            // 3. 切换左侧内容（基础实践：拓扑+链接 / 进阶实践：文字内容）
+            if (substage === '8.1') { // 点击「基础实践」显示
+                document.getElementById('topology8-base').style.display = 'flex';
+                document.getElementById('resource8-base').style.display = 'block';
+                document.getElementById('content8-advanced').style.display = 'none';
+            } else if (substage === '8.2') { // 点击「进阶实践」显示
+                document.getElementById('topology8-base').style.display = 'none';
+                document.getElementById('resource8-base').style.display = 'none';
+                document.getElementById('content8-advanced').style.display = 'block';
+            }
+        });
+    });
+
+    // 初始化：打开综合实践时，默认显示基础实践内容
+    document.addEventListener('DOMContentLoaded', function() {
+        if (document.getElementById('stage8')) {
+            document.getElementById('topology8-base').style.display = 'flex';
+            document.getElementById('resource8-base').style.display = 'block';
+            document.getElementById('content8-advanced').style.display = 'none';
+        }
+    });
+    // 主阶段切换适配（点击时间线“综合实践”时，默认显示项目1）
+    document.querySelectorAll('.timeline-item[data-stage="8"]').forEach(item => {
+        item.addEventListener('click', function() {
+            // 1. 激活时间线按钮（综合实践变蓝）
+            document.querySelectorAll('.timeline-item').forEach(i => i.classList.remove('active'));
+            this.classList.add('active');
+            
+            // 2. 显示综合实践阶段主内容（核心修复：改为stage8，对应左侧固定拓扑）
+            document.querySelectorAll('.network-stage').forEach(s => s.classList.remove('active'));
+            document.getElementById('stage8').classList.add('active');
+            
+            // 3. 显示右侧项目1说明（默认）
+            document.querySelectorAll('.exp-stage').forEach(e => e.classList.remove('active'));
+            document.getElementById('exp-stage8').classList.add('active');
+            document.querySelectorAll('.exp-substage[id^="exp-substage8."]').forEach(es => es.classList.remove('active'));
+            document.getElementById('exp-substage8.1').classList.add('active');
+            
+            // 4. 更新进度条
+            const index = Array.from(document.querySelectorAll('.timeline-item')).indexOf(this);
+            const total = document.querySelectorAll('.timeline-item').length - 1;
+            document.getElementById('timelineProgress').style.width = `${(index / total) * 100}%`;
+        });
+    });
+    </script>
+   <!-- 应用配置子项目切换功能 -->
+    <script>
+        // 找到所有应用切换按钮和对应内容
+        const appBtns = document.querySelectorAll('.substage-btn[data-app]');
+        const appContents = document.querySelectorAll('.app-content');
+
+        // 给每个按钮绑定点击事件
+        appBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                // 切换按钮激活状态
+                appBtns.forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                
+                // 切换对应内容显示
+                const appName = this.getAttribute('data-app');
+                appContents.forEach(content => {
+                    content.classList.remove('active');
+                });
+                document.getElementById(`app-${appName}`).classList.add('active');
+            });
+        });
+    </script>    
+
+</body></html>

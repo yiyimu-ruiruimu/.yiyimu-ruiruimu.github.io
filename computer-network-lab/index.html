@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>计算机网络智能实践教学平台 - 首页</title>
+    <style>
+        /* 页面基础样式，与原平台保持一致 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", Arial, sans-serif;
+        }
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        .container {
+            width: 1200px;
+            margin: 0 auto;
+            padding: 50px 20px;
+        }
+        /* 首页内容样式 */
+        .homepage {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+            padding: 60px 80px;
+            text-align: left;
+        }
+        /* 修改1：标题改为“计算机网络智能实践教学平台”+ 居中 */
+        .homepage h2 {
+            color: #2d3748;
+            font-size: 28px;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #4299e1;
+            padding-bottom: 10px;
+            text-align: center; /* 新增：标题居中 */
+        }
+        .homepage h3 {
+            color: #4a5568;
+            font-size: 22px;
+            margin: 30px 0 15px;
+        }
+        .homepage p {
+            font-size: 16px;
+            margin-bottom: 15px;
+            color: #4a5568;
+        }
+        .homepage ul {
+            list-style: disc;
+            margin: 15px 0 15px 30px;
+            font-size: 16px;
+            color: #4a5568;
+        }
+        .homepage li {
+            margin-bottom: 8px;
+        }
+        /* 按钮样式，与原平台保持一致 */
+        .start-practice-btn {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 14px 36px;
+            background-color: #4299e1;
+            color: #fff;
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            text-decoration: none; /* 清除链接下划线 */
+        }
+        .start-practice-btn:hover {
+            background-color: #3182ce;
+        }
+        /* 新增：按钮外层容器，实现按钮居中 */
+        .btn-container {
+            text-align: center;
+            margin-top: 40px; /* 可调整按钮与上方内容的间距 */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 首页内容（修改标题+按钮居中） -->
+        <div class="homepage">
+            <div class="homepage-content">
+                <!-- 修改1：标题替换并居中 -->
+                <h2>计算机网络智能实践教学平台</h2>
+                <div class="highlight">
+                    计算机网络智能实践教学平台是为网络技术学习者打造的沉浸式实践环境，旨在通过模拟企业网络演进历程，帮助学习者掌握局域网构建、虚拟局域网（VLAN）配置、网络互联及应用部署等核心技能。
+                </div>
+                <h3>平台内容</h3>
+                <ul>
+                    <li><strong>局域网阶段</strong>：学习基础局域网的搭建与设备连接原理</li>
+                    <li><strong>虚拟局域网阶段</strong>：掌握VLAN划分与跨交换机VLAN配置技术</li>
+                    <li><strong>网络互联阶段</strong>：深入理解单臂路由、静态路由及动态路由协议（RIP/OSPF/BGP）</li>
+                    <li><strong>PPP阶段</strong>：深入理解广域网互联核心技术PPP技术</li>
+                    <li><strong>应用配置阶段</strong>：学习网络应用服务的部署与调试</li>
+                    <li><strong>网络安全阶段</strong>：学习ACL和VPN技术的作用和工作原理</li>
+                    <li><strong>数据流分析阶段</strong>：学习Wireshark抓包与过滤技巧，解析协议栈封装流程，通过数据流转发分析定位网络故障</li>
+                    <li><strong>综合实践阶段</strong>：针对SOHO、酒店等应用情景，从网络组建、网络数据流分析两个层面进行综合训练</li>
+                </ul>
+                
+                <h3>平台目的</h3>
+                <p>通过渐进式的实践场景，将理论知识转化为实际操作能力，培养学习者分析和解决网络工程问题的能力，为从事网络设计、部署与维护工作奠定基础。</p>
+                
+                <!-- 修改2：添加按钮容器，实现按钮居中 -->
+                <div class="btn-container">
+                    <!-- 跳转链接需按之前的方法修改为你的实际文件路径 -->
+                    <a href="./html/main-page.html" class="start-practice-btn">开启实践之旅</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

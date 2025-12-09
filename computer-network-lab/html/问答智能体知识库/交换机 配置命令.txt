@@ -1,0 +1,94 @@
+
+Basic Configuration
+
+Enter Global Configuration Mode: configure terminal
+
+Set a hostname: hostname <SwitchName>
+
+Set an enable secret password: enable secret <password>
+
+Save the configuration: copy running-config startup-config
+
+Interface Configuration
+
+Enter an interface: interface <type> <number> (e.g., interface gigabitEthernet 0/1)
+
+Assign a description: description <text>
+
+Set speed: speed <10 | 100 | 1000 | auto>
+
+Set duplex: duplex <full | half | auto>
+
+Enable the interface: no shutdown
+
+VLAN Configuration
+
+Create a VLAN: vlan <VLAN_ID>
+
+Name the VLAN: name <VLAN_Name>
+
+Assign a port to a VLAN: Enter the interface: interface <type> <number> Set mode to access: switchport mode access Assign VLAN: switchport access vlan <VLAN_ID>
+
+Trunk Configuration
+
+Enter the interface: interface <type> <number>
+
+Set trunk mode: switchport mode trunk
+
+Allow VLANs on the trunk: switchport trunk allowed vlan <VLAN_IDs>
+
+Port Security
+
+Enable port security: switchport port-security
+
+Set maximum MAC addresses: switchport port-security maximum <number>
+
+Configure violation action: switchport port-security violation <shutdown | restrict | protect>
+
+Enable sticky MAC: switchport port-security mac-address sticky
+
+Spanning Tree Protocol (STP)
+
+Enable PortFast: spanning-tree portfast (use only for end devices)
+
+Set STP mode: spanning-tree mode <pvst | rapid-pvst>
+
+IP Configuration for Management
+
+Enter VLAN interface: interface vlan <VLAN_ID>
+
+Assign an IP address: ip address <IP> <Subnet_Mask>
+
+Set a default gateway: ip default-gateway <Gateway_IP>
+
+SSH Configuration
+
+Set a domain name: ip domain-name <domain>
+
+Generate RSA keys: crypto key generate rsa
+
+Enable SSH: line vty 0 4 > transport input ssh
+
+Create a user: username <name> privilege <level> secret <password>
+
+Monitoring and Troubleshooting
+
+Show running configuration: show running-config
+
+Show VLANs: show vlan brief
+
+Show interfaces: show interfaces status
+
+Show MAC address table: show mac address-table
+
+Show spanning tree: show spanning-tree
+
+Ping a device: ping <IP>
+
+Resetting the Switch
+
+Delete VLAN database: delete flash:vlan.dat
+
+Erase startup configuration: erase startup-config
+
+Reload the switch: reload

@@ -1,0 +1,1311 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>实践智能体 - 计算机网络实践自测平台</title>
+    <script src="https://cdn.tailwindcss.com/3.3.3"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7fa;
+        }
+        .card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        .option-card {
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-left: 4px solid transparent;
+        }
+        .option-card.selected {
+            border-left-color: #3b82f6;
+            background-color: #eff6ff;
+        }
+        .option-card:hover:not(.selected) {
+            background-color: #f3f4f6;
+        }
+        .question-nav {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+        }
+        .result-correct {
+            background-color: #ecfdf5;
+            border-color: #10b981;
+        }
+        .result-incorrect {
+            background-color: #fee2e2;
+            border-color: #ef4444;
+        }
+        .radar-chart-container {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+/* 学习建议样式 */
+#suggestionsContainer p {
+    margin-bottom: 1rem;
+    line-height: 1.6;
+}
+#suggestionsContainer strong {
+    color: #1e40af;
+}
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- 首页 -->
+    <div id="homePage" class="container mx-auto px-4 py-12">
+        <div class="text-center mb-12">
+            <h1 class="text-[clamp(1.8rem,5vw,3rem)] font-bold text-gray-800 mb-4">实践智能体</h1>
+            <p class="text-xl text-gray-600">计算机网络实践自测平台</p>
+        </div>
+        
+        <div class="grid md:grid-cols-3 gap-8">
+            <!-- VLAN自测 -->
+            <div class="card bg-white rounded-xl shadow-md p-6" onclick="selectTest('vlan')">
+                <div class="text-blue-600 text-4xl mb-4"><i class="fas fa-sitemap"></i></div>
+                <h2 class="text-xl font-semibold mb-2">VLAN自测</h2>
+                <p class="text-gray-600 mb-4">包含VLAN基础理论、配置命令和排错分析等15道题目</p>
+                <button class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition">开始测试</button>
+            </div>
+ 
+            <!-- 单臂路由自测 -->
+            <div class="card bg-white rounded-xl shadow-md p-6" onclick="selectTest('singleArmRoute')">
+                <div class="text-purple-600 text-4xl mb-4"><i class="fas fa-project-diagram"></i></div>
+                <h2 class="text-xl font-semibold mb-2">单臂路由自测</h2>
+                <p class="text-gray-600 mb-4">包含单臂路由协议的10道综合测试题</p>
+                <button class="w-full bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition">开始测试</button>
+            </div>
+            
+            <!-- 静态路由自测 -->
+            <div class="card bg-white rounded-xl shadow-md p-6" onclick="selectTest('staticRoute')">
+                <div class="text-green-600 text-4xl mb-4"><i class="fas fa-road"></i></div>
+                <h2 class="text-xl font-semibold mb-2">静态路由自测</h2>
+                <p class="text-gray-600 mb-4">包含静态路由原理、配置方法和故障排查等15道题目</p>
+                <button class="w-full bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition">开始测试</button>
+            </div>
+            
+            <!-- 动态路由自测 -->
+            <div class="card bg-white rounded-xl shadow-md p-6" onclick="selectTest('dynamicRoute')">
+                <div class="text-purple-600 text-4xl mb-4"><i class="fas fa-project-diagram"></i></div>
+                <h2 class="text-xl font-semibold mb-2">动态路由自测</h2>
+                <p class="text-gray-600 mb-4">包含RIP、OSPF等动态路由协议的15道综合测试题</p>
+                <button class="w-full bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition">开始测试</button>
+            </div>
+
+            <!-- ppp自测 -->
+            <div class="card bg-white rounded-xl shadow-md p-6" onclick="selectTest('ppp')">
+                <div class="text-purple-600 text-4xl mb-4"><i class="fas fa-project-diagram"></i></div>
+                <h2 class="text-xl font-semibold mb-2">ppp自测</h2>
+                <p class="text-gray-600 mb-4">包含ppp协议的10道综合测试题</p>
+                <button class="w-full bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition">开始测试</button>
+            </div>
+
+            <!-- 应用配置自测 -->
+            <div class="card bg-white rounded-xl shadow-md p-6" onclick="selectTest('appConfig')">
+                <div class="text-purple-600 text-4xl mb-4"><i class="fas fa-project-diagram"></i></div>
+                <h2 class="text-xl font-semibold mb-2">应用配置自测</h2>
+                <p class="text-gray-600 mb-4">包含DHCP、DNS等典型应用协议的20道综合测试题</p>
+                <button class="w-full bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition">开始测试</button>
+            </div>
+
+            <!-- ACL自测 -->
+            <div class="card bg-white rounded-xl shadow-md p-6" onclick="selectTest('ACL')">
+                <div class="text-purple-600 text-4xl mb-4"><i class="fas fa-project-diagram"></i></div>
+                <h2 class="text-xl font-semibold mb-2">ACL自测</h2>
+                <p class="text-gray-600 mb-4">包含ACL的10道综合测试题</p>
+                <button class="w-full bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition">开始测试</button>
+            </div>
+
+            <!-- 数据流分析自测 -->
+            <div class="card bg-white rounded-xl shadow-md p-6" onclick="selectTest('dataFlow')">
+            <!-- 正确代码 -->
+                <div class="text-blue-600 text-4xl mb-4"><i class="fas fa-stream"></i></div>   
+                <h2 class="text-xl font-semibold mb-2">数据流分析自测</h2>
+                <p class="text-gray-600 mb-4">包含协议封装、转发流程、故障排查等10道综合测试题</p>
+                <button class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition">开始测试</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 测试页面 -->
+    <div id="testPage" class="hidden container mx-auto px-4 py-8">
+        <div class="flex justify-between items-center mb-8">
+            <button onclick="goHome()" class="text-gray-600 hover:text-gray-800"><i class="fas fa-arrow-left mr-1"></i> 返回首页</button>
+            <div id="testProgress" class="text-gray-600">第 <span id="currentQuestionNum">1</span> 题 / 共 <span id="totalQuestions">15</span> 题</div>
+        </div>
+        
+        <div class="bg-white rounded-xl shadow-md p-6 md:p-8 mb-8">
+            <div class="mb-2 text-sm text-gray-500" id="questionType">理论考核题</div>
+            <h2 class="text-2xl font-semibold mb-6" id="questionText">题目内容将在这里显示</h2>
+            
+            <div id="optionsContainer" class="space-y-3 mb-8">
+                <!-- 选项将通过JS动态生成 -->
+            </div>
+            
+            <div id="answerFeedback" class="hidden p-4 rounded-lg border-l-4 mb-6">
+                <div class="font-medium mb-2" id="feedbackTitle">正确答案：C</div>
+                <div id="feedbackContent">Port VLAN通过交换机端口划分VLAN，一个端口仅能归属一个VLAN；A是Trunk端口特性，B、D是Tag VLAN的特点，故选C。</div>
+            </div>
+        </div>
+        
+        <div class="question-nav flex justify-between w-full max-w-2xl">
+            <button id="prevBtn" class="bg-gray-200 text-gray-700 py-2 px-6 rounded-lg hover:bg-gray-300 transition" onclick="prevQuestion()">上一题</button>
+            <button id="submitBtn" class="bg-green-600 text-white py-2 px-6 rounded-lg hover:bg-green-700 transition" onclick="submitAnswer()">提交答案</button>
+            <button id="nextBtn" class="bg-blue-600 text-white py-2 px-6 rounded-lg hover:bg-blue-700 transition" onclick="nextQuestion()">下一题</button>
+        </div>
+    </div>
+    
+    <!-- 成绩统计页面 -->
+    <div id="resultPage" class="hidden container mx-auto px-4 py-12">
+        <div class="text-center mb-10">
+            <h1 class="text-3xl font-bold text-gray-800 mb-2">测试结果</h1>
+            <p class="text-gray-600" id="resultTestName">VLAN自测</p>
+        </div>
+        
+        <div class="bg-white rounded-xl shadow-md p-6 md:p-8 mb-10">
+            <div class="flex flex-col md:flex-row justify-between items-center mb-8">
+                <div>
+                    <p class="text-gray-600 mb-1">您的得分</p>
+                    <p class="text-5xl font-bold text-blue-600" id="scoreDisplay">12/15</p>
+                </div>
+                <div class="mt-4 md:mt-0">
+                    <p class="text-gray-600 mb-1">正确率</p>
+                    <p class="text-5xl font-bold text-green-600" id="accuracyDisplay">80%</p>
+                </div>
+            </div>
+            
+            <div class="mb-10">
+                <h3 class="text-xl font-semibold mb-4">题型正确率</h3>
+                <div class="space-y-4">
+                    <div>
+                        <div class="flex justify-between mb-1">
+                            <span class="font-medium">理论考核题</span>
+                            <span id="theoryAccuracy">83% (5/6)</span>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between mb-1">
+                            <span class="font-medium">配置命令考查题</span>
+                            <span id="configAccuracy">75% (3/4)</span>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between mb-1">
+                            <span class="font-medium">配置错误与修正题</span>
+                            <span id="troubleshootAccuracy">80% (4/5)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div>
+                <h3 class="text-xl font-semibold mb-6">能力分析</h3>
+                <div class="radar-chart-container">
+                    <canvas id="abilityRadarChart"></canvas>
+                    <!-- 学习建议区域 -->
+                    <div class="mt-10">
+                        <h3 class="text-xl font-semibold mb-4">学习建议
+                        <div id="suggestionsContainer" class="bg-gray-50 p-5 rounded-lg border border-gray-200">
+                            <!-- 建议内容将在这里显示 -->
+                        
+                </div>
+
+
+            </div>
+        </div>
+        
+        <div class="text-center">
+            <button onclick="goHome()" class="bg-blue-600 text-white py-3 px-8 rounded-lg hover:bg-blue-700 transition text-lg">返回首页</button>
+        </div>
+    </div>
+
+    <script>
+        // 测试标题映射
+        const testTitles = {
+            vlan: "VLAN自测",
+            staticRoute: "静态路由自测",
+            dynamicRoute: "动态路由自测",
+            singleArmRoute: "单臂路由自测",
+            ppp:"PPP自测",
+            appConfig:"应用配置自测",
+            ACL:"ACL自测",
+            dataFlow: "数据流分析自测"
+        };
+        
+        // 当前测试状态
+        let currentTestType = null;
+        let currentQuestions = [];
+        let currentQuestionIndex = 0;
+        let userAnswers = [];
+        let testCompleted = false;
+        
+        // 题库数据
+       const questionBanks = {
+        "vlan": [
+            {
+            "type": "理论考核题",
+            "question": "VLAN的核心特性是（  ）",
+            "options": ["只能在同一物理网段内划分", "不受物理位置限制，逻辑隔离", "不同VLAN间主机可直接通信", "广播数据包可跨VLAN传输"],
+            "answer": "B",
+            "analysis": "VLAN是在物理网段内进行逻辑划分，核心特性是不受物理位置限制，可灵活分组；相同VLAN内主机可直接通信，不同VLAN间需路由设备转发，广播包仅在本VLAN内传播，故A、C、D错误。"
+            },
+            {
+            "type": "理论考核题",
+            "question": "实现VLAN间通信必须依赖的设备是（  ）",
+            "options": ["二层交换机", "集线器", "路由设备（路由器或三层交换机）", "网桥"],
+            "answer": "C",
+            "analysis": "二层交换机仅能实现同一VLAN内通信，无法转发不同VLAN的数据包；路由设备（路由器或三层交换机）具备网络层功能，可通过路由转发实现VLAN间互通，集线器和网桥无此功能，故选C。"
+            },
+            {
+            "type": "理论考核题",
+            "question": "Port VLAN的特点是（  ）",
+            "options": ["一个端口可属于多个VLAN", "基于IEEE802.1Q协议添加标签", "一个端口只能属于一个VLAN", "主要用于跨交换机VLAN通信"],
+            "answer": "C",
+            "analysis": "Port VLAN通过交换机端口划分VLAN，一个端口仅能归属一个VLAN；A是Trunk端口特性，B、D是Tag VLAN的特点，故选C。"
+            },
+            {
+            "type": "理论考核题",
+            "question": "Tag VLAN遵循的标准协议是（  ）",
+            "options": ["IEEE802.3", "IEEE802.1Q", "IEEE802.11", "IEEE802.1X"],
+            "answer": "B",
+            "analysis": "Tag VLAN需在数据帧中添加4字节的802.1Q标签标识VLAN归属，遵循IEEE802.1Q协议；A是以太网标准，C是无线局域网标准，D是端口认证标准，故选B。"
+            },
+            {
+            "type": "理论考核题",
+            "question": "三层交换机实现VLAN间路由的核心技术是（  ）",
+            "options": ["物理接口转发", "子接口封装", "交换虚拟接口（SVI）", "Trunk链路聚合"],
+            "answer": "C",
+            "analysis": "三层交换机通过为每个VLAN创建SVI（虚拟接口）并配置IP地址，利用直连路由实现VLAN间通信；A是二层转发方式，B是路由器单臂路由技术，D是链路冗余技术，故选C。"
+            },
+            {
+            "type": "配置命令考查题",
+            "question": "在Packet Tracer中，创建VLAN 2的正确命令是（  ）",
+            "options": ["Switch(config)# vlan 2", "Switch# vlan 2", "Switch(config-if)# vlan 2", "Switch(config-vlan)# create vlan 2"],
+            "answer": "A",
+            "analysis": "创建VLAN需在全局配置模式（config）下执行\"vlan 编号\"命令；B是特权模式，无此操作；C是端口模式，无法创建VLAN；D命令格式错误，故选A。"
+            },
+            {
+            "type": "配置命令考查题",
+            "question": "将交换机Fa0/1端口划分为VLAN 3的正确命令是（  ）",
+            "options": ["Switch(config)# interface fa0/1 switchport access vlan 3", "Switch(config-if)# switchport access vlan 3", "Switch(config)# switchport fa0/1 access vlan 3", "Switch(config-if)# access vlan 3"],
+            "answer": "B",
+            "analysis": "划分端口到VLAN需先进入端口配置模式（config-if），再执行\"switchport access vlan 编号\"命令；A未进入端口模式，C命令格式错误，D缺少\"switchport\"关键字，故选B。"
+            },
+            {
+            "type": "配置命令考查题",
+            "question": "配置交换机Fa0/24端口为Trunk模式的正确命令是（  ）",
+            "options": ["Switch(config-if)# switchport mode trunk", "Switch(config)# trunk interface fa0/24", "Switch(config-if)# set trunk mode on", "Switch(config)# interface fa0/24 trunk enable"],
+            "answer": "A",
+            "analysis": "Trunk模式配置需在端口模式下执行\"switchport mode trunk\"命令；B、C、D命令格式均不符合Cisco设备命令规范，故选A。"
+            },
+            {
+            "type": "配置命令考查题",
+            "question": "三层交换机中为VLAN 2的SVI接口配置IP地址192.168.1.1/24的正确命令是（  ）",
+            "options": ["Switch(config)# interface vlan 2 ip address 192.168.1.1 255.255.255.0", "Switch(config-if)# ip address 192.168.1.1 255.255.255.0", "Switch(config)# vlan 2 ip address 192.168.1.1 255.255.255.0", "Switch(config-if)# ip address 192.168.1.1/24"],
+            "answer": "B",
+            "analysis": "需先进入VLAN虚拟接口模式（config-if），再配置IP地址；A未进入接口模式，C直接在全局模式配置错误，D是华为设备命令格式，Cisco设备需完整输入子网掩码，故选B。"
+            },
+            {
+            "type": "配置命令考查题",
+            "question": "查看交换机VLAN配置信息的正确命令是（  ）",
+            "options": ["Switch# show vlan", "Switch# display vlan", "Switch(config)# show vlan brief", "Switch# show vlan configuration"],
+            "answer": "A",
+            "analysis": "Cisco设备查看VLAN配置的特权模式命令是\"show vlan\"；B是华为设备命令，C需在特权模式执行且\"brief\"是简化显示，题干未要求简化，D命令格式错误，故选A。"
+            },
+            {
+            "type": "配置错误与修正题",
+            "question": "某管理员在配置Port VLAN时，执行命令如下：Switch(config)# interface fa0/5 Switch(config-if)# vlan access 4 该命令的错误在于（  ）",
+            "options": ["未创建VLAN 4", "端口模式错误", "命令关键字顺序错误", "需先开启端口"],
+            "answer": "C",
+            "analysis": "划分端口到VLAN的正确命令是\"switchport access vlan 编号\"，题干缺少\"switchport\"关键字且顺序错误；A若未创建VLAN，命令执行会提示错误，但题干命令本身格式错误，B、D并非该命令直接错误，故选C。"
+            },
+            {
+            "type": "配置错误与修正题",
+            "question": "配置Trunk端口时，执行命令：Switch(config-if)# switchport trunk mode on 该命令的问题是（  ）",
+            "options": ["命令格式错误，Cisco设备无此命令", "需先配置VLAN允许列表", "端口未开启", "缺少封装协议配置"],
+            "answer": "A",
+            "analysis": "Cisco设备配置Trunk模式的正确命令是\"switchport mode trunk\"，\"trunk mode on\"并非标准命令；D仅在三层交换机与二层交换机互联时需配置\"switchport trunk encapsulation dot1q\"，但题干核心错误是命令格式，故选A。"
+            },
+            {
+            "type": "配置错误与修正题",
+            "question": "三层交换机配置VLAN间路由时，仅执行了以下命令：Switch(config)# vlan 5 Switch(config-vlan)# exit Switch(config)# interface vlan 5 未配置后续命令，导致VLAN 5内主机无法与其他VLAN通信，缺失的关键命令是（  ）",
+            "options": ["switchport mode trunk", "ip address 192.168.5.1 255.255.255.0", "no shutdown", "both B and C"],
+            "answer": "D",
+            "analysis": "SVI接口需配置IP地址（作为VLAN内主机网关）并开启（no shutdown），否则无法实现路由转发；A是Trunk端口配置命令，与SVI接口无关，故选D。"
+            },
+            {
+            "type": "配置错误与修正题",
+            "question": "某交换机配置如下：Switch(config)# vlan 10 Switch(config-vlan)# exit Switch(config)# interface fa0/10 Switch(config-if)# switchport access vlan 10 Switch(config-if)# switchport mode trunk 该配置的错误是（  ）",
+            "options": ["不能同时配置Access模式和Trunk模式", "未创建VLAN 10", "端口未开启", "需配置封装协议"],
+            "answer": "A",
+            "analysis": "一个端口只能工作在Access模式（归属单个VLAN）或Trunk模式（允许多VLAN通行），不能同时配置两种模式；B已创建VLAN 10，C、D并非核心错误，故选A。"
+            },
+            {
+            "type": "配置错误与修正题",
+            "question": "配置Tag VLAN时，未配置\"switchport trunk encapsulation dot1q\"，可能导致的问题是（  ）",
+            "options": ["端口无法成为Trunk模式", "跨交换机的同一VLAN主机无法通信", "VLAN创建失败", "端口无法开启"],
+            "answer": "B",
+            "analysis": "\"switchport trunk encapsulation dot1q\"用于指定Trunk端口采用802.1Q标签封装，若未配置，跨交换机的VLAN数据帧无法被正确识别，导致同一VLAN主机无法通信；A端口仍可成为Trunk模式，C、D与该命令无关，故选B。"
+            }
+        ],
+        "staticRoute": [
+            {
+            "type": "理论考核题",
+            "question": "静态路由的核心特点是（  ）",
+            "options": ["由路由器自动学习生成路由条目", "需网络管理员手工配置路由信息", "路由条目会随网络拓扑变化自动更新", "适用于大型复杂网络环境"],
+            "answer": "B",
+            "analysis": "静态路由是由管理员手工配置的路由信息，不会自动学习或更新，稳定性高、保密性强，适用于小型简单网络；A、C是动态路由的特点，D为动态路由的适用场景，故选B。"
+            },
+            {
+            "type": "理论考核题",
+            "question": "路由器转发数据包的依据是（  ）",
+            "options": ["ARP表", "路由表", "MAC地址表", "CAM表"],
+            "answer": "B",
+            "analysis": "路由器属于网络层设备，通过查找路由表中的路由条目，选择最佳路径转发数据包；ARP表用于解析IP与MAC地址映射，MAC地址表和CAM表是交换机的转发依据，故选B。"
+            },
+            {
+            "type": "理论考核题",
+            "question": "缺省路由的作用是（  ）",
+            "options": ["优先匹配所有目标网络", "当路由表中无匹配条目时，作为默认转发路径", "仅用于动态路由协议中", "必须配置在核心路由器上"],
+            "answer": "B",
+            "analysis": "缺省路由是静态路由的特殊形式，当数据包在路由表中找不到目标网络的匹配条目时，会按照缺省路由指定的路径转发；A错误（优先级最低），C错误（可手工配置静态缺省路由），D错误（无强制部署位置要求），故选B。"
+            },
+            {
+            "type": "理论考核题",
+            "question": "静态路由相比动态路由的优势不包括（  ）",
+            "options": ["配置简单", "网络资源占用少", "路由收敛速度快", "安全性高"],
+            "answer": "C",
+            "analysis": "静态路由无需协议交互，配置简单、占用资源少、保密性强；但路由收敛速度（拓扑变化后恢复通信的速度）远慢于动态路由（动态路由可自动更新），故选C。"
+            },
+            {
+            "type": "理论考核题",
+            "question": "实现两个独立局域网（跨路由器）互通，静态路由配置的核心是（  ）",
+            "options": ["在每台路由器上配置到达对方局域网的路由条目", "仅在核心路由器上配置静态路由", "配置路由器接口IP地址即可，无需额外路由", "静态路由需与动态路由结合使用"],
+            "answer": "A",
+            "analysis": "跨路由器的局域网互通时，每台路由器需明确到达对方网段的下一跳地址（或出接口），即配置对应的静态路由条目；B、D无需额外条件，C仅配置接口IP只能实现直连网段通信，故选A。"
+            },
+            {
+            "type": "配置命令考查题",
+            "question": "在Cisco路由器上，配置到达目标网络192.168.5.0/24，下一跳为192.168.3.2的静态路由命令是（  ）",
+            "options": ["Router(config)# ip route 192.168.5.0 255.255.255.0 192.168.3.2", "Router# ip route 192.168.5.0 255.255.255.0 192.168.3.2", "Router(config)# route static 192.168.5.0 255.255.255.0 192.168.3.2", "Router(config-if)# ip route 192.168.5.0 255.255.255.0 192.168.3.2"],
+            "answer": "A",
+            "analysis": "静态路由配置命令格式为\"ip route 目标网络 子网掩码 下一跳地址\"，需在全局配置模式（config）下执行；B是特权模式，C命令格式错误，D是端口模式，均无法配置，故选A。"
+            },
+            {
+            "type": "配置命令考查题",
+            "question": "查看路由器静态路由配置的正确命令是（  ）",
+            "options": ["Router# show ip route static", "Router(config)# display ip route", "Router# show static route", "Router# show ip route"],
+            "answer": "D",
+            "analysis": "Cisco路由器查看所有路由（含静态、直连、动态）的命令是\"show ip route\"，静态路由条目会标记为\"S\"；A、C命令格式错误，B是华为设备命令，故选D。"
+            },
+            {
+            "type": "配置命令考查题",
+            "question": "配置缺省路由（默认路由）的正确命令是（  ）",
+            "options": ["Router(config)# ip route 0.0.0.0 0.0.0.0 192.168.1.1", "Router(config)# ip route 255.255.255.255 0.0.0.0 192.168.1.1", "Router# ip route default 192.168.1.1", "Router(config)# default route 192.168.1.1"],
+            "answer": "A",
+            "analysis": "缺省路由的目标网络和子网掩码均为0.0.0.0，代表所有未匹配的网络，命令格式为\"ip route 0.0.0.0 0.0.0.0 下一跳\"；B、C、D命令格式错误，故选A。"
+            },
+            {
+            "type": "配置命令考查题",
+            "question": "在串口连接的路由器中，DCE端路由器必须配置的参数是（  ）",
+            "options": ["静态路由优先级", "时钟频率（clock rate）", "接口描述信息", "NAT转换规则"],
+            "answer": "B",
+            "analysis": "路由器串口通过V.35电缆连接时，DCE（数据电路终接设备）端需配置时钟频率（如64000），为链路提供同步时钟信号，否则无法通信；A、C非必需，D与串口通信无关，故选B。"
+            },
+            {
+            "type": "配置命令考查题",
+            "question": "若路由器接口Fa0/0的IP地址为192.168.2.1/24，需配置静态路由到达192.168.4.0/24，且出接口为Fa0/0，正确命令是（  ）",
+            "options": ["Router(config)# ip route 192.168.4.0 255.255.255.0 Fa0/0", "Router(config)# ip route 192.168.4.0 255.255.255.0 192.168.2.1", "Router(config-if)# ip route 192.168.4.0 255.255.255.0 Fa0/0", "Router(config)# route ip 192.168.4.0 255.255.255.0 Fa0/0"],
+            "answer": "A",
+            "analysis": "静态路由可通过\"目标网络+出接口\"配置，命令格式为\"ip route 目标网络 子网掩码 出接口\"，需在全局配置模式执行；B下一跳为自身接口IP错误，C是端口模式，D命令格式错误，故选A。"
+            },
+            {
+            "type": "配置错误与修正题",
+            "question": "某管理员配置静态路由命令如下：Router# ip route 192.168.6.0 255.255.255.0 192.168.3.1 该配置的错误在于（  ）",
+            "options": ["目标网络子网掩码错误", "下一跳地址不可达", "配置模式错误，应在全局配置模式执行", "命令关键字顺序错误"],
+            "answer": "C",
+            "analysis": "静态路由需在全局配置模式（Router(config)#）下执行，题干中在特权模式（Router#）直接输入命令，模式错误；A子网掩码与/24匹配，B、D无证据表明错误，故选C。"
+            },
+            {
+            "type": "配置错误与修正题",
+            "question": "路由器R1连接192.168.1.0/24（Fa0/0接口，IP：192.168.1.1），路由器R2连接192.168.2.0/24（Fa0/0接口，IP：192.168.2.1），两路由器通过串口连接（R1串口IP：192.168.3.1，R2串口IP：192.168.3.2）。若仅在R1上配置静态路由：ip route 192.168.2.0 255.255.255.0 192.168.3.2，R2未配置对应路由，则（  ）",
+            "options": ["192.168.1.0网段主机可Ping通192.168.2.0网段主机", "192.168.2.0网段主机可Ping通192.168.1.0网段主机", "双向均无法Ping通", "需重启路由器后才能互通"],
+            "answer": "C",
+            "analysis": "静态路由是单向的，R1配置了到达192.168.2.0的路由，但R2无到达192.168.1.0的路由，导致回程数据包无法转发，双向均无法互通；需在R2上补充配置\"ip route 192.168.1.0 255.255.255.0 192.168.3.1\"，故选C。"
+            },
+            {
+            "type": "配置错误与修正题",
+            "question": "配置静态路由时，命令为：Router(config)# ip route 192.168.7.0 255.255.255.0 192.168.5.3，测试发现无法到达目标网络，可能的原因是（  ）",
+            "options": ["目标网络不存在", "下一跳地址192.168.5.3与路由器无直连网段", "静态路由命令格式错误", "未配置接口IP地址"],
+            "answer": "B",
+            "analysis": "静态路由的下一跳地址必须与路由器的某个接口处于同一直连网段（即路由器可直接到达下一跳），否则路由条目无效；A、D与命令本身无关，C命令格式正确，故选B。"
+            },
+            {
+            "type": "配置错误与修正题",
+            "question": "某路由器配置缺省路由命令如下：Router(config)# ip route 0.0.0.0 255.255.255.255 192.168.4.1 该命令的错误是（  ）",
+            "options": ["下一跳地址错误", "子网掩码错误，缺省路由子网掩码应为0.0.0.0", "命令关键字错误", "需在端口模式配置"],
+            "answer": "B",
+            "analysis": "缺省路由的核心是匹配所有未明确配置的网络，因此子网掩码必须为0.0.0.0（代表任意网络），题干中子网掩码写为255.255.255.255（主机路由），无法实现缺省路由功能，故选B。"
+            },
+            {
+            "type": "配置错误与修正题",
+            "question": "路由器R1的Fa0/0接口IP为192.168.2.1/24，串口S2/0IP为192.168.3.1/24，需配置到达192.168.4.0/24的静态路由，下一跳为192.168.3.2（R2串口IP），正确配置后，查看路由表显示\"S 192.168.4.0/24 [1/0] via 192.168.3.2\"，其中\"[1/0]\"代表（  ）",
+            "options": ["路由优先级为1，度量值为0", "跳数为1，带宽为0", "管理距离为1，度量值为0", "接口编号为1/0"],
+            "answer": "C",
+            "analysis": "Cisco路由表中静态路由的\"[管理距离/度量值]\"字段，静态路由默认管理距离为1（优先级最高），度量值为0（无额外开销）；A、B、D对字段含义解释错误，故选C。"
+            }
+        ],
+        "dynamicRoute": [
+            {
+            "type": "理论考核题",
+            "question": "RIP协议作为距离矢量路由协议，衡量路径开销的核心指标是（  ）",
+            "options": ["带宽", "跳数", "延迟", "负载"],
+            "answer": "B",
+            "analysis": "RIP协议以跳数作为路径开销的衡量标准，最大跳数限制为15跳（16跳视为不可达）；带宽、延迟、负载是OSPF等链路状态协议考量的指标，故选B。"
+            },
+            {
+            "type": "理论考核题",
+            "question": "以下关于RIPv1和RIPv2的区别，说法错误的是（  ）",
+            "options": ["RIPv1不支持VLSM，RIPv2支持VLSM", "RIPv1以广播形式更新路由，RIPv2以组播形式更新", "RIPv1是无类路由协议，RIPv2是有类路由协议", "两者更新周期均为30秒"],
+            "answer": "C",
+            "analysis": "RIPv1属于有类路由协议，不支持可变长子网掩码（VLSM），以广播（255.255.255.255）发送更新；RIPv2是无类路由协议，支持VLSM，以组播（224.0.0.9）发送更新，两者更新周期均为30秒，故C错误。"
+            },
+            {
+            "type": "理论考核题",
+            "question": "OSPF协议的核心特性不包括（  ）",
+            "options": ["属于链路状态路由协议", "利用SPF算法计算最短路径", "以跳数作为路径开销 metric", "维护全网链路状态数据库"],
+            "answer": "C",
+            "analysis": "OSPF是典型的链路状态协议，通过扩散链路状态信息同步全网数据库，采用SPF算法计算最短路径；其路径开销基于带宽等链路特性，而非跳数，跳数是RIP的metric，故选C。"
+            },
+            {
+            "type": "理论考核题",
+            "question": "动态路由协议相比静态路由的最大优势是（  ）",
+            "options": ["配置简单", "网络资源占用少", "拓扑变化时自动更新路由", "安全性高"],
+            "answer": "C",
+            "analysis": "动态路由协议能自动发现网络拓扑、学习路由信息，当网络拓扑变化时可自动调整路由条目，无需人工干预；A、B、D是静态路由的优势，故选C。"
+            },
+            {
+            "type": "理论考核题",
+            "question": "以下哪种场景更适合使用RIP协议而非OSPF协议？（  ）",
+            "options": ["大型企业复杂网络", "需支持VLSM和快速收敛的网络", "小型同类简单网络", "对路由稳定性要求极高的核心网络"],
+            "answer": "C",
+            "analysis": "RIP协议适用于小型同类网络，配置简单但收敛慢、最大跳数受限；OSPF适用于中大型复杂网络，支持VLSM、收敛快、稳定性高，故A、B、D适合OSPF，C适合RIP。"
+            },
+            {
+            "type": "配置命令考查题",
+            "question": "在Cisco路由器上配置RIPv2协议时，指定参与路由协议的直连网络192.168.5.0/24的正确命令是（  ）",
+            "options": ["Router(config-router)# network 192.168.5.0", "Router(config)# network 192.168.5.0 255.255.255.0", "Router(config-router)# network 192.168.5.0 0.0.0.255", "Router(config)# router rip network 192.168.5.0"],
+            "answer": "A",
+            "analysis": "RIP协议配置中，需在路由进程模式（config-router）下用\"network 网络地址\"指定直连网络（无需子网掩码，协议自动识别主类网络）；B、D模式错误，C是OSPF协议的反掩码格式，故选A。"
+            },
+            {
+            "type": "配置命令考查题",
+            "question": "配置OSPF协议时，将直连网络192.168.3.0/24加入区域0的正确命令是（  ）",
+            "options": ["Router(config-router)# network 192.168.3.0 255.255.255.0 area 0", "Router(config-router)# network 192.168.3.0 0.0.0.255 area 0", "Router(config)# network 192.168.3.0 area 0", "Router(config-router)# network 192.168.3.0 area 0"],
+            "answer": "B",
+            "analysis": "OSPF协议的network命令格式为\"network 网络地址 反掩码 area 区域号\"，/24子网的反掩码为0.0.0.255；A用了子网掩码，C、D缺少反掩码，均格式错误，故选B。"
+            },
+            {
+            "type": "配置命令考查题",
+            "question": "查看路由器上通过RIP协议学习到的路由条目，正确的命令是（  ）",
+            "options": ["Router# show ip route rip", "Router(config)# display rip route", "Router# show rip route", "Router# show ip route dynamic"],
+            "answer": "A",
+            "analysis": "Cisco路由器查看特定协议路由的命令为\"show ip route 协议名\"，RIP协议对应的命令是\"show ip route rip\"；B是华为设备命令，C、D格式错误，故选A。"
+            },
+            {
+            "type": "配置命令考查题",
+            "question": "在三层交换机上启用RIPv2协议并指定版本的正确配置顺序是（  ）",
+            "options": ["Switch(config)# router rip → Switch(config-router)# version 2 → Switch(config-router)# network 192.168.1.0", "Switch(config)# version 2 → Switch(config)# router rip → Switch(config-router)# network 192.168.1.0", "Switch(config)# router rip → Switch(config-router)# network 192.168.1.0 → Switch(config)# version 2", "Switch(config-router)# router rip → Switch(config-router)# version 2 → Switch(config)# network 192.168.1.0"],
+            "answer": "A",
+            "analysis": "配置RIPv2的正确顺序为：进入全局配置模式→启用RIP进程（router rip）→指定版本2（version 2）→宣告直连网络（network）；B、C、D均存在模式或顺序错误，故选A。"
+            },
+            {
+            "type": "配置命令考查题",
+            "question": "配置OSPF进程号为1的正确命令是（  ）",
+            "options": ["Router(config)# ospf 1", "Router(config)# router ospf 1", "Router(config-router)# ospf process 1", "Router# router ospf 1"],
+            "answer": "B",
+            "analysis": "Cisco路由器启用OSPF协议的命令为\"router ospf 进程号\"，需在全局配置模式执行；A、C命令格式错误，D是特权模式，故选B。"
+            },
+            {
+            "type": "配置错误与修正题",
+            "question": "某管理员配置RIP协议时，命令如下：Router(config)# router rip Router(config-router)# network 192.168.6.0 255.255.255.0 Router(config-router)# version 2 该配置的错误在于（  ）",
+            "options": ["进程号未指定", "network命令后不应加子网掩码", "version 2命令应在全局模式执行", "缺少no auto-summary命令"],
+            "answer": "B",
+            "analysis": "RIP协议的network命令仅需指定主类网络地址（如192.168.6.0），无需添加子网掩码，协议会自动匹配直连子网；A RIP无需指定进程号（默认存在），C version 2需在路由进程模式执行，D未开启自动汇总不影响基础配置，故选B。"
+            },
+            {
+            "type": "配置错误与修正题",
+            "question": "配置OSPF协议时，命令如下：Router(config)# router ospf 1 Router(config-router)# network 192.168.4.0 255.255.255.0 area 0 该配置的核心错误是（  ）",
+            "options": ["进程号1已被占用", "network命令使用子网掩码而非反掩码", "未配置路由器ID", "区域0配置错误"],
+            "answer": "B",
+            "analysis": "OSPF的network命令必须使用反掩码（如/24对应0.0.0.255），题干中使用子网掩码255.255.255.0格式错误，导致网络无法加入OSPF进程；A、C非必需配置，D区域0配置正确，故选B。"
+            },
+            {
+            "type": "配置错误与修正题",
+            "question": "路由器R1和R2通过串口连接（R1为DCE端），配置RIPv2协议后，两路由器未学习到对方路由，可能的原因是（  ）",
+            "options": ["未配置version 2命令", "R1未配置clock rate时钟频率", "network命令未宣告串口所在网络", "未关闭自动汇总"],
+            "answer": "C",
+            "analysis": "RIP协议需通过network命令宣告直连网络（包括串口所在网段），否则协议不会在该接口发送/接收路由更新；A未指定版本会默认使用RIPv1，但仍可学习路由，B串口未配置时钟频率会导致链路不通（而非路由学习失败），D自动汇总不影响直连路由学习，故选C。"
+            },
+            {
+            "type": "配置错误与修正题",
+            "question": "三层交换机配置RIP协议时，仅执行以下命令：Switch(config)# router rip Switch(config-router)# network 192.168.2.0 Switch(config-router)# version 2 但VLAN 10（192.168.2.0/24）内主机无法与外部网络通信，缺失的关键配置是（  ）",
+            "options": ["配置VLAN 10的SVI接口IP地址", "关闭路由自动汇总", "指定邻居路由器IP", "配置Trunk端口"],
+            "answer": "A",
+            "analysis": "三层交换机需为VLAN创建SVI接口并配置IP地址（作为VLAN内主机网关），否则即使RIP协议宣告了网络，也无法实现路由转发；B、C非必需配置，D Trunk端口与路由协议无关，故选A。"
+            },
+            {
+            "type": "配置错误与修正题",
+            "question": "配置OSPF协议时，命令如下：Router(config)# router ospf 1 Router(config-router)# network 192.168.7.0 0.0.0.255 area 1 Router(config-router)# network 192.168.8.0 0.0.0.255 area 2 两台相邻路由器均配置不同区域（1和2），未配置ABR（区域边界路由器），导致路由无法互通，该错误属于（  ）",
+            "options": ["网络地址宣告错误", "区域配置错误，非骨干区域需连接骨干区域（area 0）", "反掩码配置错误", "缺少router-id配置"],
+            "answer": "B",
+            "analysis": "OSPF协议中，所有非骨干区域（如area 1、area 2）必须直接连接骨干区域（area 0），或通过ABR间接连接，否则区域间无法传递路由；题干中两路由器分属不同非骨干区域且无ABR，导致路由隔离；A、C配置正确，D未配置router-id会自动选举（不影响区域互通），故选B。"
+            }
+        ],
+        "singleArmRoute": [
+            {
+                "type": "配置命令题",
+                "question": "单臂路由实现VLAN间通信的核心是依赖路由器的哪种接口？（  ）",
+                "options": ["物理接口", "子接口", "聚合接口", "loopback接口"],
+                "answer": "B",
+                "analysis": "子接口是单臂路由的核心，通过逻辑划分实现多VLAN对应，物理接口仅作为传输通道。"
+            },
+            {
+                "type": "配置命令题",
+                "question": "交换机连接路由器的端口必须配置为哪种链路类型？（  ）",
+                "options": ["Access", "Trunk", "Hybrid", "以上均可"],
+                "answer": "B",
+                "analysis": "交换机与路由器连接需Trunk链路，才能传递多VLAN标签数据。"
+            },
+            {
+                "type": "配置命令题",
+                "question": "路由器子接口配置中，用于封装802.1Q VLAN标签的命令是？（  ）",
+                "options": ["encapsulation dot1q 10", "switchport mode trunk", "vlan encapsulation 10", "dot1q tag 10"],
+                "answer": "A",
+                "analysis": "`encapsulation dot1q [VLAN ID]`是路由器子接口封装VLAN标签的标准命令。"
+            },
+            {
+                "type": "配置命令题",
+                "question": "若VLAN10的网段为192.168.10.0/24，对应路由器子接口Fa0/0.1的网关配置正确的是？（  ）",
+                "options": ["Router(config-if)#ip address 192.168.10.1 255.255.255.0", "Router(config)#ip address 192.168.10.1 255.255.255.0", "Router(config-if)#ip gateway 192.168.10.1", "Router(config-subif)#ip address 192.168.10.1 0.0.0.255"],
+                "answer": "A",
+                "analysis": "路由器子接口的IP地址（网关）需在接口模式下配置，子网掩码对应网段。"
+            },
+            {
+                "type": "配置命令题",
+                "question": "配置单臂路由时，路由器物理接口Fa0/0的状态应设置为？（  ）",
+                "options": ["关闭（shutdown）", "开启（no shutdown）", "配置为Trunk模式", "配置为Access模式"],
+                "answer": "B",
+                "analysis": "物理接口必须开启（no shutdown），子接口才能正常转发数据。"
+            },
+            {
+                "type": "故障排查题",
+                "question": "某单臂路由子接口配置如下，最可能导致VLAN20主机无法通信的原因是？（  ）\nRouter(config)#interface Fa0/0.2\nRouter(config-subif)#encapsulation dot1q 20",
+                "options": ["未配置IP地址", "封装协议错误", "子接口编号与VLAN ID不匹配", "物理接口未开启"],
+                "answer": "A",
+                "analysis": "子接口需配置对应VLAN的网关IP，否则主机无法通过该接口通信。"
+            },
+            {
+                "type": "配置命令题",
+                "question": "交换机上配置Trunk链路允许所有VLAN通过的命令是？（  ）",
+                "options": ["Switch(config-if)#switchport trunk allowed vlan all", "Switch(config-if)#trunk allow all vlan", "Switch(config)#allow trunk all vlan", "Switch(config-if)#switchport trunk vlan all permit"],
+                "answer": "A",
+                "analysis": "`switchport trunk allowed vlan all`是交换机Trunk允许所有VLAN的标准命令。"
+            },
+            {
+                "type": "原理理解题",
+                "question": "单臂路由中，子接口Fa0/0.10对应的VLAN ID为10，接收数据时会执行什么操作？（  ）",
+                "options": ["添加VLAN10标签", "剥离VLAN10标签", "转换为VLAN1标签", "不处理标签"],
+                "answer": "B",
+                "analysis": "子接口接收数据时会剥离对应VLAN标签，转发时会添加标签。"
+            },
+            {
+                "type": "故障排查题",
+                "question": "以下哪项配置遗漏会导致单臂路由无法实现VLAN间互通？（  ）",
+                "options": ["交换机创建对应VLAN", "路由器子接口配置IP", "主机设置正确网关", "路由器配置静态路由"],
+                "answer": "D",
+                "analysis": "单臂路由通过子接口实现VLAN间通信，无需额外配置静态路由。"
+            },
+            {
+                "type": "故障排查题",
+                "question": "若单臂路由物理接口Fa0/0已开启，但子接口无法转发数据，最可能的故障点是？（  ）",
+                "options": ["子接口未封装802.1Q", "主机IP为静态配置", "交换机端口为Access模式", "路由器未配置DHCP"],
+                "answer": "A",
+                "analysis": "子接口必须封装对应VLAN的802.1Q标签，否则无法识别VLAN数据。"
+            }
+            ],
+        "ppp": [
+            {
+                "type": "配置命令题",
+                "question": "PPP链路的路由器接口封装命令是？（  ）",
+                "options": ["encapsulation ppp", "switchport mode ppp", "ppp encapsulation", "interface ppp"],
+                "answer": "A",
+                "analysis": "路由器接口下通过`encapsulation ppp`命令开启PPP封装，是PPP配置的基础步骤。"
+            },
+            {
+                "type": "原理理解题",
+                "question": "PPP协议的核心子协议中，负责链路建立与拆除的是？（  ）",
+                "options": ["LCP", "NCP", "IPCP", "CHAP"],
+                "answer": "A",
+                "analysis": "LCP（链路控制协议）负责PPP链路的建立、配置协商与拆除；NCP负责网络层参数协商。"
+            },
+            {
+                "type": "配置命令题",
+                "question": "PPP的CHAP认证中，路由器作为被认证方时，配置本地用户名和密码的命令是？（  ）",
+                "options": ["ppp chap hostname [用户名] password [密码]", "username [用户名] password [密码]", "ppp chap password [密码]", "chap authentication [用户名] [密码]"],
+                "answer": "B",
+                "analysis": "CHAP认证需先在全局模式下用`username [对端用户名] password [密码]`配置本地凭证，与对端匹配。"
+            },
+            {
+                "type": "故障排查题",
+                "question": "PPP链路两端均配置了`encapsulation ppp`，但链路仍无法UP，最可能的原因是？（  ）",
+                "options": ["接口未开启（shutdown）", "未配置IP地址", "未配置DHCP", "未配置ACL"],
+                "answer": "A",
+                "analysis": "PPP链路建立的前提是物理接口处于开启状态（`no shutdown`），否则LCP协商无法启动。"
+            },
+            {
+                "type": "原理理解题",
+                "question": "以下哪种认证方式是PPP协议支持的双向加密认证？（  ）",
+                "options": ["CHAP", "PAP", "MD5", "RADIUS"],
+                "answer": "A",
+                "analysis": "CHAP通过三次握手+加密口令实现双向认证；PAP是明文密码认证，安全性低。"
+            },
+            {
+                "type": "配置命令题",
+                "question": "在路由器Serial接口下，启用PPP的PAP认证（作为认证方）的命令是？（  ）",
+                "options": ["ppp authentication pap", "ppp pap authentication", "authentication pap", "pap enable"],
+                "answer": "A",
+                "analysis": "接口模式下用`ppp authentication pap`命令，指定该接口作为PAP认证的发起方。"
+            },
+            {
+                "type": "原理理解题",
+                "question": "PPP的NCP子协议中，负责协商IP地址的是？（  ）",
+                "options": ["IPCP", "IPXCP", "ATCP", "LCP"],
+                "answer": "A",
+                "analysis": "IPCP（IP控制协议）是NCP的子协议，用于协商PPP链路两端的IP地址等网络层参数。"
+            },
+            {
+                "type": "故障排查题",
+                "question": "CHAP认证失败，提示“Authentication failed”，最可能的原因是？（  ）",
+                "options": ["两端用户名/密码不匹配", "接口封装类型为HDLC", "未配置IP地址", "链路带宽不足"],
+                "answer": "A",
+                "analysis": "CHAP认证的核心是两端`username`和`password`完全一致，否则会认证失败。"
+            },
+            {
+                "type": "配置命令题",
+                "question": "PPP链路中，配置路由器Serial接口IP地址的命令是？（  ）",
+                "options": ["Router(config-if)#ip address 10.0.0.1 255.255.255.0", "Router(config)#ip address serial 0/0 10.0.0.1", "Router(config-if)#serial ip 10.0.0.1 255.255.255.0", "Router(config)#interface serial 0/0 ip 10.0.0.1"],
+                "answer": "A",
+                "analysis": "PPP接口的IP地址需在接口配置模式下，通过`ip address [IP] [子网掩码]`命令配置。"
+            },
+            {
+                "type": "原理理解题",
+                "question": "PPP协议与HDLC相比，最大的优势是？（  ）",
+                "options": ["支持认证和多网络层协议", "仅支持IP协议", "是Cisco私有协议", "无需配置封装"],
+                "answer": "A",
+                "analysis": "PPP是通用广域网协议，支持CHAP/PAP认证、IP/IPX等多网络层协议；HDLC是Cisco私有协议，无认证功能。"
+            }
+            ],
+        "appConfig": [
+            {
+                "type": "理论原理题",
+                "question": "DHCP客户端首次获取IP地址时，发送的第一个广播报文是？（  ）",
+                "options": ["DHCP Discover", "DHCP Offer", "DHCP Request", "DHCP ACK"],
+                "answer": "A",
+                "analysis": "DHCP获取IP四步流程：①客户端发DHCP Discover（广播找服务器）→②服务器发DHCP Offer（提供IP）→③客户端发DHCP Request（确认选IP）→④服务器发DHCP ACK（确认分配）。"
+            },
+            {
+                "type": "理论原理题",
+                "question": "DHCP租约到期前，客户端会主动发送哪种报文续租？（  ）",
+                "options": ["DHCP Request", "DHCP Renew", "DHCP Offer", "DHCP NAK"],
+                "answer": "A",
+                "analysis": "DHCP租约到期50%时，客户端直接向原服务器发DHCP Request续租；若失败，到期87.5%时广播DHCP Request续租，无响应则租约失效。"
+            },
+            {
+                "type": "理论原理题",
+                "question": "DNS协议采用“递归查询+迭代查询”的组合，其中递归查询的发起方是？（  ）",
+                "options": ["本地主机", "本地DNS服务器", "根DNS服务器", "顶级域DNS服务器"],
+                "answer": "A",
+                "analysis": "本地主机向本地DNS服务器发起递归查询（“帮我找到结果”）；本地DNS服务器向根/顶级域服务器发起迭代查询（“告诉我下一步找谁”）。"
+            },
+            {
+                "type": "理论原理题",
+                "question": "DNS中用于将域名映射到IP地址的记录类型是？（  ）",
+                "options": ["A记录", "MX记录", "CNAME记录", "NS记录"],
+                "answer": "A",
+                "analysis": "A记录（地址记录）：域名→IPv4；MX记录（邮件交换）：指定邮件服务器；CNAME（别名）：域名→域名；NS记录：指定该域名的DNS服务器。"
+            },
+            {
+                "type": "理论原理题",
+                "question": "FTP的“主动模式”中，数据连接的建立方向是？（  ）",
+                "options": ["服务器主动连客户端", "客户端主动连服务器", "双向同时建立", "无需数据连接"],
+                "answer": "A",
+                "analysis": "FTP主动模式：①客户端用随机端口连服务器21（控制连接）→②服务器用20端口主动连客户端随机端口（数据连接）；被动模式：服务器开放随机端口，客户端主动连。"
+            },
+            {
+                "type": "理论原理题",
+                "question": "以下哪项是FTP协议的核心局限？（  ）",
+                "options": ["传输数据不加密", "仅支持文本文件", "无法断点续传", "仅能单用户访问"],
+                "answer": "A",
+                "analysis": "FTP默认传输数据和命令均为明文，存在密码泄露风险；改进方案是SFTP（基于SSH加密）或FTPS（基于SSL/TLS加密）。"
+            },
+            {
+                "type": "理论原理题",
+                "question": "HTTP协议的“无状态”特性是指？（  ）",
+                "options": ["服务器不记忆客户端历史请求", "每次请求必须重新建立连接", "仅支持GET/POST两种请求", "传输数据不加密"],
+                "answer": "A",
+                "analysis": "HTTP无状态：服务器处理完请求后，不保存客户端的任何信息；需用Cookie/Session技术实现“记住用户”（如登录状态）。"
+            },
+            {
+                "type": "理论原理题",
+                "question": "HTTP中用于“向服务器提交表单数据”的请求方法是？（  ）",
+                "options": ["POST", "GET", "PUT", "DELETE"],
+                "answer": "A",
+                "analysis": "GET：从服务器获取数据（参数拼在URL后，不安全）；POST：向服务器提交数据（参数在请求体，相对安全）；PUT：更新服务器资源；DELETE：删除服务器资源。"
+            },
+            {
+                "type": "理论原理题",
+                "question": "HTTPS相比HTTP的核心改进是？（  ）",
+                "options": ["基于SSL/TLS加密传输", "默认端口改为443", "支持更大文件传输", "无需DNS解析"],
+                "answer": "A",
+                "analysis": "HTTPS = HTTP + SSL/TLS：①握手阶段验证服务器身份（证书）→②协商加密算法→③后续数据用对称加密传输，解决HTTP明文泄露问题；443是端口区别，非核心改进。"
+            },
+            {
+                "type": "理论原理题",
+                "question": "SMTP协议的核心功能是？（  ）",
+                "options": ["在邮件服务器间转发邮件", "从服务器下载邮件到客户端", "解析邮件域名", "加密邮件内容"],
+                "answer": "A",
+                "analysis": "SMTP（简单邮件传输协议）：负责“邮件从发件方服务器→收件方服务器”的转发；POP3/IMAP负责“客户端从服务器下载邮件”。"
+            },
+            {
+                "type": "理论原理题",
+                "question": "IMAP相比POP3的优势是？（  ）",
+                "options": ["支持多设备同步邮件状态", "传输速度更快", "仅下载邮件正文", "无需密码登录"],
+                "answer": "A",
+                "analysis": "POP3：下载邮件到本地后，服务器默认删除原邮件，多设备不同步；IMAP：邮件保留在服务器，多设备（电脑/手机）可同步已读/未读、删除等状态。"
+            },
+            {
+                "type": "理论原理题",
+                "question": "以下哪个协议不属于TCP/IP模型的应用层？（  ）",
+                "options": ["TCP", "HTTP", "DNS", "FTP"],
+                "answer": "A",
+                "analysis": "TCP/IP模型应用层协议：HTTP、DNS、FTP、SMTP等；TCP属于传输层协议，负责端到端可靠传输。"
+            },
+            {
+                "type": "理论原理题",
+                "question": "HTTP默认端口80属于哪类端口？（  ）",
+                "options": ["知名端口（0-1023）", "注册端口（1024-49151）", "动态端口（49152-65535）", "私有端口"],
+                "answer": "A",
+                "analysis": "端口号分类：①知名端口（0-1023）：系统/常用服务（如80 HTTP、53 DNS）→②注册端口（1024-49151）：应用自定义服务→③动态端口（49152-65535）：客户端临时使用。"
+            },
+            {
+                "type": "理论原理题",
+                "question": "DHCP中继代理的核心作用是？（  ）",
+                "options": ["转发DHCP广播报文到其他网段", "分配更多IP地址", "延长DHCP租约", "加密DHCP报文"],
+                "answer": "A",
+                "analysis": "DHCP报文是广播包，无法跨网段传输；DHCP中继（如路由器）可将客户端的DHCP广播转为单播，转发到其他网段的DHCP服务器，实现多网段共享一个服务器。"
+            },
+            {
+                "type": "理论原理题",
+                "question": "DNS客户端的“本地缓存”作用是？（  ）",
+                "options": ["减少重复DNS查询，加快访问", "存储所有域名的IP", "替代DNS服务器", "加密DNS查询"],
+                "answer": "A",
+                "analysis": "DNS客户端（如电脑/手机）会缓存已解析的域名-IP映射，下次访问同一域名时，直接用缓存结果，无需再查DNS服务器，减少延迟。"
+            },
+            {
+                "type": "理论原理题",
+                "question": "HTTP状态码“404”表示的含义是？（  ）",
+                "options": ["请求的资源不存在", "服务器内部错误", "权限不足", "请求成功"],
+                "answer": "A",
+                "analysis": "HTTP状态码分类：①2xx（成功，如200 OK）→②3xx（重定向，如302临时跳转）→③4xx（客户端错，如404资源不存在、403权限不足）→④5xx（服务器错，如500内部错误）。"
+            },
+            {
+                "type": "理论原理题",
+                "question": "FTP的“匿名登录”通常使用的用户名是？（  ）",
+                "options": ["anonymous", "ftp", "guest", "admin"],
+                "answer": "A",
+                "analysis": "FTP匿名登录：用户名默认是“anonymous”，密码可填任意邮箱（如user@example.com），仅能访问服务器开放的公共文件，无修改权限。"
+            },
+            {
+                "type": "理论原理题",
+                "question": "DHCP服务器分配IP前，会用哪种机制检测地址是否已被占用？（  ）",
+                "options": ["ARP请求", "ICMP ping", "DHCP Request", "DNS查询"],
+                "answer": "A",
+                "analysis": "DHCP地址冲突检测（ACD）：服务器分配IP前，发送ARP请求（“谁用这个IP？”），若有响应，说明地址已被占用，会重新分配其他IP。"
+            },
+            {
+                "type": "理论原理题",
+                "question": "使用IMAP协议时，客户端删除邮件后，服务器上的邮件会？（  ）",
+                "options": ["同步删除", "保留原邮件", "自动备份", "转为草稿"],
+                "answer": "A",
+                "analysis": "IMAP的核心是“双向同步”：客户端的操作（删除、标记已读）会同步到服务器，确保多设备看到的邮件状态一致；POP3删除本地邮件不影响服务器。"
+            },
+            {
+                "type": "理论原理题",
+                "question": "以下哪个应用层协议必须依赖TCP协议传输？（  ）",
+                "options": ["HTTP", "DNS", "DHCP", "TFTP"],
+                "answer": "A",
+                "analysis": "HTTP需可靠传输（不能丢包），依赖TCP；DNS默认用UDP（轻量快速），大报文用TCP；DHCP用UDP（广播传输）；TFTP（简单文件传输）用UDP。"
+            }
+            ]
+        ,
+        "ACL": [
+        {
+            "type": "理论原理题",
+            "question": "ACL的核心作用是？（  ）",
+            "options": ["控制网络访问权限", "实现VLAN间通信", "自动分配IP地址", "解析域名"],
+            "answer": "A",
+            "analysis": "ACL（访问控制列表）通过允许/拒绝特定IP、端口的数据包，控制网络访问权限，保护敏感资源。"
+        },
+        {
+            "type": "理论原理题",
+            "question": "标准ACL的编号范围是？（  ）",
+            "options": ["1-99", "100-199", "200-299", "300-399"],
+            "answer": "A",
+            "analysis": "标准ACL编号：1-99（基本ACL，仅控制源IP）；扩展ACL编号：100-199（控制源IP+目标IP+端口）。"
+        },
+        {
+            "type": "配置命令题",
+            "question": "在Cisco路由器上创建标准ACL（编号10）的命令是？（  ）",
+            "options": ["Router(config)# access-list 10 permit 192.168.1.0 0.0.0.255", "Router(config)# acl 10 permit 192.168.1.0", "Router(config-if)# access-list 10 permit any", "Router# access-list 10 permit host 192.168.1.1"],
+            "answer": "A",
+            "analysis": "标准ACL需在全局配置模式下创建，命令格式：`access-list [编号] permit/deny [源IP] [反掩码]`。"
+        },
+        {
+            "type": "理论原理题",
+            "question": "扩展ACL相比标准ACL的优势是？（  ）",
+            "options": ["可控制目标IP和端口", "仅控制源IP", "配置更简单", "仅适用于交换机"],
+            "answer": "A",
+            "analysis": "扩展ACL可同时控制源IP、目标IP、传输协议（TCP/UDP）和端口，精准限制特定服务访问。"
+        },
+        {
+            "type": "配置命令题",
+            "question": "将ACL应用到路由器接口入站方向的命令是？（  ）",
+            "options": ["Router(config-if)# ip access-group 10 in", "Router(config)# apply acl 10 in", "Router(config-if)# access-group 10 inbound", "Router(config)# ip acl 10 in"],
+            "answer": "A",
+            "analysis": "ACL应用命令：`ip access-group [编号] in/out`，in表示入站（数据进入接口时检测），out表示出站。"
+        },
+        {
+            "type": "故障排查题",
+            "question": "ACL配置后未生效，最可能的原因是？（  ）",
+            "options": ["未应用到接口", "ACL编号错误", "未创建VLAN", "未配置DHCP"],
+            "answer": "A",
+            "analysis": "ACL创建后必须应用到具体接口（in/out方向），否则规则仅存在于配置中，不生效。"
+        },
+        {
+            "type": "理论原理题",
+            "question": "ACL规则的执行顺序是？（  ）",
+            "options": ["自上而下，匹配即停止", "自下而上，匹配即停止", "随机执行", "同时执行所有规则"],
+            "answer": "A",
+            "analysis": "ACL规则按配置顺序自上而下执行，一旦数据包匹配某条规则，立即执行该规则，后续规则不再处理。"
+        },
+        {
+            "type": "配置命令题",
+            "question": "拒绝所有IP访问的ACL命令是？（  ）",
+            "options": ["access-list 10 deny any", "access-list 10 deny all", "access-list 10 reject any", "access-list 10 block all"],
+            "answer": "A",
+            "analysis": "`any`代表所有IP地址（等价于0.0.0.0 255.255.255.255），`deny any`用于拒绝所有流量。"
+        },
+        {
+            "type": "故障排查题",
+            "question": "扩展ACL配置后，特定端口访问仍能通，原因可能是？（  ）",
+            "options": ["规则顺序错误（允许规则在拒绝规则前）", "ACL未编号", "接口未配置IP", "未开启DHCP"],
+            "answer": "A",
+            "analysis": "若先配置`permit any`（允许所有），再配置`deny tcp any host 192.168.30.10 eq 80`（拒绝HTTP），则拒绝规则无效（所有流量已被允许）。"
+        },
+        {
+            "type": "理论原理题",
+            "question": "ACL默认隐含的规则是？（  ）",
+            "options": ["deny any（拒绝所有）", "permit any（允许所有）", "deny 192.168.0.0/16", "permit 10.0.0.0/8"],
+            "answer": "A",
+            "analysis": "ACL默认最后一条隐含规则是`deny any`，即未明确允许的流量全部拒绝（最小权限原则）。"
+        }
+        ],
+        "dataFlow": [
+            {
+                "type": "理论原理题",
+                "question": "数据流在TCP/IP协议栈中的封装顺序是？（  ）",
+                "options": ["应用层→传输层→网络层→数据链路层", "数据链路层→网络层→传输层→应用层", "应用层→网络层→传输层→数据链路层", "传输层→应用层→网络层→数据链路层"],
+                "answer": "A",
+                "analysis": "数据流封装遵循“自上而下”原则：应用层数据（如HTTP内容）→传输层添加TCP/UDP头部→网络层添加IP头部→数据链路层添加以太网帧头部。"
+            },
+            {
+                "type": "理论原理题",
+                "question": "跨VLAN数据流转发时，路由器的核心作用是？（  ）",
+                "options": ["剥离并重新封装VLAN标签", "仅转发不修改标签", "广播数据流到所有VLAN", "无需路由器，交换机直接转发"],
+                "answer": "A",
+                "analysis": "跨VLAN通信时，路由器接收带VLAN标签的数据包后，剥离标签，根据IP路由转发到目标VLAN，再重新添加对应VLAN标签发送。"
+            },
+            {
+                "type": "理论原理题",
+                "question": "Wireshark抓包时，能直接查看的数据流层级不包括？（  ）",
+                "options": ["物理层原始信号", "数据链路层以太网帧", "网络层IP包", "应用层HTTP数据"],
+                "answer": "A",
+                "analysis": "Wireshark可解析数据链路层及以上的封装数据（帧、IP包、TCP段、应用层数据），无法直接查看物理层的电信号/光信号。"
+            },
+            {
+                "type": "配置命令题",
+                "question": "在Cisco路由器上，查看IP数据包转发细节的debug命令是？（  ）",
+                "options": ["debug ip packet detail", "show ip flow", "debug data flow", "show packet forward"],
+                "answer": "A",
+                "analysis": "`debug ip packet detail`是路由器查看IP数据包转发过程的核心命令，可显示源IP、目标IP、转发接口等细节；其他选项命令格式错误。"
+            },
+            {
+                "type": "配置命令题",
+                "question": "查看交换机MAC地址表（验证二层转发路径）的正确命令是？（  ）",
+                "options": ["Switch# show mac address-table", "Switch# display mac table", "Switch(config)# show mac-table", "Switch# show arp table"],
+                "answer": "A",
+                "analysis": "Cisco交换机查看MAC地址表的特权模式命令是`show mac address-table`；B是华为设备命令，C是模式错误，D是查看ARP表命令。"
+            },
+            {
+                "type": "故障排查题",
+                "question": "PC能ping通网关，但无法访问Web服务器（80端口），抓包显示HTTP请求发出后无响应，最可能的原因是？（  ）",
+                "options": ["ACL拦截了TCP 80端口", "IP路由配置错误", "MAC地址表缺失", "物理链路断开"],
+                "answer": "A",
+                "analysis": "ping通网关说明IP路由和物理链路正常；HTTP依赖TCP 80端口，无响应大概率是ACL规则拦截了该端口的流量。"
+            },
+            {
+                "type": "故障排查题",
+                "question": "跨网段数据流转发失败，抓包发现IP包的目标MAC地址是网关MAC，但未到达目标主机，可能的问题是？（  ）",
+                "options": ["网关路由器无对应路由条目", "PC未配置网关", "目标主机IP地址错误", "数据链路层封装错误"],
+                "answer": "A",
+                "analysis": "PC已将数据包发给网关（目标MAC为网关），说明网关配置正确；未到达目标主机，核心原因是网关路由器路由表中无目标网段的路由条目。"
+            },
+            {
+                "type": "理论原理题",
+                "question": "TCP数据流建立连接的三次握手，第二次握手的标志位组合是？（  ）",
+                "options": ["SYN+ACK", "SYN", "ACK", "FIN+ACK"],
+                "answer": "A",
+                "analysis": "TCP三次握手：①客户端发SYN（请求连接）→②服务器发SYN+ACK（同意连接）→③客户端发ACK（确认连接）。"
+            },
+            {
+                "type": "配置命令题",
+                "question": "在Wireshark中，过滤仅显示研发部PC（192.168.10.5）与财务服务器（192.168.30.10）的数据流，过滤规则是？（  ）",
+                "options": ["ip.addr == 192.168.10.5 && ip.addr == 192.168.30.10", "ip.src == 192.168.10.5 and ip.dst == 192.168.30.10", "ip 192.168.10.5 192.168.30.10", "flow between 192.168.10.5 and 192.168.30.10"],
+                "answer": "A",
+                "analysis": "Wireshark过滤双向IP数据流的标准规则是`ip.addr == 源IP && ip.addr == 目标IP`，可显示两者之间的所有请求和响应数据。"
+            },
+            {
+                "type": "故障排查题",
+                "question": "VLAN10主机与VLAN20主机无法通信，抓包显示数据包带VLAN10标签到达路由器，但未转发到VLAN20，最可能的原因是？（  ）",
+                "options": ["路由器未配置对应VLAN的子接口", "交换机Trunk端口未允许VLAN10", "主机IP地址错误", "网关配置错误"],
+                "answer": "A",
+                "analysis": "数据包已带VLAN10标签到达路由器，说明Trunk端口配置正常；未转发到VLAN20，核心是路由器未配置VLAN10或VLAN20的子接口（无网关IP）。"
+            }
+        ], 
+        };
+
+        // 页面控制函数
+        function selectTest(testType) {
+            currentTestType = testType;
+            startTest();
+        }
+        
+        function startTest() {
+            currentQuestionIndex = 0;
+            userAnswers = [];
+            testCompleted = false;
+            
+            // 加载题目数据
+            currentQuestions = [...questionBanks[currentTestType]];
+            
+            // 更新页面标题
+            document.getElementById('resultTestName').textContent = testTitles[currentTestType];
+            
+            // 渲染第一题
+            renderQuestion();
+            
+            // 显示测试页面，隐藏首页
+            document.getElementById('homePage').classList.add('hidden');
+            document.getElementById('testPage').classList.remove('hidden');
+            document.getElementById('resultPage').classList.add('hidden');
+            
+            updateNavigationButtons();
+        }
+        
+        function renderQuestion() {
+            const question = currentQuestions[currentQuestionIndex];
+            const userAnswer = userAnswers[currentQuestionIndex];
+            
+            // 更新题目信息
+            document.getElementById('questionType').textContent = question.type;
+            document.getElementById('questionText').textContent = question.question;
+            document.getElementById('currentQuestionNum').textContent = currentQuestionIndex + 1;
+            document.getElementById('totalQuestions').textContent = currentQuestions.length;
+            
+            // 清空选项容器
+            const optionsContainer = document.getElementById('optionsContainer');
+            optionsContainer.innerHTML = '';
+            
+            // 隐藏答案反馈
+            document.getElementById('answerFeedback').classList.add('hidden');
+            
+            // 生成选项
+            question.options.forEach((option, index) => {
+                const optionLetter = String.fromCharCode(65 + index); // A, B, C, D
+                const optionElement = document.createElement('div');
+                optionElement.className = `option-card p-4 rounded-lg border ${userAnswer === index ? 'selected' : ''}`;
+                optionElement.innerHTML = `
+                    <div class="flex items-start">
+                        <div class="font-bold text-lg mr-3">${optionLetter}</div>
+                        <div>${option}</div>
+                    </div>
+                `;
+                optionElement.onclick = () => {
+                    // 如果未提交答案，允许选择
+                    if (userAnswer === undefined) {
+                        document.querySelectorAll('.option-card').forEach(el => 
+                            el.classList.remove('selected')
+                        );
+                        optionElement.classList.add('selected');
+                    }
+                };
+                optionsContainer.appendChild(optionElement);
+            });
+            
+            // 如果已有答案，显示反馈
+            if (userAnswer !== undefined) {
+                const feedbackTitle = document.getElementById('feedbackTitle');
+                const feedbackContent = document.getElementById('feedbackContent');
+                const isCorrect = userAnswer === question.answer.charCodeAt(0) - 65;
+                
+                feedbackTitle.textContent = isCorrect ? '回答正确' : `正确答案：${question.answer}`;
+                feedbackContent.textContent = question.analysis;
+                
+                document.getElementById('answerFeedback').classList.remove('hidden');
+                document.getElementById('answerFeedback').className = `p-4 rounded-lg border-l-4 mb-6 ${isCorrect ? 'result-correct' : 'result-incorrect'}`;
+            }
+        }
+        
+        function submitAnswer() {
+            // 获取选中的选项
+            const selectedOption = document.querySelector('.option-card.selected');
+            if (!selectedOption) {
+                alert('请选择一个答案');
+                return;
+            }
+            
+            // 记录答案索引
+            const selectedIndex = Array.from(document.querySelectorAll('.option-card')).indexOf(selectedOption);
+            userAnswers[currentQuestionIndex] = selectedIndex;
+            
+            // 显示答案反馈
+            renderQuestion();
+            
+            // 更新导航按钮状态
+            updateNavigationButtons();
+        }
+        
+        function prevQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                renderQuestion();
+                updateNavigationButtons();
+            }
+        }
+        
+        function nextQuestion() {
+            if (currentQuestionIndex < currentQuestions.length - 1) {
+                currentQuestionIndex++;
+                renderQuestion();
+                updateNavigationButtons();
+            } else {
+                // 最后一题提交后显示结果
+                if (userAnswers.length === currentQuestions.length) {
+                    showResults();
+                }
+            }
+        }
+        
+        function updateNavigationButtons() {
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const submitBtn = document.getElementById('submitBtn');
+            
+            // 第一题隐藏上一题按钮
+            prevBtn.disabled = currentQuestionIndex === 0;
+            prevBtn.classList.toggle('opacity-50', currentQuestionIndex === 0);
+            prevBtn.classList.toggle('cursor-not-allowed', currentQuestionIndex === 0);
+            
+            // 最后一题显示完成按钮
+            if (currentQuestionIndex === currentQuestions.length - 1) {
+                nextBtn.textContent = '完成测试';
+            } else {
+                nextBtn.textContent = '下一题';
+            }
+            
+            // 如果已提交答案，隐藏提交按钮
+            if (userAnswers[currentQuestionIndex] !== undefined) {
+                submitBtn.classList.add('hidden');
+                nextBtn.classList.remove('hidden');
+            } else {
+                submitBtn.classList.remove('hidden');
+                nextBtn.classList.add('hidden');
+            }
+        }
+        
+        function showResults() {
+            // 计算得分和正确率
+            let score = 0;
+            let theoryCount = 0, theoryCorrect = 0;
+            let configCount = 0, configCorrect = 0;
+            let troubleshootCount = 0, troubleshootCorrect = 0;
+            
+            currentQuestions.forEach((question, index) => {
+                const correctAnswerIndex = question.answer.charCodeAt(0) - 65;
+                const isCorrect = userAnswers[index] === correctAnswerIndex;
+                
+                if (isCorrect) score++;
+                
+                // 按题型统计
+                if (question.type.includes('理论')) {
+                    theoryCount++;
+                    if (isCorrect) theoryCorrect++;
+                } else if (question.type.includes('配置命令')) {
+                    configCount++;
+                    if (isCorrect) configCorrect++;
+                } else if (question.type.includes('错误与修正')) {
+                    troubleshootCount++;
+                    if (isCorrect) troubleshootCorrect++;
+                }
+            });
+            
+            const accuracy = Math.round((score / currentQuestions.length) * 100);
+            
+            // 更新结果页面
+            document.getElementById('scoreDisplay').textContent = `${score}/${currentQuestions.length}`;
+            document.getElementById('accuracyDisplay').textContent = `${accuracy}%`;
+            
+            // 更新题型正确率
+            document.getElementById('theoryAccuracy').textContent = `${Math.round((theoryCorrect/theoryCount)*100)}% (${theoryCorrect}/${theoryCount})`;
+            document.getElementById('configAccuracy').textContent = `${Math.round((configCorrect/configCount)*100)}% (${configCorrect}/${configCount})`;
+            document.getElementById('troubleshootAccuracy').textContent = `${Math.round((troubleshootCorrect/troubleshootCount)*100)}% (${troubleshootCorrect}/${troubleshootCount})`;
+            
+            // 绘制雷达图
+            drawRadarChart(theoryCorrect/theoryCount, configCorrect/configCount, troubleshootCorrect/troubleshootCount);
+            
+            // 显示结果页面
+            document.getElementById('testPage').classList.add('hidden');
+            document.getElementById('resultPage').classList.remove('hidden');
+	
+// 生成并显示学习建议
+const suggestionsContainer = document.getElementById('suggestionsContainer');
+const suggestions = generateSuggestions(
+    theoryCorrect/theoryCount * 100,
+    configCorrect/configCount * 100,
+    troubleshootCorrect/troubleshootCount * 100
+);
+
+// 将每个建议段落用<p>标签包裹
+const suggestionsHTML = suggestions.map(para => 
+    para.replace(/\*\*(.*?)\*\*/g, '<strong>$1')
+).map(para => `<p class="mb-3">${para}`).join('');
+
+suggestionsContainer.innerHTML = suggestionsHTML;
+
+        }
+        
+        function drawRadarChart(theory, config, troubleshoot) {
+            const ctx = document.getElementById('abilityRadarChart').getContext('2d');
+            
+            // 销毁已有图表
+            if (window.abilityChart) {
+                window.abilityChart.destroy();
+            }
+            
+            window.abilityChart = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['理论知识', '配置能力', '排错能力'],
+                    datasets: [{
+                        label: '能力评估',
+                        data: [theory * 100, config * 100, troubleshoot * 100],
+                        backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                        borderColor: 'rgba(59, 130, 246, 1)',
+                        pointBackgroundColor: 'rgba(59, 130, 246, 1)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgba(59, 130, 246, 1)'
+                    }]
+                },
+                options: {
+                    scales: {
+                        r: {
+                            angleLines: {
+                                display: true
+                            },
+                            suggestedMin: 0,
+                            suggestedMax: 100
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+        }
+        
+   function generateSuggestions(theoryScore, configScore, troubleshootScore) {
+    // 使用数组存储每个建议段落
+    const suggestions = [];
+    
+    // 理论知识建议
+    if (theoryScore < 60) {
+        suggestions.push("**理论知识薄弱**：建议重点复习VLAN基本概念、路由协议工作原理等基础理论，推荐参考《计算机网络（谢希仁版）》第5-7章。");
+    } else if (theoryScore < 80) {
+        suggestions.push("**理论知识良好**：可加强对IEEE 802.1Q、OSPF协议细节等进阶内容的学习。");
+    } else {
+        suggestions.push("**理论知识优秀**：建议将重点放在理论与实践结合的应用上。");
+    }
+    
+    // 配置能力建议
+    if (configScore < 60) {
+        suggestions.push("**配置能力不足**：需强化交换机VLAN划分、路由表配置等基础命令练习，建议使用华为eNSP模拟器进行实操。");
+    } else if (configScore < 80) {
+        suggestions.push("**配置能力良好**：可尝试复杂场景配置，如跨交换机VLAN通信、路由重分发等综合实验。");
+    } else {
+        suggestions.push("**配置能力优秀**：建议学习配置优化技巧，如路由策略、ACL规则设计等高级应用。");
+    }
+    
+    // 排错能力建议
+    if (troubleshootScore < 60) {
+        suggestions.push("**排错能力待提高**：从简单故障入手，如端口VLAN成员关系错误、静态路由配置错误等常见问题的定位方法。");
+    } else if (troubleshootScore < 80) {
+        suggestions.push("**排错能力良好**：建议学习使用debug命令、抓包工具等高级排错手段分析复杂网络故障。");
+    } else {
+        suggestions.push("**排错能力优秀**：可挑战综合故障场景分析，如路由环路、VLAN间通信异常等复杂问题的排查。");
+    }
+    
+    // 生成总结建议
+    const avgScore = (theoryScore + configScore + troubleshootScore) / 3;
+    if (avgScore < 60) {
+        suggestions.push("**总体建议**：您的网络实践能力处于基础阶段，建议系统学习网络基础知识，从单个设备配置开始逐步掌握。");
+    } else if (avgScore < 80) {
+        suggestions.push("**总体建议**：您已具备较好的网络实践能力，建议通过综合实验项目提升技能，如小型企业网络搭建与维护。");
+    } else {
+        suggestions.push("**总体建议**：您的网络实践能力优秀，可深入学习SDN、网络自动化等前沿技术拓展视野。");
+    }
+    
+    return suggestions; // 返回段落数组
+}
+
+        function goHome() {
+            document.getElementById('resultPage').classList.add('hidden');
+            document.getElementById('testPage').classList.add('hidden');
+            document.getElementById('homePage').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
