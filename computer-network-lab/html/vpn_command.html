@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IPsec VPN配置命令（bj-路由器）</title>
+    <style>
+        /* ========== 全局样式变量 & 重置 ========== */
+        :root {
+            --primary-color: #2563eb;
+            --primary-light: #3b82f6;
+            --primary-dark: #1d4ed8;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --comment-color: #059669;
+            --command-bg: #1e293b;
+            --command-text: #ffffff;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --border-color: #e2e8f0;
+            --spacing-xs: 4px;
+            --spacing-sm: 8px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+            --radius-sm: 6px;
+            --radius-md: 8px;
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 6px rgba(0,0,0,0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", "PingFang SC", Arial, sans-serif;
+        }
+
+        body {
+            padding: var(--spacing-lg);
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+            line-height: 1.7;
+        }
+
+        /* ========== 主容器 ========== */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: var(--bg-primary);
+            padding: var(--spacing-lg);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* ========== 标题样式 ========== */
+        h1 {
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-md);
+            border-bottom: 3px solid var(--primary-color);
+            padding-bottom: var(--spacing-md);
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        h4 {
+            color: var(--primary-dark);
+            margin: var(--spacing-md) 0 var(--spacing-sm);
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        /* ========== 核心：滚动命令窗口 ========== */
+        .command-scroll-container {
+            width: 100%;          /* 左右齐平 */
+            height: 500px;        /* 固定窗口高度，可根据需求调整 */
+            margin: 0 auto;       /* 水平居中 */
+            padding: var(--spacing-md);
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+            overflow-y: auto;     /* 垂直滚动，水平禁止 */
+            overflow-x: hidden;
+            /* 美化滚动条（兼容Chrome/Safari） */
+            scrollbar-width: thin;
+            scrollbar-color: var(--primary-color) var(--bg-secondary);
+        }
+
+        /* 美化滚动条（Chrome/Safari） */
+        .command-scroll-container::-webkit-scrollbar {
+            width: 8px;          /* 滚动条宽度 */
+        }
+        .command-scroll-container::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+            border-radius: 4px;
+        }
+        .command-scroll-container::-webkit-scrollbar-thumb {
+            background: var(--primary-light);
+            border-radius: 4px;
+            transition: background 0.2s ease;
+        }
+        .command-scroll-container::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-color);
+        }
+
+        /* ========== 命令展示区样式 ========== */
+        .command-display {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-md);
+        }
+
+        /* 注释样式 */
+        .command-comment {
+            color: var(--comment-color);
+            font-size: 14px;
+            font-weight: 500;
+            margin: var(--spacing-sm) 0;
+            padding: var(--spacing-sm) var(--spacing-md);
+            background: rgba(16, 185, 129, 0.05);
+            border-left: 3px solid var(--comment-color);
+            border-radius: var(--radius-sm);
+            width: calc(100% - var(--spacing-md)); /* 适配滚动容器内边距 */
+        }
+
+        /* 命令行样式 */
+        .command-example {
+            background: var(--command-bg);
+            color: var(--command-text);
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-radius: var(--radius-sm);
+            font-family: "Consolas", "Monaco", monospace;
+            font-size: 14px;
+            position: relative;
+            margin-left: var(--spacing-md);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+            width: calc(100% - var(--spacing-md)); /* 左右对齐 */
+            white-space: nowrap; /* 命令不换行 */
+            overflow-x: auto;    /* 单条命令过长时水平滚动 */
+        }
+
+        /* 复制按钮样式 */
+        .copy-btn {
+            position: sticky;    /* 粘贴定位，滚动时不跑偏 */
+            right: var(--spacing-sm);
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: var(--radius-sm);
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            opacity: 0.7;
+            margin-left: auto;   /* 固定在命令行右侧 */
+            flex-shrink: 0;      /* 不被挤压 */
+        }
+
+        .command-example:hover .copy-btn {
+            opacity: 1;
+        }
+
+        .copy-btn:hover {
+            background: var(--primary-light);
+        }
+
+        .copy-btn.copied {
+            background: #10b981;
+            content: "已复制";
+        }
+
+        /* ========== 批量复制按钮 ========== */
+        .batch-copy {
+            display: block;
+            width: fit-content;
+            margin: 0 auto var(--spacing-md);
+            padding: var(--spacing-sm) var(--spacing-lg);
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .batch-copy:hover {
+            background: var(--primary-light);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* ========== 响应式适配 ========== */
+        @media (max-width: 768px) {
+            body {
+                padding: var(--spacing-md);
+            }
+
+            .container {
+                padding: var(--spacing-md);
+            }
+
+            h1 {
+                font-size: 20px;
+            }
+
+            .command-scroll-container {
+                height: 400px; /* 移动端缩短窗口高度 */
+            }
+
+            .command-example {
+                font-size: 13px;
+                padding-right: 60px; /* 给复制按钮留空间 */
+            }
+        }
+
+        @media (max-width: 480px) {
+            .command-comment {
+                font-size: 13px;
+                width: 100%;
+                margin-left: 0;
+            }
+
+            .command-example {
+                font-size: 12px;
+                margin-left: 0;
+                width: 100%;
+            }
+
+            .command-scroll-container {
+                height: 350px;
+                padding: var(--spacing-sm);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>IPsec VPN配置命令（公司出口路由器：bj-路由器）</h1>
+        
+        <!-- 批量复制按钮 -->
+        <button class="batch-copy" onclick="copyAllCommands()">📋 批量复制所有配置命令</button>
+
+        <!-- 核心：滚动命令窗口 -->
+        <div class="command-scroll-container">
+            <div class="command-display" id="command-container">
+                <!-- 1：进入路由器配置模式 -->
+                <h4>1. 进入路由器配置模式</h4>
+                <div class="command-comment">【1：进入配置模式】获取路由器的配置权限，准备执行VPN配置命令</div>
+                <div class="command-example" id="cmd1">bj-路由器> enable                                  // 进入路由器特权模式，获取配置权限
+                    <button class="copy-btn" onclick="copyCommand('cmd1')">复制</button>
+                </div>
+                <div class="command-example" id="cmd2">bj-路由器# configure terminal                     // 进入全局配置模式，后续所有配置命令都在该模式下执行
+                    <button class="copy-btn" onclick="copyCommand('cmd2')">复制</button>
+                </div>
+
+                <!-- 2：配置ISAKMP策略（密钥协商规则） -->
+                <h4>2. 配置ISAKMP策略（密钥协商规则）</h4>
+                <div class="command-comment">【2：配置ISAKMP策略】定义VPN密钥的协商方式（加密、认证、密钥有效期等）</div>
+                <div class="command-example" id="cmd3">bj-路由器(config)# crypto isakmp policy 10         // 创建编号为10的ISAKMP策略（编号越小优先级越高）
+                    <button class="copy-btn" onclick="copyCommand('cmd3')">复制</button>
+                </div>
+                <div class="command-example" id="cmd4">bj-路由器(config-isakmp)# authentication pre-share // 配置VPN的认证方式为“预共享密钥”（简单易部署）
+                    <button class="copy-btn" onclick="copyCommand('cmd4')">复制</button>
+                </div>
+                <div class="command-example" id="cmd5">bj-路由器(config-isakmp)# encryption aes-256       // 配置加密算法为AES-256（企业级高安全性）
+                    <button class="copy-btn" onclick="copyCommand('cmd5')">复制</button>
+                </div>
+                <div class="command-example" id="cmd6">bj-路由器(config-isakmp)# hash sha256             // 配置哈希算法为SHA-256（验证数据完整性）
+                    <button class="copy-btn" onclick="copyCommand('cmd6')">复制</button>
+                </div>
+                <div class="command-example" id="cmd7">bj-路由器(config-isakmp)# group 5                 // 配置密钥交换的DH组为Group5（保障密钥安全）
+                    <button class="copy-btn" onclick="copyCommand('cmd7')">复制</button>
+                </div>
+                <div class="command-example" id="cmd8">bj-路由器(config-isakmp)# lifetime 3600           // 配置密钥生存期为1小时（到期自动更新）
+                    <button class="copy-btn" onclick="copyCommand('cmd8')">复制</button>
+                </div>
+                <div class="command-example" id="cmd9">bj-路由器(config-isakmp)# exit                    // 退出ISAKMP策略配置模式
+                    <button class="copy-btn" onclick="copyCommand('cmd9')">复制</button>
+                </div>
+
+                <!-- 3：设置预共享密钥（VPN连接密码） -->
+                <h4>3. 设置预共享密钥（VPN连接密码）</h4>
+                <div class="command-comment">【3：设置预共享密钥】配置远程设备连接VPN时需要输入的“密码”，两端需一致</div>
+                <div class="command-example" id="cmd10">bj-路由器(config)# crypto isakmp key geektech123 address 20.0.1.2 255.255.255.252  // 密钥设为“geektech123”，绑定远程路由器公网IP（20.0.1.2）
+                    <button class="copy-btn" onclick="copyCommand('cmd10')">复制</button>
+                </div>
+
+                <!-- 4：配置IPsec转换集（数据加密规则） -->
+                <h4>4. 配置IPsec转换集（数据加密规则）</h4>
+                <div class="command-comment">【4：配置IPsec转换集】定义实际传输数据的加密、验证规则</div>
+                <div class="command-example" id="cmd11">bj-路由器(config)# crypto ipsec transform-set VPN-SET esp-aes-256 esp-sha256-hmac  // 创建转换集“VPN-SET”，指定加密用AES-256、验证用SHA-256
+                    <button class="copy-btn" onclick="copyCommand('cmd11')">复制</button>
+                </div>
+                <div class="command-example" id="cmd12">bj-路由器(config-crypto-trans)# mode tunnel        // 配置为“隧道模式”（公网传输时加密整个数据包）
+                    <button class="copy-btn" onclick="copyCommand('cmd12')">复制</button>
+                </div>
+                <div class="command-example" id="cmd13">bj-路由器(config-crypto-trans)# exit               // 退出转换集配置模式
+                    <button class="copy-btn" onclick="copyCommand('cmd13')">复制</button>
+                </div>
+
+                <!-- 5：配置加密映射（绑定所有规则） -->
+                <h4>5. 配置加密映射（绑定所有规则）</h4>
+                <div class="command-comment">【5：配置加密映射】将前面的策略、密钥、规则绑定到一起，形成完整的VPN规则</div>
+                <div class="command-example" id="cmd14">bj-路由器(config)# crypto map VPN-MAP 10 ipsec-isakmp  // 创建编号为10的加密映射
+                    <button class="copy-btn" onclick="copyCommand('cmd14')">复制</button>
+                </div>
+                <div class="command-example" id="cmd15">bj-路由器(config-crypto-map)# set peer 20.0.1.2    // 绑定远程路由器的公网IP
+                    <button class="copy-btn" onclick="copyCommand('cmd15')">复制</button>
+                </div>
+                <div class="command-example" id="cmd16">bj-路由器(config-crypto-map)# set transform-set VPN-SET  // 关联之前配置的转换集
+                    <button class="copy-btn" onclick="copyCommand('cmd16')">复制</button>
+                </div>
+                <div class="command-example" id="cmd17">bj-路由器(config-crypto-map)# match address 100    // 绑定需要加密的流量规则（后续通过ACL定义）
+                    <button class="copy-btn" onclick="copyCommand('cmd17')">复制</button>
+                </div>
+                <div class="command-example" id="cmd18">bj-路由器(config-crypto-map)# exit               // 退出加密映射配置模式
+                    <button class="copy-btn" onclick="copyCommand('cmd18')">复制</button>
+                </div>
+
+                <!-- 6：定义内网网段（允许访问的资源） -->
+                <h4>6. 定义内网网段（允许访问的资源）</h4>
+                <div class="command-comment">【6：定义内网网段】指定允许远程设备通过VPN访问的公司内网资源</div>
+                <div class="command-example" id="cmd19">bj-路由器(config)# access-list 100 permit ip 192.168.1.0 0.0.0.255 any  // 允许内网192.168.1.0/24网段的流量通过VPN传输
+                    <button class="copy-btn" onclick="copyCommand('cmd19')">复制</button>
+                </div>
+
+                <!-- 7：启用VPN（应用到公网接口） -->
+                <h4>7. 启用VPN（应用到公网接口）</h4>
+                <div class="command-comment">【7：启用VPN】将配置好的VPN规则应用到路由器的公网接口，使VPN生效</div>
+                <div class="command-example" id="cmd20">bj-路由器(config)# interface Serial2/0             // 进入bj-路由器的公网接口（拓扑中对应Serial2/0）
+                    <button class="copy-btn" onclick="copyCommand('cmd20')">复制</button>
+                </div>
+                <div class="command-example" id="cmd21">bj-路由器(config-if)# crypto map VPN-MAP          // 将加密映射应用到公网接口（关键步骤）
+                    <button class="copy-btn" onclick="copyCommand('cmd21')">复制</button>
+                </div>
+                <div class="command-example" id="cmd22">bj-路由器(config-if)# no shutdown                // 确保公网接口处于开启状态
+                    <button class="copy-btn" onclick="copyCommand('cmd22')">复制</button>
+                </div>
+                <div class="command-example" id="cmd23">bj-路由器(config-if)# exit                       // 退出接口配置模式
+                    <button class="copy-btn" onclick="copyCommand('cmd23')">复制</button>
+                </div>
+
+                <!-- 8：验证VPN配置 -->
+                <h4>8. 验证VPN配置</h4>
+                <div class="command-comment">【8：验证配置】检查VPN是否成功配置并生效</div>
+                <div class="command-example" id="cmd24">bj-路由器# show crypto isakmp sa                 // 查看密钥协商状态，出现“ACTIVE”表示成功
+                    <button class="copy-btn" onclick="copyCommand('cmd24')">复制</button>
+                </div>
+                <div class="command-example" id="cmd25">bj-路由器# show crypto ipsec sa                  // 查看加密通道状态，出现“ESP SAs”表示通道已建立
+                    <button class="copy-btn" onclick="copyCommand('cmd25')">复制</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 复制单条命令
+        function copyCommand(cmdId) {
+            const cmdElement = document.getElementById(cmdId);
+            // 提取命令文本（去掉复制按钮和注释，只保留核心命令）
+            const fullText = cmdElement.innerText.trim();
+            const cmdText = fullText.split('//')[0].trim(); // 截取//前的核心命令
+            
+            // 复制到剪贴板
+            navigator.clipboard.writeText(cmdText).then(() => {
+                const copyBtn = cmdElement.querySelector('.copy-btn');
+                const originalText = copyBtn.innerText;
+                copyBtn.innerText = "已复制";
+                copyBtn.classList.add('copied');
+                
+                // 恢复原文本
+                setTimeout(() => {
+                    copyBtn.innerText = originalText;
+                    copyBtn.classList.remove('copied');
+                }, 1500);
+            }).catch(err => {
+                alert('复制失败：' + err);
+            });
+        }
+
+        // 批量复制所有命令
+        function copyAllCommands() {
+            const cmdElements = document.querySelectorAll('.command-example');
+            let allCmds = '';
+            
+            cmdElements.forEach(el => {
+                const fullText = el.innerText.trim();
+                const cmdText = fullText.split('//')[0].trim();
+                allCmds += cmdText + '\n';
+            });
+
+            // 复制到剪贴板
+            navigator.clipboard.writeText(allCmds).then(() => {
+                const batchBtn = document.querySelector('.batch-copy');
+                const originalText = batchBtn.innerText;
+                batchBtn.innerText = "📋 所有命令已复制";
+                
+                // 恢复原文本
+                setTimeout(() => {
+                    batchBtn.innerText = originalText;
+                }, 2000);
+            }).catch(err => {
+                alert('批量复制失败：' + err);
+            });
+        }
+    </script>
+</body>
+</html>

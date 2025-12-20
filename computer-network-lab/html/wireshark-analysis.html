@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>基于Wireshark的网络数据流分析</title>
+    <style>
+        /* ========== 全局样式变量 & 重置 ========== */
+        :root {
+            /* 主色调（延续统一风格） */
+            --primary-color: #2563eb;
+            --primary-light: #3b82f6;
+            --primary-dark: #1d4ed8;
+            /* 辅助色 */
+            --warning-color: #f97316;
+            --danger-color: #ef4444;
+            --success-color: #10b981;
+            --info-color: #06b6d4;
+            /* 中性色 */
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --text-tertiary: #94a3b8;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --bg-tertiary: #e2e8f0;
+            --border-color: #e2e8f0;
+            /* 间距 & 圆角 */
+            --spacing-xs: 4px;
+            --spacing-sm: 8px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+            --spacing-xl: 32px;
+            --radius-sm: 6px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            /* 阴影 */
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 6px rgba(0,0,0,0.08);
+            --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", "PingFang SC", Arial, sans-serif;
+        }
+
+        body {
+            padding: var(--spacing-lg);
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+            line-height: 1.7;
+        }
+
+        /* ========== 主容器 ========== */
+        .container {
+            max-width: 1360px;
+            margin: 0 auto;
+            background: var(--bg-primary);
+            padding: var(--spacing-xl);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* ========== 标题样式 ========== */
+        h1 {
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-xl);
+            border-bottom: 3px solid var(--primary-color);
+            padding-bottom: var(--spacing-md);
+            text-align: center;
+            font-size: 26px;
+            font-weight: 600;
+        }
+
+        h2 {
+            color: var(--primary-color);
+            margin: var(--spacing-lg) 0 var(--spacing-md);
+            font-size: 18px;
+            font-weight: 600;
+            border-left: 4px solid var(--primary-color);
+            padding-left: var(--spacing-md);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        h2::before {
+            content: "";
+            display: inline-block;
+            width: 4px;
+            height: 18px;
+            background: var(--primary-color);
+            border-radius: 2px;
+        }
+
+        h3 {
+            color: var(--text-primary);
+            margin: var(--spacing-md) 0 var(--spacing-sm);
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        h4 {
+            color: var(--primary-dark);
+            margin: var(--spacing-sm) 0;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        /* ========== 核心布局 ========== */
+        .content-wrap {
+            display: flex;
+            gap: var(--spacing-xl);
+            align-items: flex-start;
+            margin-bottom: var(--spacing-xl);
+        }
+
+        /* 左侧资源区（工具说明+视频+下载） */
+        .left-resource {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-lg);
+        }
+
+        /* 右侧案例+作业区 */
+        .right-case {
+            flex: 1.2;
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-lg);
+        }
+
+        /* ========== 卡片通用样式 ========== */
+        .card {
+            background: var(--bg-secondary);
+            padding: var(--spacing-lg);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        /* ========== 文本 & 列表样式 ========== */
+        p {
+            color: var(--text-primary);
+            margin: var(--spacing-sm) 0;
+            font-size: 14px;
+        }
+
+        .text-muted {
+            color: var(--text-secondary);
+            font-size: 13px;
+        }
+
+        .feature-list, .case-list, .homework-list {
+            margin: var(--spacing-md) 0;
+            padding-left: var(--spacing-lg);
+        }
+
+        .feature-list li, .case-list li, .homework-list li {
+            margin: var(--spacing-sm) 0;
+            font-size: 14px;
+            color: var(--text-primary);
+            list-style: disc;
+        }
+
+        .feature-list li strong, .case-list li strong {
+            color: var(--primary-dark);
+        }
+
+        /* 过滤规则代码块 */
+        .code-block {
+            background: #1e293b;
+            color: #ffffff;
+            padding: var(--spacing-md);
+            border-radius: var(--radius-sm);
+            margin: var(--spacing-md) 0;
+            font-family: "Consolas", "Monaco", monospace;
+            font-size: 13px;
+            overflow-x: auto;
+        }
+
+        /* ========== 按钮 & 链接样式 ========== */
+        .link-btn {
+            display: inline-block;
+            padding: var(--spacing-sm) var(--spacing-lg);
+            background: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: var(--radius-sm);
+            margin: var(--spacing-sm) 0;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .link-btn:hover {
+            background: var(--primary-light);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .link-btn:active {
+            transform: translateY(0);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .link-btn-info {
+            background: var(--info-color);
+        }
+
+        .link-btn-info:hover {
+            background: #0891b2;
+        }
+
+        .link-btn-success {
+            background: var(--success-color);
+        }
+
+        .link-btn-success:hover {
+            background: #059669;
+        }
+
+        /* ========== 媒体资源样式 ========== */
+        .video-thumb {
+            width: 100%;
+            height: auto;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+            margin: var(--spacing-md) 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            object-fit: cover;
+        }
+
+        .video-thumb:hover {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 12px rgba(37, 99, 235, 0.15);
+            transform: translateY(-2px);
+        }
+
+        /* ========== 实验作业/报告样式 ========== */
+        .homework-card {
+            border-left: 4px solid var(--warning-color);
+            background: rgba(249, 115, 22, 0.05);
+            margin: var(--spacing-md) 0;
+            padding: var(--spacing-md);
+            border-radius: var(--radius-sm);
+        }
+
+        .report-card {
+            border-left: 4px solid var(--success-color);
+            background: rgba(16, 185, 129, 0.05);
+            margin: var(--spacing-md) 0;
+            padding: var(--spacing-md);
+            border-radius: var(--radius-sm);
+        }
+
+        /* ========== 底部提示 ========== */
+        .footer-tip {
+            margin-top: var(--spacing-xl);
+            color: var(--text-secondary);
+            text-align: center;
+            font-size: 14px;
+            padding-top: var(--spacing-md);
+            border-top: 1px solid var(--border-color);
+        }
+
+        /* ========== 响应式适配 ========== */
+        @media (max-width: 768px) {
+            body {
+                padding: var(--spacing-md);
+            }
+
+            .container {
+                padding: var(--spacing-lg);
+            }
+
+            .content-wrap {
+                flex-direction: column;
+                gap: var(--spacing-lg);
+            }
+
+            .content-wrap > div {
+                width: 100%;
+            }
+
+            h1 {
+                font-size: 22px;
+            }
+
+            h2 {
+                font-size: 17px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: var(--spacing-md);
+            }
+
+            .card {
+                padding: var(--spacing-md);
+            }
+
+            h1 {
+                font-size: 20px;
+            }
+
+            .link-btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>基于Wireshark的网络数据流分析</h1>
+
+        <!-- 核心内容布局 -->
+        <div class="content-wrap">
+            <!-- 左侧：工具说明 + 视频教程 + 模板下载 -->
+            <div class="left-resource">
+                <!-- 1. Wireshark工具基础说明 -->
+                <div class="card">
+                    <h2>Wireshark工具基础说明</h2>
+                    <p>Wireshark是一款开源的网络数据包分析工具，支持跨平台（Windows/Linux/Mac），可实时捕获并解析网络流量，是网络故障排查、协议分析、安全审计的核心工具。</p>
+                    
+                    <h3>核心功能</h3>
+                    <ul class="feature-list">
+                        <li><strong>实时抓包</strong>：捕获局域网/广域网中所有进出的网络数据包；</li>
+                        <li><strong>协议解析</strong>：支持数百种协议（TCP/IP/HTTP/DNS/FTP等）的解码分析；</li>
+                        <li><strong>过滤规则</strong>：通过自定义过滤条件快速定位目标数据包；</li>
+                        <li><strong>流量统计</strong>：分析会话、端口、协议的流量占比及趋势；</li>
+                        <li><strong>离线分析</strong>：支持保存抓包文件（.pcap/.pcapng），离线复盘分析。</li>
+                    </ul>
+
+                    <h3>常用抓包过滤规则</h3>
+                    <div class="code-block">
+# 按协议过滤<br>
+http          # 仅显示HTTP协议数据包<br>
+tcp           # 仅显示TCP协议数据包<br>
+dns           # 仅显示DNS协议数据包<br>
+icmp          # 仅显示ICMP（ping）数据包<br>
+<br>
+# 按IP地址过滤<br>
+ip.addr == 192.168.1.10  # 源/目的IP为192.168.1.10<br>
+ip.src == 192.168.1.10   # 源IP为192.168.1.10<br>
+ip.dst == 192.168.2.30   # 目的IP为192.168.2.30<br>
+<br>
+# 按端口过滤<br>
+tcp.port == 80           # 仅显示80端口（HTTP）数据包<br>
+tcp.port == 443          # 仅显示443端口（HTTPS）数据包<br>
+udp.port == 53           # 仅显示53端口（DNS）数据包
+                    </div>
+
+                    <h3>抓包前准备</h3>
+                    <p class="text-muted">💡 提示：抓包前需确保网卡处于“混杂模式”，Windows需以管理员身份运行Wireshark，Linux需使用sudo权限。</p>
+                </div>
+
+                <!-- 2. 使用视频教程 -->
+                <div class="card">
+                    <h2>Wireshark使用视频教程</h2>
+                    <p>以下视频覆盖Wireshark从基础操作到实战分析的全流程：</p>
+                    <img src="./fig/wireshark.png" 
+                         alt="Wireshark使用教程" 
+                         class="video-thumb">
+                    <a href="https://www.bilibili.com/video/BV1P1nuzKEYz/?vd_source=67a412c416b4717fee360508599d6de5" target="_blank" class="link-btn">观看视频</a>
+                    
+                </div>
+                <!-- 3. 实验作业链接 -->
+                <div class="card">
+                    <h2>Wireshark实验作业</h2>
+                    <p>以下作业，完成后需提交抓包文件（.pcap）和实验报告：</p>
+                    
+                    <div class="homework-card">
+                        <h3>作业（必做）</h3>
+                        <p>作业要求：使用Wireshark捕获本机ping网关的ICMP数据包，分析请求/响应包结构，截图并标注关键字段。</p>
+                        <a href="./homework/dataflow_analysis_with_wireshark.docx" target="_blank" class="link-btn link-btn-info">下载作业要求</a>
+                        <a href="./homework/report_model_8.docx" target="_blank" class="link-btn">下载实验报告模版</a>
+                        <a href="https://jpkc.webvpn.bcu.edu.cn:8000/meol/index.do" target="_blank" class="link-btn">提交作业</a>
+                    </div>
+
+                    <p class="text-muted" style="margin-top: var(--spacing-md);">💡 截止时间：（上次课上课之前）</p>
+                </div>
+            </div>
+
+            <!-- 右侧：应用案例 + 实验作业 + 常见问题 -->
+            <div class="right-case">
+                <!-- 1. 典型应用案例 -->
+                <div class="card">
+                    <h2>Wireshark典型应用案例</h2>
+                    
+                    <h3>案例1：HTTP协议抓包分析</h3>
+                    <div class="case-list">
+                        <li><strong>实验场景</strong>：捕获浏览器访问百度首页的HTTP数据包；</li>
+                        <li><strong>核心步骤</strong>：<br>
+                            ① 启动Wireshark，选择网卡开始抓包；<br>
+                            ② 浏览器访问https://www.baidu.com；<br>
+                            ③ 停止抓包，使用过滤规则`http`筛选数据包；<br>
+                            ④ 分析HTTP请求（GET/POST）、响应状态码（200/404）、响应头信息。
+                        </li>
+                        <li><strong>关键结论</strong>：HTTP为明文传输，可直接看到请求参数和响应内容；HTTPS（443端口）为加密传输，需解密才能解析。</li>
+                    </div>
+
+                    <h3>案例2：TCP三次握手分析</h3>
+                    <div class="case-list">
+                        <li><strong>实验场景</strong>：捕获PC访问Web服务器时的TCP三次握手过程；</li>
+                        <li><strong>核心步骤</strong>：<br>
+                            ① 过滤规则：`tcp and ip.addr == 192.168.2.30`；<br>
+                            ② 识别三次握手数据包：<br>
+                            - 第一次：客户端→服务器（SYN=1，Seq=随机值）；<br>
+                            - 第二次：服务器→客户端（SYN=1，ACK=1，Seq=随机值，Ack=客户端Seq+1）；<br>
+                            - 第三次：客户端→服务器（ACK=1，Seq=客户端Seq+1，Ack=服务器Seq+1）。
+                        </li>
+                        <li><strong>关键结论</strong>：三次握手完成后，TCP连接建立，可传输HTTP数据；若握手失败，会导致无法访问服务器。</li>
+                    </div>
+
+                    <h3>案例3：DNS解析故障排查</h3>
+                    <div class="case-list">
+                        <li><strong>故障现象</strong>：浏览器输入域名无法访问，输入IP可正常访问；</li>
+                        <li><strong>抓包分析</strong>：<br>
+                            ① 过滤规则：`dns`；<br>
+                            ② 查看DNS请求包（客户端→DNS服务器）和响应包；<br>
+                            ③ 若无响应包：DNS服务器地址配置错误或网络不通；<br>
+                            ④ 若响应包为“域名不存在”：域名解析记录错误。
+                        </li>
+                        <li><strong>解决方案</strong>：修改本地DNS服务器地址（如8.8.8.8/114.114.114.114），重新测试。</li>
+                    </div>
+                </div>
+
+
+
+                <!-- 2. 常见问题解答 -->
+                <div class="card">
+                    <h2>常见问题解答</h2>
+                    <h3>Q1：Wireshark抓不到数据包？</h3>
+                    <p>A：① 确认选择了正确的网卡（如有线网卡/无线网卡）；② Windows需以管理员身份运行；③ 关闭防火墙/杀毒软件的拦截。</p>
+                    
+                    <h3>Q2：过滤规则输入后无结果？</h3>
+                    <p>A：① 检查规则语法（如`ip.addr`而非`ipaddr`）；② 确认抓包期间有对应流量产生；③ 区分“抓包过滤”和“显示过滤”（Wireshark顶部两个输入框）。</p>
+                    
+                    <h3>Q3：HTTPS数据包无法解析内容？</h3>
+                    <p>A：HTTPS基于TLS加密，需配置SSL密钥日志才能解密；或使用`ssl.handshake`过滤握手过程，无法直接查看明文内容。</p>
+                    
+                    <h3>Q4：抓包文件过大，打开卡顿？</h3>
+                    <p>A：① 使用过滤规则筛选关键数据包后另存为新文件；② 关闭不必要的协议解析器；③ 升级Wireshark至最新版本。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 底部提示 -->
+        <p class="footer-tip">
+            💡 提示：所有视频、作业、模板文件需替换为实际资源路径后使用；抓包时请勿捕获涉密网络流量，遵守网络安全法规。
+        </p>
+    </div>
+</body>
+</html>

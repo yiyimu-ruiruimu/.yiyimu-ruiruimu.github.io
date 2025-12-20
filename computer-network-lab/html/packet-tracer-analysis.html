@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>基于Packet Tracer的数据流分析</title>
+    <style>
+        /* 全局样式重置 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "微软雅黑", Arial, sans-serif;
+        }
+        body {
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        /* 主容器 */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+            text-align: center;
+        }
+        /* 左右分区容器 */
+        .content-wrap {
+            display: flex;
+            gap: 30px;
+            align-items: flex-start;
+        }
+        /* 左侧区域 */
+        .left-area {
+            flex: 1;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+        }
+        /* 右侧区域（包含协议说明+对话智能体） */
+        .right-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        /* 协议/故障/问题区域 */
+        .analysis-box {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+        }
+        /* 对话智能体容器 */
+        .chat-agent-box {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+        }
+        /* 子标题样式 */
+        h2 {
+            color: #3498db;
+            margin: 15px 0 10px;
+            font-size: 18px;
+            border-left: 4px solid #3498db;
+            padding-left: 10px;
+        }
+        h3 {
+            color: #2c3e50;
+            margin: 12px 0 8px;
+            font-size: 16px;
+        }
+        p {
+            line-height: 1.8;
+            color: #333;
+            margin: 8px 0;
+            font-size: 14px;
+        }
+        /* 链接/按钮样式 */
+        .link-btn {
+            display: inline-block;
+            padding: 10px 15px;
+            background: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            margin: 10px 0;
+            transition: background 0.3s;
+        }
+        .link-btn:hover {
+            background: #2980b9;
+        }
+        /* 拓扑图/动画图样式 */
+        .media-img {
+            width: 100%;
+            height: auto;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            margin: 10px 0;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .media-img:hover {
+            border-color: #3498db;
+            box-shadow: 0 0 8px rgba(52, 152, 219, 0.3);
+        }
+        /* 协议列表样式 */
+        .protocol-list {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        .protocol-list li {
+            line-height: 1.8;
+            color: #333;
+            margin: 6px 0;
+        }
+        /* 故障案例样式 */
+        .case-box {
+            background: #e8f4fd;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 15px 0;
+        }
+        /* 常见问题样式 */
+        .tip {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        /* 对话智能体样式 */
+        .chat-container {
+            width: 100%;
+            height: 400px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            background: white;
+            padding: 15px;
+            overflow-y: auto;
+            margin-bottom: 15px;
+        }
+        .chat-message {
+            margin: 10px 0;
+            padding: 8px 12px;
+            border-radius: 6px;
+            max-width: 90%;
+        }
+        .agent-message {
+            background: #e8f4fd;
+            color: #2c3e50;
+            align-self: flex-start;
+        }
+        .hint-message {
+            background: #fdf2e8;
+            color: #e67e22;
+            margin: 5px 0 15px 20px;
+            font-size: 13px;
+        }
+        .negative-hint {
+            background: #ffebee;
+            color: #e53935;
+            margin: 5px 0 15px 20px;
+            font-size: 13px;
+        }
+        .student-prompt {
+            background: #3498db;
+            color: white;
+            align-self: flex-end;
+            margin-left: auto;
+        }
+        .chat-input-area {
+            display: flex;
+            gap: 10px;
+        }
+        #chat-input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            outline: none;
+            font-size: 14px;
+        }
+        #chat-input:focus {
+            border-color: #3498db;
+        }
+        #send-btn {
+            padding: 10px 20px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        #send-btn:hover {
+            background: #2980b9;
+        }
+        #reset-btn {
+            padding: 10px 15px;
+            background: #95a5a6;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        #reset-btn:hover {
+            background: #7f8c8d;
+        }
+        /* 响应式适配 */
+        @media (max-width: 768px) {
+            .content-wrap {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>基于Packet Tracer的数据流分析（PC0访问Web服务器）</h1>
+
+        <!-- 左右分区核心内容 -->
+        <div class="content-wrap">
+            <!-- 左侧区域：拓扑图、下载、视频、动画链接 -->
+            <div class="left-area">
+                <h2>一、网络拓扑相关资源</h2>
+                
+                <!-- 拓扑图展示 -->
+                <h3>1. 核心拓扑图（PC0访问Web服务器）</h3>
+                <p>拓扑说明：包含PC0（192.168.1.10）、交换机、路由器、Web服务器（192.168.2.30），模拟极客公司办公网场景</p>
+                <img src="./fig/dataflow.png" alt="PC0访问Web服务器拓扑图" class="media-img">
+                
+                <!-- 拓扑图下载链接 -->
+                <h3>2. 拓扑图下载</h3>
+                <p>点击下方链接下载可编辑的Packet Tracer拓扑文件：</p>
+                <a href="./pkt/dataflow.pkt" class="link-btn">下载PC0访问Web服务器拓扑图（.pkt）</a>
+                
+                <!-- 视频链接 -->
+                <h3>3. 全流程讲解视频</h3>
+                <p>观看PC0通过HTTP访问Web服务器的完整操作视频：</p>
+                <a href="./operation_tutorial_video/dataflow_1_chufaDNS.mp4" target="_blank" class="link-btn">第一步:DNS进程启动，紧接着触发ARP发现</a>
+                <a href="./operation_tutorial_video/dataflow_2_ARP.mp4" target="_blank" class="link-btn">第二步、ARP协议数据流分析</a>
+                <a href="./operation_tutorial_video/dataflow_3_dns.mp4" target="_blank" class="link-btn">第三步、DNS协议数据流分析</a>
+                <a href="./operation_tutorial_video/dataflow_4_tcpjl.mp4" target="_blank" class="link-btn">第四步、TCP连接建立数据流分析</a>
+                <a href="./operation_tutorial_video/dataflow_5_http.mp4" target="_blank" class="link-btn">第五步、HTTP协议数据流分析</a> 
+                <a href="./operation_tutorial_video/dataflow_6_tcpsf.mp4" target="_blank" class="link-btn">第六步、TCP连接释放数据流分析</a>                               
+                <!-- TCP/IP协议栈数据包封装动画（点击触发） -->
+                <h3>4. TCP/IP协议栈数据包封装动画</h3>
+                <p>点击下方图片，查看数据包从应用层到物理层的封装全过程动画：</p>
+                <!-- 静态图展示，点击打开动画页面（支持GIF/MP4/网页动画） -->
+                <a href="./operation_tutorial_video/data_encap_tcp_ip.mp4" target="_blank">
+                    <img src="./fig/data_encap_TCP_IP.png" 
+                         alt="TCP/IP协议栈数据包封装动画（点击播放）" 
+                         class="media-img">
+                </a>
+                <p style="font-size: 12px; color: #666; margin-top: 5px;">💡 提示：点击图片自动跳转至动画演示页面</p>
+            </div>
+
+            <!-- 右侧区域：分析内容 + 对话智能体 -->
+            <div class="right-area">
+                <!-- 协议/故障/问题分析区域 -->
+                <div class="analysis-box">
+                    <h2>一、访问过程涉及的协议及作用</h2>
+                    <p>基于左侧拓扑，PC0访问Web服务器的全流程涉及以下核心协议：</p>
+                    <ul class="protocol-list">
+                        <li><strong>DNS协议</strong>：域名解析协议，PC0通过DNS请求报文获取web服务器的IP地址；</li>
+                        <li><strong>ARP协议</strong>：地址解析协议，PC0通过ARP获取路由器端口f0/0的MAC地址，实现IP地址到MAC地址的映射；</li>
+                        <li><strong>Ethernet协议</strong>：以太网协议，负责数据在局域网内的帧封装与物理层传输；</li>
+                        <li><strong>IP协议</strong>：网际协议，封装源IP（PC0）和目的IP（Web服务器），负责跨网段数据路由转发；</li>
+                        <li><strong>TCP协议</strong>：传输控制协议，建立可靠的端到端连接（三次握手），保证数据有序、无丢失传输；</li>
+                        <li><strong>HTTP协议</strong>：超文本传输协议，定义PC0与Web服务器之间的请求/响应规则（如GET请求、响应状态码）。</li>
+                    </ul>
+
+                    <h2>二、故障排查背景（极客公司仿真场景）</h2>
+                    <div class="case-box">
+                        <h3>场景：PC0无法访问Web服务器</h3>
+                        <p><strong>现象</strong>：PC0输入Web服务器IP后无法打开网页，ping 192.168.2.30超时；</p>
+                        <a href="./pkt/dataflow _withproblem.pkt" class="link-btn">下载问题案例拓扑图（.pkt）</a>
+                    </div>
+
+                    <h2>三、新手常见问题与解决</h2>
+                    <p><span class="tip">问题1：拓扑图导入后设备无法连线？</span>→确认使用正确线缆（PC-交换机用直通线，路由器-路由器用交叉线）；</p>
+                    <p><span class="tip">问题2：视频/动画无法播放？</span>→更换浏览器（Chrome/Edge兼容性最佳）；</p>
+                    <p><span class="tip">问题3：配置IP后仍无法通信？</span>→检查PC默认网关是否配置为路由器对应端口IP；</p>
+                    <p><span class="tip">问题4：HTTP服务开启后仍无法访问？</span>→检查TCP 80端口是否被防火墙拦截，或服务器IP配置错误；</p>
+                    <p><span class="tip">问题5：仿真模式无数据流？</span>→确认切换到【Simulation】模式，勾选HTTP/TCP/IP协议过滤规则。</p>
+                </div>
+
+                <!-- 故障排查对话智能体 -->
+                <div class="chat-agent-box">
+                    <h2>📝 故障排查引导助手</h2>
+                    <p style="font-size: 13px; color: #666;">跟随助手提问，一步步排查PC0无法访问Web服务器的问题（输入任意关键词即可进入下一步）</p>
+                    <!-- 对话显示容器 -->
+                    <div class="chat-container" id="chat-container">
+                        <div class="chat-message agent-message">你好！现在我们一起排查「PC0无法访问Web服务器（ping 192.168.2.30超时）」的问题。首先，你观察到的核心现象是不是：PC0输入Web服务器IP无法打开网页，且ping 192.168.2.30超时？</div>
+                    </div>
+                    <!-- 输入区域 -->
+                    <div class="chat-input-area">
+                        <input type="text" id="chat-input" placeholder="输入你的回答（如：是/对/是的/未解决/不知道），按回车或点击发送..." />
+                        <button id="send-btn">发送</button>
+                        <button id="reset-btn">重置对话</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 底部提示 -->
+        <p style="margin-top: 30px; color: #666; text-align: center;">💡 提示：点击浏览器左上角「返回」可回到主页面；拓扑文件、视频、动画需替换为实际资源路径后使用。</p>
+    </div>
+
+    <script>
+        // 定义负面回答关键词（学生表示无法解决的话术）
+        const negativeKeywords = ['不能解决', '未解决', '不知道', '不会', '没找到', '失败', '不行', '没解决', '解决不了'];
+
+        // 对话步骤配置（新增负面回答引导逻辑）
+        const chatSteps = [
+            // 步骤0：初始提问（现象确认）
+            {
+                agentMsg: "你好！现在我们一起排查「PC0无法访问Web服务器（ping 192.168.2.30超时）」的问题。首先，你观察到的核心现象是不是：PC0输入Web服务器IP无法打开网页，且ping 192.168.2.30超时？",
+                hintMsg: "💡 提示：这是排查的第一步，先确认故障现象是否匹配目标场景",
+                negativeMsg: "没关系！我们先确认现象：在Packet Tracer中打开拓扑，双击PC0→Desktop→Command Prompt，输入ping 192.168.2.30，若显示Request timed out，就是该故障现象～",
+                nextStep: 1
+            },
+            // 步骤1：引导跟踪数据流
+            {
+                agentMsg: "确认现象匹配！接下来请打开Packet Tracer，切换到「Simulation（仿真模式）」，跟踪PC0访问Web服务器的数据流。你看到数据包在哪个位置中断了？",
+                hintMsg: "💡 提示：重点查看数据包经过路由器时的状态，是否在路由器端口2位置停止传输？",
+                negativeMsg: "别着急！教你怎么跟踪：1. 点击Packet Tracer顶部「Simulation」切换模式；2. 点击「Auto Capture/Play」开始捕获；3. 双击PC0发送ping请求，就能看到数据包传输路径，重点看路由器端口2是否有中断～",
+                nextStep: 2
+            },
+            // 步骤2：引导检查路由器配置
+            {
+                agentMsg: "没错！数据包在路由器端口2中断了。接下来请检查路由器的端口配置，你发现端口2存在什么问题？",
+                hintMsg: "💡 提示：对比路由器端口1（已配置192.168.1.1/24），查看端口2是否配置了IP地址？",
+                negativeMsg: "我来教你检查：1. 双击路由器→CLI→输入enable（进入特权模式）；2. 输入show running-config（查看配置）；3. 找到interface FastEthernet0/1（端口2），若没有ip address配置，就是未配IP～",
+                nextStep: 3
+            },
+            // 步骤3：引导确认路由器端口问题
+            {
+                agentMsg: "非常棒！路由器端口2确实未配置IP地址（仅端口1配了）。接下来请检查Web服务器的配置，你发现HTTP服务和80端口有什么异常？",
+                hintMsg: "💡 提示：打开Web服务器的「Services（服务）」面板，查看HTTP服务是否启用，80端口是否开放？",
+                negativeMsg: "教你快速检查：1. 双击Web服务器→Desktop→Services；2. 找到HTTP选项，若Enabled列是No，就是未启用；80端口是HTTP默认端口，若被修改也会导致访问失败～",
+                nextStep: 4
+            },
+            // 步骤4：引导确认路由器端口问题
+            {
+                agentMsg: "答对了！Web服务器的HTTP服务未启用，80端口处于关闭状态。现在先解决路由器的问题：针对端口2未配置IP的问题，你应该怎么配置？",
+                hintMsg: "💡 提示：给路由器端口2配置和Web服务器同网段的IP（192.168.2.1/24），并执行no shutdown启用端口",
+                negativeMsg: "直接给你配置命令：1. 路由器CLI中输入：configure terminal（进入全局配置）；2. interface FastEthernet0/1（进入端口2）；3. ip address 192.168.2.1 255.255.255.0（配置IP）；4. no shutdown（启用端口）；5. exit（退出）～",
+                nextStep: 5
+            },
+            // 步骤5：引导解决Web服务器问题
+            {
+                agentMsg: "配置正确！路由器端口2配置192.168.2.1/24并启用后，接下来解决Web服务器的问题：如何开启Web服务器的HTTP服务？",
+                hintMsg: "💡 提示：登录Web服务器→打开「Services」面板→找到HTTP服务，勾选启用，确认80端口为默认端口",
+                negativeMsg: "手把手教你：1. 双击Web服务器→Desktop→Services；2. 找到HTTP行，点击Enabled列的No，改为Yes；3. 确认Port列是80（默认），无需修改；4. 点击OK保存配置～",
+                nextStep: 6
+            },
+            // 步骤6：引导验证结果
+            {
+                agentMsg: "操作正确！HTTP服务已开启，80端口也开放了。现在重新跟踪数据流，你能看到哪些正常的交互过程？",
+                hintMsg: "💡 提示：重点观察TCP三次握手是否完成，HTTP请求和响应是否正常传输？",
+                negativeMsg: "验证方法：1. 重新开启Simulation模式捕获；2. PC0再次ping 192.168.2.30，能看到Reply；3. 访问Web服务器IP，能看到TCP三次握手（SYN→SYN+ACK→ACK）和HTTP请求/响应包～",
+                nextStep: 7
+            },
+            // 步骤7：完成排查
+            {
+                agentMsg: "太棒了！你已经完成全部排查：TCP三次握手完成，HTTP请求/响应正常，PC0能成功访问Web服务器了。总结一下：本次故障是「路由器端口2未配IP+Web服务器HTTP服务未启用」导致的，你学会了吗？",
+                hintMsg: "💡 恭喜！你已掌握Packet Tracer故障排查的核心思路：先跟踪数据流定位中断点→再逐一检查设备配置→最后验证修复结果",
+                negativeMsg: "没关系！我们再总结：本次故障核心是2个点→路由器端口2没配IP（192.168.2.1/24）、Web服务器HTTP服务没开。只要配置好这两个点，PC0就能正常访问啦～",
+                nextStep: -1 // 结束
+            }
+        ];
+
+        // DOM元素获取
+        const chatContainer = document.getElementById('chat-container');
+        const chatInput = document.getElementById('chat-input');
+        const sendBtn = document.getElementById('send-btn');
+        const resetBtn = document.getElementById('reset-btn');
+
+        // 当前对话步骤
+        let currentStep = 0;
+
+        // 渲染单条消息
+        function renderMessage(text, type) {
+            const msgDiv = document.createElement('div');
+            msgDiv.className = `chat-message ${type}`;
+            msgDiv.textContent = text;
+            chatContainer.appendChild(msgDiv);
+            // 滚动到底部
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        // 初始化对话
+        function initChat() {
+            currentStep = 0;
+            chatContainer.innerHTML = '';
+            // 渲染初始消息
+            renderMessage(chatSteps[0].agentMsg, 'agent-message');
+            renderMessage(chatSteps[0].hintMsg, 'hint-message');
+            // 清空输入框
+            chatInput.value = '';
+        }
+
+        // 检测是否为负面回答
+        function isNegativeAnswer(text) {
+            return negativeKeywords.some(keyword => text.includes(keyword));
+        }
+
+        // 发送消息处理（新增负面回答分支）
+        function sendMessage() {
+            const inputText = chatInput.value.trim();
+            if (!inputText) return;
+
+            // 渲染学生输入
+            renderMessage(inputText, 'student-prompt');
+            chatInput.value = '';
+
+            // 检测是否为负面回答
+            if (isNegativeAnswer(inputText)) {
+                // 渲染负面引导消息，不跳转步骤
+                setTimeout(() => {
+                    renderMessage(chatSteps[currentStep].negativeMsg, 'negative-hint');
+                }, 500);
+                return; // 不跳转下一步
+            }
+
+            // 正常回答：进入下一步
+            currentStep = chatSteps[currentStep].nextStep;
+            if (currentStep === -1) {
+                // 对话结束
+                return;
+            }
+            if (currentStep < chatSteps.length) {
+                // 渲染下一步的agent消息和提示
+                setTimeout(() => {
+                    renderMessage(chatSteps[currentStep].agentMsg, 'agent-message');
+                    renderMessage(chatSteps[currentStep].hintMsg, 'hint-message');
+                }, 500);
+            }
+        }
+
+        // 事件绑定
+        sendBtn.addEventListener('click', sendMessage);
+        chatInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+        resetBtn.addEventListener('click', initChat);
+
+        // 初始化
+        window.onload = initChat;
+    </script>
+</body>
+</html>
