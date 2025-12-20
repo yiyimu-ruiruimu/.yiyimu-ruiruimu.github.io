@@ -750,16 +750,12 @@
             <div class="subtitle">极客科技有限公司网络演进历程</div>
         </header>
 
-        <!-- 登录/注册按钮区域 -->
+        <!-- 登录/注册/退出按钮区域 -->
         <div style="text-align: right; padding: 15px; background: #f9fbfd;">
-        <button id="loginBtn" style="padding: 8px 15px; background: #1a6bc4; color: white; border: none; border-radius: 4px; cursor: pointer;">登录</button>
-        <button id="signupBtn" style="padding: 8px 15px; background: #27ae60; color: white; border: none; border-radius: 4px; cursor: pointer; margin-left: 10px;">注册</button>
+        <button id="loginBtn" style="padding: 8px 15px; background: #1a6bc4; color: white; border: none; border-radius: 4px; cursor: pointer;">登录/注册</button>
         <span id="userInfo" style="margin-left: 15px; display: none;"></span>
         <button id="logoutBtn" style="padding: 8px 15px; background: #e74c3c; color: white; border: none; border-radius: 4px; cursor: pointer; margin-left: 10px; display: none;">退出</button>
         </div>
-
-        <!-- 引入Netlify Identity的JS库 -->
-        <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 
 
         <div class="timeline">
@@ -2243,51 +2239,50 @@
         });
     </script>    
     
-    <script>
-    // 初始化Netlify Identity
-    if (window.netlifyIdentity) {
-    window.netlifyIdentity.on("init", user => {
-        if (!user) {
-        window.netlifyIdentity.on("login", () => {
-            // 登录成功后刷新页面显示用户信息
-            document.location.href = "/";
-        });
-        }
-    });
-    }
+   
+        <!-- 引入Auth0的SDK -->
+<script src="https://cdn.auth0.com/js/auth0-spa-js/2.0/auth0-spa-js.production.js"></script>
 
-    // 登录按钮点击事件
-    document.getElementById("loginBtn").addEventListener("click", () => {
-    if (window.netlifyIdentity) {
-        window.netlifyIdentity.open("login"); // 打开登录弹窗
-    }
+<script>
+    // 初始化Auth0（替换成你的信息）
+    const auth0 = await createAuth0Client({
+    domain: "YOUR_AUTH0_DOMAIN", // 替换：比如dev-xxxx.us.auth0.com
+    clientId: "YOUR_AUTH0_CLIENT_ID" // 替换：比如abc123xyz789
     });
 
-    // 注册按钮点击事件
-    document.getElementById("signupBtn").addEventListener("click", () => {
-    if (window.netlifyIdentity) {
-        window.netlifyIdentity.open("signup"); // 打开注册弹窗
-    }
-    });
-
-    // 退出按钮点击事件
-    document.getElementById("logoutBtn").addEventListener("click", () => {
-    if (window.netlifyIdentity) {
-        window.netlifyIdentity.logout(); // 退出登录
-        document.location.href = "/"; // 刷新页面
-    }
-    });
-
-    // 检查登录状态并更新UI
-    window.netlifyIdentity.on("init", user => {
-    if (user) {
-        // 登录成功：显示用户信息和退出按钮，隐藏登录/注册按钮
+    // 检查是否已登录，更新页面显示
+    async function checkLogin() {
+    const isAuthenticated = await auth0.isAuthenticated();
+    if (isAuthenticated) {
+        const user = await auth0.getUser();
+        // 显示用户信息+退出按钮，隐藏登录按钮
         document.getElementById("userInfo").textContent = `当前登录：${user.email}`;
         document.getElementById("userInfo").style.display = "inline";
         document.getElementById("logoutBtn").style.display = "inline";
         document.getElementById("loginBtn").style.display = "none";
-        document.getElementById("signupBtn").style.display = "none";
     }
+    }
+    // 页面加载时检查登录状态
+    checkLogin();
+
+    // 登录/注册按钮点击事件
+    document.getElementById("loginBtn").addEventListener("click", async () => {
+    // 打开Auth0的登录/注册弹窗
+    await auth0.loginWithPopup();
+    // 登录后更新页面显示
+    checkLogin();
     });
-    </script>
+
+    // 退出按钮点击事件
+    document.getElementById("logoutBtn").addEventListener("click", async () => {
+    await auth0.logout({
+        returnTo: window.location.origin // 退出后跳回当前站点
+    });
+    // 退出后更新页面显示
+    document.getElementById("userInfo").style.display = "none";
+    document.getElementById("logoutBtn").style.display = "none";
+    document.getElementById("loginBtn").style.display = "inline";
+    });
+</script>
+
 </body></html>
