@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录 - 计算机网络智能实践教学平台</title>
+    <style>
+        /* 复用首页样式，保持风格统一 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", Arial, sans-serif;
+        }
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        .container {
+            width: 1200px;
+            margin: 0 auto;
+            padding: 50px 20px;
+        }
+        .login-box {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+            padding: 60px 80px;
+            max-width: 500px;
+            margin: 50px auto; /* 居中显示 */
+        }
+        .login-box h2 {
+            color: #2d3748;
+            font-size: 28px;
+            margin-bottom: 40px;
+            border-bottom: 2px solid #4299e1;
+            padding-bottom: 10px;
+            text-align: center;
+        }
+        .form-group {
+            margin-bottom: 25px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 16px;
+            color: #4a5568;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: #4299e1; /* 聚焦时边框变主题色 */
+        }
+        .btn-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+        .start-practice-btn {
+            display: inline-block;
+            padding: 14px 36px;
+            background-color: #4299e1;
+            color: #fff;
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            text-decoration: none;
+        }
+        .start-practice-btn:hover {
+            background-color: #3182ce;
+        }
+        .link-text {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #666;
+        }
+        .link-text a {
+            color: #4299e1;
+            text-decoration: underline;
+        }
+        .back-home {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+        .back-home a {
+            color: #666;
+            text-decoration: none;
+        }
+        .back-home a:hover {
+            color: #4299e1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="login-box">
+            <h2>用户登录</h2>
+            <form>
+                <div class="form-group">
+                    <label for="username">用户名</label>
+                    <input type="text" id="username" name="username" placeholder="请输入用户名" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">密码</label>
+                    <input type="password" id="password" name="password" placeholder="请输入密码" required>
+                </div>
+                <div class="link-text" style="text-align: right;">
+                    <a href="#">忘记密码？</a>
+                </div>
+                <!-- login.html 的 <head> 中添加 -->
+                <script src="../auth-utils.js"></script>
+
+                <!-- 替换登录页的登录按钮 -->
+                <div class="btn-container">
+                <button onclick="login()" class="start-practice-btn">登录</button>
+                </div>
+                <!-- 注册链接也改为调用注册方法 -->
+                <div class="link-text">
+                还没有账号？<a href="javascript:register()">立即注册</a>
+                </div>
+                <div class="back-home">
+                    <a href="../index.html">返回首页</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,9 +1,12 @@
 <!DOCTYPE html>
 <!-- saved from url=(0253)file:///E:/%E6%95%99%E7%A7%91%E7%A0%94/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80%E8%AF%BE%E6%94%B9/%E5%AE%9E%E8%B7%B5%E6%95%99%E5%AD%A6%E5%B9%B3%E5%8F%B01123/%E6%99%BA%E8%83%BD%E5%AE%9E%E8%B7%B5%E5%B9%B3%E5%8F%B0-%E5%8A%A0vlan.html -->
-<html lang="zh-CN"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    
+<html lang="zh-CN">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>计算机网络智能实践教学平台 - 极客科技有限公司网络演进</title>
+    <!-- 【新增】这一行是引入auth-utils.js脚本，直接粘贴到<head>里即可 -->
+   <script src="../auth-utils.js"></script>
     <style>
         * {
             margin: 0;
@@ -749,13 +752,6 @@
             <h1>计算机网络智能实践教学平台</h1>
             <div class="subtitle">极客科技有限公司网络演进历程</div>
         </header>
-
-        <!-- 登录/注册/退出按钮区域 -->
-        <div style="text-align: right; padding: 15px; background: #f9fbfd;">
-        <button id="loginBtn" style="padding: 8px 15px; background: #1a6bc4; color: white; border: none; border-radius: 4px; cursor: pointer;">登录/注册</button>
-        <span id="userInfo" style="margin-left: 15px; display: none;"></span>
-        <button id="logoutBtn" style="padding: 8px 15px; background: #e74c3c; color: white; border: none; border-radius: 4px; cursor: pointer; margin-left: 10px; display: none;">退出</button>
-        </div>
 
 
         <div class="timeline">
@@ -2239,50 +2235,16 @@
         });
     </script>    
     
-   
-        <!-- 引入Auth0的SDK -->
-<script src="https://cdn.auth0.com/js/auth0-spa-js/2.0/auth0-spa-js.production.js"></script>
-
+<!-- 【新增】这一段是登录校验逻辑，直接粘贴到<body>标签的最后面 -->
 <script>
-    // 初始化Auth0（替换成你的信息）
-    const auth0 = await createAuth0Client({
-    domain: "YOUR_AUTH0_DOMAIN", // 替换：比如dev-xxxx.us.auth0.com
-    clientId: "YOUR_AUTH0_CLIENT_ID" // 替换：比如abc123xyz789
-    });
-
-    // 检查是否已登录，更新页面显示
-    async function checkLogin() {
-    const isAuthenticated = await auth0.isAuthenticated();
-    if (isAuthenticated) {
-        const user = await auth0.getUser();
-        // 显示用户信息+退出按钮，隐藏登录按钮
-        document.getElementById("userInfo").textContent = `当前登录：${user.email}`;
-        document.getElementById("userInfo").style.display = "inline";
-        document.getElementById("logoutBtn").style.display = "inline";
-        document.getElementById("loginBtn").style.display = "none";
-    }
-    }
-    // 页面加载时检查登录状态
-    checkLogin();
-
-    // 登录/注册按钮点击事件
-    document.getElementById("loginBtn").addEventListener("click", async () => {
-    // 打开Auth0的登录/注册弹窗
-    await auth0.loginWithPopup();
-    // 登录后更新页面显示
-    checkLogin();
-    });
-
-    // 退出按钮点击事件
-    document.getElementById("logoutBtn").addEventListener("click", async () => {
-    await auth0.logout({
-        returnTo: window.location.origin // 退出后跳回当前站点
-    });
-    // 退出后更新页面显示
-    document.getElementById("userInfo").style.display = "none";
-    document.getElementById("logoutBtn").style.display = "none";
-    document.getElementById("loginBtn").style.display = "inline";
-    });
-</script>
-
+    // 页面加载完成后，检查是否登录
+    (async () => {
+      // 调用auth-utils.js里的isLoggedIn方法，判断是否登录
+      const loggedIn = await isLoggedIn();
+      // 如果未登录，跳转到登录页
+      if (!loggedIn) {
+        window.location.href = `${window.location.origin}/html/login.html`;
+      }
+    })();
+  </script>
 </body></html>

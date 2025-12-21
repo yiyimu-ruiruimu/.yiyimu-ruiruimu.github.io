@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>注册 - 计算机网络智能实践教学平台</title>
+    <style>
+        /* 同样复用首页样式，保持一致性 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", Arial, sans-serif;
+        }
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        .container {
+            width: 1200px;
+            margin: 0 auto;
+            padding: 50px 20px;
+        }
+        .register-box {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+            padding: 60px 80px;
+            max-width: 500px;
+            margin: 50px auto; /* 居中显示 */
+        }
+        .register-box h2 {
+            color: #2d3748;
+            font-size: 28px;
+            margin-bottom: 40px;
+            border-bottom: 2px solid #4299e1;
+            padding-bottom: 10px;
+            text-align: center;
+        }
+        .form-group {
+            margin-bottom: 25px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 16px;
+            color: #4a5568;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: #4299e1;
+        }
+        .btn-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+        .start-practice-btn {
+            display: inline-block;
+            padding: 14px 36px;
+            background-color: #4299e1;
+            color: #fff;
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            text-decoration: none;
+        }
+        .start-practice-btn:hover {
+            background-color: #3182ce;
+        }
+        .link-text {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #666;
+        }
+        .link-text a {
+            color: #4299e1;
+            text-decoration: underline;
+        }
+        .back-home {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+        .back-home a {
+            color: #666;
+            text-decoration: none;
+        }
+        .back-home a:hover {
+            color: #4299e1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="register-box">
+            <h2>用户注册</h2>
+            <form>
+                <div class="form-group">
+                    <label for="reg-username">用户名</label>
+                    <input type="text" id="reg-username" name="reg-username" placeholder="请设置用户名" required>
+                </div>
+                <div class="form-group">
+                    <label for="reg-email">邮箱</label>
+                    <input type="email" id="reg-email" name="reg-email" placeholder="请输入邮箱" required>
+                </div>
+                <div class="form-group">
+                    <label for="reg-password">密码</label>
+                    <input type="password" id="reg-password" name="reg-password" placeholder="请设置密码（至少6位）" required>
+                </div>
+                <div class="form-group">
+                    <label for="reg-confirm">确认密码</label>
+                    <input type="password" id="reg-confirm" name="reg-confirm" placeholder="请再次输入密码" required>
+                </div>
+                <!-- register.html 的 <head> 中添加 -->
+                <script src="../auth-utils.js"></script>
+
+                <!-- 替换注册页的注册按钮 -->
+                <div class="btn-container">
+                <button onclick="register()" class="start-practice-btn">注册</button>
+                </div>
+                <!-- 登录链接改为调用登录方法 -->
+                <div class="link-text">
+                已有账号？<a href="javascript:login()">立即登录</a>
+                </div>
+                <div class="back-home">
+                    <a href="../index.html">返回首页</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
