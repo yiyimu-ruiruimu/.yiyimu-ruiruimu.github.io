@@ -15,8 +15,8 @@ async function initAuth0() {
 
     // 初始化客户端（替换为你的 Auth0 Domain 和 Client ID）
     auth0Client = await createAuth0Client({
-      domain: "你的Auth0域名（如xxx.auth0.com）",
-      clientId: "你的Auth0 Client ID",
+      domain: "dev-h2db85qqcj17fjnp.eu.auth0.com",
+      clientId: "X0wGZvSMQolpwtUMHl2JBKW2ETmWV2Ah",
       authorizationParams: {
         // 登录成功后跳转的目标页面（核心！指向main-page.html）
         redirect_uri: `${window.location.origin}/html/main-page.html`
