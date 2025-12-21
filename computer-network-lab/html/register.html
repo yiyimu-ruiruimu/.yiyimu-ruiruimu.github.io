@@ -1,9 +1,12 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
+    <!-- register.html 的 <head> 中添加 -->
+    <script src="../auth-utils.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>注册 - 计算机网络智能实践教学平台</title>
+
     <style>
         /* 同样复用首页样式，保持一致性 */
         * {
@@ -123,12 +126,28 @@
                     <label for="reg-confirm">确认密码</label>
                     <input type="password" id="reg-confirm" name="reg-confirm" placeholder="请再次输入密码" required>
                 </div>
-                <!-- register.html 的 <head> 中添加 -->
-                <script src="../auth-utils.js"></script>
+
+
+                <!-- 1. 新增表单验证脚本（放在这里） -->
+                <script>
+                function checkPassword() {
+                    const pwd = document.getElementById('reg-password').value;
+                    const confirmPwd = document.getElementById('reg-confirm').value;
+                    if (pwd.length < 6) {
+                        alert('密码长度至少6位');
+                        return false;
+                    }
+                    if (pwd !== confirmPwd) {
+                        alert('两次密码不一致');
+                        return false;
+                    }
+                    return true;
+                }
+                </script>
 
                 <!-- 替换注册页的注册按钮 -->
                 <div class="btn-container">
-                <button onclick="register()" class="start-practice-btn">注册</button>
+                    <button type="button" onclick="register()" class="start-practice-btn">注册</button>
                 </div>
                 <!-- 登录链接改为调用登录方法 -->
                 <div class="link-text">

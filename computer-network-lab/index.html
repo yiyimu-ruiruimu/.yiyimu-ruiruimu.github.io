@@ -1,9 +1,15 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
+      <!-- 第一步：先引入Auth0 SDK -->
+    <script src="https://cdn.auth0.com/js/auth0-spa-js/2.4.0/auth0-spa-js.production.js"></script>
+  
+     <!-- 第二步：再引入其他脚本（包括auth-utils.js） -->
+    <script src="./auth-utils.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>计算机网络智能实践教学平台 - 首页</title>
+
     <style>
         /* 页面基础样式，与原平台保持一致 */
         * {
@@ -109,8 +115,6 @@
                 <p>通过渐进式的实践场景，将理论知识转化为实际操作能力，培养学习者分析和解决网络工程问题的能力，为从事网络设计、部署与维护工作奠定基础。</p>
                 
                 <!-- 修改2：添加按钮容器，实现按钮居中 -->
-                <!-- index.html 的 <head> 中添加 -->
-                <script src="./auth-utils.js"></script>
 
                 <!-- 修改首页的登录按钮（替换原按钮代码） -->
                 <div class="btn-container">

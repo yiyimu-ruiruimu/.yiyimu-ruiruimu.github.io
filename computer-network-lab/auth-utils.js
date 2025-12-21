@@ -5,13 +5,7 @@ let auth0Client = null;
 async function initAuth0() {
   if (!auth0Client) {
     // 引入 Auth0 SDK（如果页面没单独引入，这里兜底）
-    if (!window.createAuth0Client) {
-      const script = document.createElement('script');
-      script.src = 'https://cdn.auth0.com/js/auth0-spa-js/2.1/auth0-spa-js.production.js';
-      script.async = true;
-      document.head.appendChild(script);
-      await new Promise(resolve => script.onload = resolve);
-    }
+
 
     // 初始化客户端（替换为你的 Auth0 Domain 和 Client ID）
     auth0Client = await createAuth0Client({

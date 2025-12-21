@@ -2235,16 +2235,21 @@
         });
     </script>    
     
-<!-- 【新增】这一段是登录校验逻辑，直接粘贴到<body>标签的最后面 -->
-<script>
-    // 页面加载完成后，检查是否登录
-    (async () => {
-      // 调用auth-utils.js里的isLoggedIn方法，判断是否登录
-      const loggedIn = await isLoggedIn();
-      // 如果未登录，跳转到登录页
-      if (!loggedIn) {
-        window.location.href = `${window.location.origin}/html/login.html`;
-      }
-    })();
-  </script>
+    <!-- 【新增】这一段是登录校验逻辑，直接粘贴到<body>标签的最后面 -->
+    <script>
+        (async () => {
+        try { // 新增try块
+            // 调用auth-utils.js里的isLoggedIn方法，判断是否登录
+            const loggedIn = await isLoggedIn();
+            // 如果未登录，跳转到登录页
+            if (!loggedIn) {
+            window.location.href = `${window.location.origin}/html/login.html`;
+            }
+        } catch (err) { // 新增catch块捕获错误
+            console.error('登录状态检查失败：', err);
+            // 可选：添加用户可见的错误提示
+            // alert('页面加载失败，请刷新重试或联系管理员');
+        }
+        })();
+    </script>
 </body></html>
