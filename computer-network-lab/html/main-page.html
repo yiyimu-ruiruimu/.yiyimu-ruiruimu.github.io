@@ -5,8 +5,12 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>计算机网络智能实践教学平台 - 极客科技有限公司网络演进</title>
-    <!-- 【新增】这一行是引入auth-utils.js脚本，直接粘贴到<head>里即可 -->
-   <script src="../auth-utils.js"></script>
+    
+     <!-- 引入Auth0 SDK -->
+    <script src="https://cdn.auth0.com/js/auth0-spa-js/2.4.0/auth0-spa-js.production.js"></script>
+    <!-- 引入auth-utils.js，注意路径是上一级目录 -->
+    <script src="../auth-utils.js"></script>
+    
     <style>
         * {
             margin: 0;
@@ -2235,21 +2239,26 @@
         });
     </script>    
     
-    <!-- 【新增】这一段是登录校验逻辑，直接粘贴到<body>标签的最后面 -->
+
+    <!-- 【新增】这一段是登录校验逻辑，直接粘贴到<body>标签的最底部 -->
     <script>
-        (async () => {
-        try { // 新增try块
-            // 调用auth-utils.js里的isLoggedIn方法，判断是否登录
-            const loggedIn = await isLoggedIn();
-            // 如果未登录，跳转到登录页
-            if (!loggedIn) {
-            window.location.href = `${window.location.origin}/html/login.html`;
-            }
-        } catch (err) { // 新增catch块捕获错误
-            console.error('登录状态检查失败：', err);
-            // 可选：添加用户可见的错误提示
-            // alert('页面加载失败，请刷新重试或联系管理员');
+    document.addEventListener('DOMContentLoaded', async function() {
+    try {
+        console.log('开始检查登录状态...');
+        // 等待认证初始化
+        await initAuth0();
+        // 检查是否已登录
+        const loggedIn = await isLoggedIn();
+        console.log('登录状态:', loggedIn);
+        if (!loggedIn) {
+        console.log('用户未登录，跳转到首页');
+        alert('您尚未登录，将跳转到登录页面');
+        window.location.href = '../index.html';
         }
-        })();
+    } catch (error) {
+        console.error('登录状态检查失败:', error);
+        alert('页面加载失败，请刷新重试或联系管理员');
+    }
+    });
     </script>
 </body></html>

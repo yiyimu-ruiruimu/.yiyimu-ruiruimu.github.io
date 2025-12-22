@@ -1,76 +1,102 @@
 // auth-utils.js：Auth0 通用初始化脚本
 let auth0Client = null;
 
-// 初始化 Auth0 客户端
 async function initAuth0() {
   if (!auth0Client) {
-   
-    // 第一步：确保 Auth0 SDK 已加载
-    if (typeof createAuth0Client === 'undefined') {
-      // 动态加载 SDK（如果未引入）
-      await new Promise((resolve, reject) => {
-        const script = document.createElement('script');
-        script.src = 'https://cdn.auth0.com/js/auth0-spa-js/v2/auth0-spa-js.production.js';
-        script.onload = resolve;
-        script.onerror = () => reject(new Error('Auth0 SDK 加载失败'));
-        document.head.appendChild(script);
-      });
-    }
-
-    // 初始化客户端（替换为你的 Auth0 Domain 和 Client ID）
-    auth0Client = await createAuth0Client({
-      domain: "dev-h2db85qqcj17fjnp.eu.auth0.com",
-      clientId: "X0wGZvSMQolpwtUMHl2JBKW2ETmWV2Ah",
-      authorizationParams: {
-        // 登录成功后跳转的目标页面（核心！指向main-page.html）
-        redirect_uri: `${window.location.origin}/html/main-page.html`
+    try {
+      // 检查SDK是否已加载
+      if (typeof createAuth0Client === 'undefined') {
+         // 重试机制
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        if (typeof createAuth0Client === 'undefined') {
+          throw new Error('Auth0 SDK 未加载，请检查HTML中的script标签');
+        }
       }
-    });
+      // Netlify环境适配 - 使用相对路径
+      const currentOrigin = window.location.origin;
+      const redirectPath = window.location.pathname.includes('/html/') ? 
+        '/html/main-page.html' : '/main-page.html';
 
-    // 处理登录回调：Auth0 登录成功后会带 code/state 参数跳转，这里完成校验
-    if (window.location.search.includes("code=") && window.location.search.includes("state=")) {
-      await auth0Client.handleRedirectCallback();
-      // 清除 URL 中的回调参数（可选，让地址栏更干净）
-      window.history.replaceState({}, document.title, window.location.pathname);
+      auth0Client = await createAuth0Client({
+        domain: "dev-h2db85qqcj17fjnp.eu.auth0.com",
+        clientId: "8cfYo5uJGKxjFV5qe6DOz8HRWKH32BvT",
+        authorizationParams: {
+          redirect_uri: `${window.location.origin}/html/main-page.html`
+        },
+        cacheLocation: 'localstorage'
+      });
+
+      // 处理登录回调
+      if (window.location.search.includes("code=") && window.location.search.includes("state=")) {
+        await auth0Client.handleRedirectCallback();
+        window.history.replaceState({}, document.title, window.location.pathname);
+      }
+    } catch (error) {
+      console.error('Auth0初始化失败:', error);
+      alert('认证服务初始化失败: ' + error.message);
+      throw error;
     }
   }
   return auth0Client;
 }
 
-// 封装登录方法（供按钮调用）
 async function login() {
-  const auth0 = await initAuth0();
-  // 触发 Auth0 登录界面，指定登录模式
-  await auth0.loginWithRedirect({
-    authorizationParams: { screen_hint: 'login' }
-  });
+  try {
+    const auth0 = await initAuth0();
+    await auth0.loginWithRedirect({
+      authorizationParams: { 
+        screen_hint: 'login',
+        redirect_uri: `${window.location.origin}/html/main-page.html`
+      }
+    });
+  } catch (error) {
+    console.error('登录失败:', error);
+    alert('登录失败: ' + error.message);
+  }
 }
 
-// 封装注册方法（供按钮调用）
 async function register() {
-  const auth0 = await initAuth0();
-  // 触发 Auth0 注册界面
-  await auth0.loginWithRedirect({
-    authorizationParams: { screen_hint: 'signup' }
-  });
+  try {
+    const auth0 = await initAuth0();
+    await auth0.loginWithRedirect({
+      authorizationParams: { 
+        screen_hint: 'signup',
+        redirect_uri: `${window.location.origin}/html/main-page.html`
+      }
+    });
+  } catch (error) {
+    console.error('注册失败:', error);
+    alert('注册失败: ' + error.message);
+  }
 }
 
-// 封装退出登录方法
 async function logout() {
-  const auth0 = await initAuth0();
-  await auth0.logout({
-    logoutParams: {
-      // 退出后跳回首页
-      returnTo: `${window.location.origin}/index.html`
-    }
-  });
+  try {
+    const auth0 = await initAuth0();
+    await auth0.logout({
+      logoutParams: {
+        returnTo: `${window.location.origin}/index.html`
+      }
+    });
+  } catch (error) {
+    console.error('退出登录失败:', error);
+    alert('退出登录失败: ' + error.message);
+  }
 }
 
-// 检查是否已登录
 async function isLoggedIn() {
-  const auth0 = await initAuth0();
-  return await auth0.isAuthenticated();
+  try {
+    const auth0 = await initAuth0();
+    return await auth0.isAuthenticated();
+  } catch (error) {
+    console.error('检查登录状态失败:', error);
+    return false;
+  }
 }
 
-// 页面加载时自动初始化
-window.onload = initAuth0;
+// 页面加载时初始化
+document.addEventListener('DOMContentLoaded', function() {
+  initAuth0().catch(error => {
+    console.error('初始化失败:', error);
+  });
+});

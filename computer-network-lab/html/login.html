@@ -2,6 +2,7 @@
 <html lang="zh-CN">
 <head>
     <!-- login.html 的 <head> 中添加 -->
+    <script src="https://cdn.auth0.com/js/auth0-spa-js/2.4.0/auth0-spa-js.production.js"></script>
     <script src="../auth-utils.js"></script>   
      
     <meta charset="UTF-8">
@@ -137,5 +138,14 @@
             </form>
         </div>
     </div>
+        <!-- 添加错误处理 -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // 检查是否在正确路径
+        if (!window.location.pathname.includes('/html/')) {
+            console.warn('登录页面路径可能不正确');
+        }
+    });
+    </script>
 </body>
 </html>

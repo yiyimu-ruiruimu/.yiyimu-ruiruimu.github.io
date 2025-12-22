@@ -1,0 +1,18 @@
+[build]
+  publish = "."
+
+[[redirects]]
+  from = "/"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/html/*"
+  to = "/html/:splat"
+  status = 200
+
+# Auth0回调URL处理
+[[redirects]]
+  from = "/main-page.html"
+  to = "/html/main-page.html"
+  status = 200
