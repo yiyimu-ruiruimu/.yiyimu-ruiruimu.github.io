@@ -4,8 +4,18 @@ let auth0Client = null;
 // 初始化 Auth0 客户端
 async function initAuth0() {
   if (!auth0Client) {
-    // 引入 Auth0 SDK（如果页面没单独引入，这里兜底）
-
+   
+    // 第一步：确保 Auth0 SDK 已加载
+    if (typeof createAuth0Client === 'undefined') {
+      // 动态加载 SDK（如果未引入）
+      await new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = 'https://cdn.auth0.com/js/auth0-spa-js/v2/auth0-spa-js.production.js';
+        script.onload = resolve;
+        script.onerror = () => reject(new Error('Auth0 SDK 加载失败'));
+        document.head.appendChild(script);
+      });
+    }
 
     // 初始化客户端（替换为你的 Auth0 Domain 和 Client ID）
     auth0Client = await createAuth0Client({
