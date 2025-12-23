@@ -1,16 +1,9 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-      <!-- 第一步：先引入Auth0 SDK -->
-    <script src="https://cdn.auth0.com/js/auth0-spa-js/2.4.0/auth0-spa-js.production.js"></script>
-  
-     <!-- 第二步：再引入其他脚本（包括auth-utils.js） -->
-    <script src="./auth-utils.js"></script>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>计算机网络智能实践教学平台 - 首页</title>
-
     <style>
         /* 页面基础样式，与原平台保持一致 */
         * {
@@ -116,34 +109,12 @@
                 <p>通过渐进式的实践场景，将理论知识转化为实际操作能力，培养学习者分析和解决网络工程问题的能力，为从事网络设计、部署与维护工作奠定基础。</p>
                 
                 <!-- 修改2：添加按钮容器，实现按钮居中 -->
-
-                <!-- 修改首页的登录按钮（替换原按钮代码） -->
                 <div class="btn-container">
-                <a href="javascript:login()" class="start-practice-btn">登录开启实践之旅</a>
-                <p style="font-size: 14px; margin-top: 10px; color: #666;">
-                    若未注册，请先<a href="javascript:register()" style="color: #4299e1; text-decoration: underline;">注册</a>
-                </p>
+                    <!-- 跳转链接需按之前的方法修改为你的实际文件路径 -->
+                    <a href="./html/main-page.html" class="start-practice-btn">开启实践之旅</a>
                 </div>
             </div>
         </div>
     </div>
-     <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // 检查Auth0 SDK是否加载成功
-        if (typeof createAuth0Client === 'undefined') {
-            console.error('Auth0 SDK加载失败');
-            // 可以显示用户友好的提示信息
-            setTimeout(function() {
-                const btnContainer = document.querySelector('.btn-container');
-                if (btnContainer) {
-                    btnContainer.innerHTML = `
-                        <p style="color: red; margin-bottom: 10px;">认证服务初始化失败，请刷新页面重试</p>
-                        <a href="javascript:location.reload()" class="start-practice-btn">刷新页面</a>
-                    `;
-                }
-            }, 1000);
-        }
-    });
-    </script>
 </body>
 </html>
