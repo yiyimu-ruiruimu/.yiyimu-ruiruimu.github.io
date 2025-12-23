@@ -866,11 +866,11 @@
                         <div class="network-topology" id="topology3.2">
                            
                             <!-- 粘贴原静态路由的拓扑图代码 -->
-                            <img src="./fig/static-routing.png" alt="静态路由拓扑图" style="max-width: 100%; max-height: 120%; object-fit: contain;">
+                            <img src="./fig/static_routing.png" alt="静态路由拓扑图" style="max-width: 100%; max-height: 120%; object-fit: contain;">
 
                         </div>
                         <!-- 粘贴原静态路由的链接和配置命令 -->
-                        <a href="./pkt/static-routing.pkt" class="info-link">点击下载静态路由配置拓扑</a>
+                        <a href="./pkt/static_routing.pkt" class="info-link">点击下载静态路由配置拓扑</a>
 
                         
                         <div class="command-display">
@@ -887,9 +887,12 @@
                             <div class="command-example">Router1(config): ip route 0.0.0.0 0.0.0.0 20.0.0.1</div>
                         </div>
 
-                        <a href="./operation_tutorial_video/router-interface-config.mp4" class="info-link" target="_blank">点击查看路由接口配置讲解</a>                        
-                        <a href="./operation_tutorial_video/static routing.mp4" class="info-link" target="_blank">点击查看静态路由配置讲解</a>
-                        <a href="./homework/routing-config and static routing.docx" class="info-link">点击查看静态路由实验作业</a>
+                        <a href="./operation_tutorial_video/router_interface_config.mp4" class="info-link" target="_blank">点击查看路由接口配置讲解</a>                        
+                        <a href="./operation_tutorial_video/static_routing.mp4" class="info-link" target="_blank">点击查看静态路由配置讲解</a>
+                        <a href="./homework/routing_config_and_static_routing.docx" class="info-link">点击下载静态路由实验作业指导书</a>
+                        <a href="./homework/report_model_static_routing.docx" class="info-link">点击下载静态路由实验报告模板</a>
+                        <p>实验报告提交方式：优慕课-计算机网络基础-单元学习-实验-静态路由实验</p>
+                        <p class="text-muted" style="margin-top: var(--spacing-md);">💡 截止时间：（上次课上课之前）</p>
                     </div>
 
                     <!-- 3.3 动态路由（包含IGP和EGP） -->
@@ -913,10 +916,10 @@
                         <div class="dynamic-content active" id="igp-content">
                             <div class="network-topology" id="topology-igp">
                                 <!-- 粘贴原IGP的拓扑图代码 -->
-                                <img src="./fig/dynamic-routing.png" alt="IGP协议拓扑图" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+                                <img src="./fig/dynamic_routing.png" alt="IGP协议拓扑图" style="max-width: 100%; max-height: 100%; object-fit: contain;">
                             </div>
                             <!-- 粘贴原IGP的链接和配置命令 -->
-                            <a href="./fig/dynamic-routing.png" class="info-link">点击下载动态路由配置拓扑</a>
+                            <a href="./pkt/dynamic_routing.pkt" class="info-link">点击下载动态路由配置拓扑</a>
                             <div class="command-display">
                                 <h4>RIP协议配置命令</h4>
                                 <div class="command-comment">// 进入全局配置模式</div>
@@ -930,10 +933,10 @@
                                 <div class="command-example">BJ-路由器: network 20.0.0.0</div>
                                 <div class="command-example">BJ-路由器: network 20.0.1.0</div>
                             </div>
-
-                            <a href="./operation_tutorial_video/RIP-config.mp4" class="info-link" target="_blank">点击查看RIP动态路由协议配置讲解</a>      
-                            <a href="./homework/RIP-dynamic routing experiment.docx" class="info-link">点击RIP动态路由配置实验作业（选做）</a>
-                            
+                            <div class="highlight">
+                                <a href="./operation_tutorial_video/RIP-config.mp4" class="info-link" target="_blank">点击查看RIP动态路由协议配置讲解</a>      
+                                <a href="./homework/RIP_dynamic_routing_experiment.docx" class="info-link">点击RIP动态路由配置实验作业（选做）</a>
+                            </div>
                             <div class="command-display">
                                 <h4>OSPF协议配置命令</h4>
                                 <div class="command-comment">// 进入全局配置模式</div>
@@ -946,8 +949,11 @@
                                 <div class="command-example">BJ-路由器: network 192.168.1.0 0.0.0.255 area 0</div>
                                 <div class="command-example">BJ-路由器: network 20.0.0.0 0.0.0.3 area 0</div>
                             </div>
-                            <a href="./operation_tutorial_video/OSPF config and connectivity test.mp4" class="info-link" target="_blank">点击查看OSPF动态路由协议配置讲解</a>      
-                            <a href="./homework/OSPF-dynamic routing experiment.docx" class="info-link">点击OSPF动态路由配置实验作业</a>
+                            <div class="highlight">
+                                <a href="./operation_tutorial_video/OSPF_config_and_connectivity_test.mp4" class="info-link" target="_blank">点击查看OSPF动态路由协议配置讲解</a>      
+ 
+                            </div>
+
 
                         </div>
                         
@@ -1006,7 +1012,6 @@
                             </div>
                             <!-- 粘贴原EGP的链接和配置命令 -->
 
-                            <a href="file:///E:/%E6%95%99%E7%A7%91%E7%A0%94/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80%E8%AF%BE%E6%94%B9/%E5%AE%9E%E8%B7%B5%E6%95%99%E5%AD%A6%E5%B9%B3%E5%8F%B01123/BGP%E5%8D%8F%E8%AE%AE%E5%AE%9E%E9%AA%8C.pdf" class="info-link">点击进行BGP协议实验</a>
 
                             <div class="command-display">
                                 <h4>BGP协议配置命令（双AS跨部门场景）</h4>
@@ -1093,9 +1098,9 @@
                     <a href="operation_tutorial_video/dhcp_on_router.mp4" class="info-link" target="_blank">点击查看路由器的DHCP配置讲解</a>
                     <a href="./operation_tutorial_video/app_server_config.mp4" class="info-link" target="_blank">点击查看DNS、WWW、FTP、Email应用服务配置讲解</a>
                     <div class="highlight">
-                    <p><strong>应用配置阶段实验作业（必做）：</strong>完成上图拓扑中应用配置，撰写实验报告，并从优慕课-课程活动-课程作业中，找到对应作业提交，点击下面的链接下载实验报告模版</p>
+                    <p><strong>应用配置阶段实验作业（必做）：</strong>完成上图拓扑中应用配置，撰写实验报告</p>
                     <a href="./homework/experimnt_report_model_of_appconfig.docx" class="info-link" target="_blank">点击下载应用配置实验报告模版</a>
-                    <p><strong>作业实验报告提交方式：</strong>优慕课-计算机网络基础（张玉）-单元学习-实验-实验十</p>
+                    <p><strong>作业实验报告提交方式：</strong>优慕课-计算机网络基础-单元学习-实验-应用配置实验</p>
                     </div>
 
                 </div>
@@ -1146,7 +1151,7 @@
  
                     </div>
                                       
-                    <!-- 5.2 VPN虚拟专用网络 -->
+                    <!-- 6.2 VPN虚拟专用网络 -->
                     <div class="substage" id="substage6.2">
                         <div class="highlight">
                             <p><strong>问题导入：</strong> "极客公司员工需要在家远程办公，需访问公司内部服务器（192.168.1.100/24），但互联网传输数据不安全，如何实现安全的远程访问？"</p>
@@ -1170,6 +1175,61 @@
 
 
                     </div>
+
+                    <!-- 6.3 新增NAT技术子项目 -->
+                    <div class="network-stage" id="stage6">
+                        <!-- NAT技术子项目 -->
+                        <div class="substage active" id="substage6.3">
+                            <div class="highlight">
+                                <p><strong>问题导入：</strong> "公司内部网络使用私有IP地址，无法直接访问互联网，同时需要保护内部网络结构不被外部知晓，如何解决？"</p>
+                                <p><strong>答案：</strong>"配置网络地址转换（NAT）技术"</p>
+                            </div>
+
+                            <div class="concept-box">
+                                <div class="concept-title">🌐 关键概念：NAT技术</div>
+                                <p>网络地址转换（NAT）通过将内部私有IP地址转换为公共IP地址，实现私有网络与互联网的通信，同时隐藏内部网络结构，提升安全性。常见类型包括静态NAT、动态NAT和端口地址转换（PAT）。</p>
+                            </div>
+
+                            <div class="network-topology" id="topology6.3">
+                                <!-- 替换为你的NAT拓扑图路径 -->
+                                <img src="./fig/vpn.png" alt="NAT技术拓扑图" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+                            </div>
+
+                            <a href="./pkt/vpn.pkt" class="info-link">点击下载NAT配置拓扑</a>
+                            <a href="./operation_tutorial_video/nat_config.mp4" class="info-link" target="_blank">点击查看NAT配置讲解</a>
+
+                            <div class="command-display">
+                                <h4>NAT配置命令</h4>
+                                <div class="command-comment">// 配置内部接口（连接私有网络）</div>
+                                <div class="command-example">bj-Router(config): interface fastethernet 0/0</div>
+                                <div class="command-example">bj-Router(config-if): ip address 192.168.1.1 255.255.255.0</div>
+                                <div class="command-example">bj-Router(config-if): ip nat inside</div>
+                                <div class="command-example">bj-Router(config-if): no shutdown</div>
+
+                                <div class="command-comment">// 配置外部接口（连接互联网）</div>
+                                <div class="command-example">bj-Router(config): interface serial 2/0</div>
+                                <div class="command-example">bj-Router(config-if): ip address 20.0.1.1 255.255.255.0</div>
+                                <div class="command-example">bj-Router(config-if): ip nat outside</div>
+                                <div class="command-example">bj-Router(config-if): no shutdown</div>
+
+                                <div class="command-comment">// 配置动态NAT地址池</div>
+                                <div class="command-example">bj-Router(config): ip nat pool public 20.0.1.10 20.0.1.20 netmask 255.255.255.0</div>
+                                <div class="command-comment">// 定义访问控制列表匹配内部网络</div>
+                                <div class="command-example">bj-Router(config): access-list 1 permit 192.168.1.0 0.0.0.255</div>
+                                <div class="command-comment">// 关联地址池和访问控制列表</div>
+                                <div class="command-example">bj-Router(config): ip nat inside source list 1 pool public</div>
+
+                                <!-- 新增：静态NAT配置命令 -->
+                                <div class="command-comment" style="margin-top: 20px; font-weight: 600;">// 静态NAT配置（一对一映射，适用于内部服务器）</div>
+                                <div class="command-comment">// 格式：ip nat inside source static 内部私有IP 外部公共IP</div>
+                                <div class="command-example">Router(config): ip nat inside source static 192.168.1.10 202.100.1.8</div>
+                                <div class="command-comment">// 说明：将内部服务器IP(192.168.1.10)固定映射为公共IP(20.0.1.8)</div>
+                            </div>
+
+
+
+                        </div>
+                    </div>
                 </div>
 
                
@@ -1183,8 +1243,13 @@
                     <!-- 基础实践资源链接（默认显示） -->
                     <div id="resource8-base">
                         <a href="./pkt/phase2_assessment_simulation.pka" class="info-link">点击下载基础实践统一拓扑</a>
-                        <a href="./operation_tutorial_video/basic_netconfig_without_ACL.mp4" class="info-link" target="_blank">点击查看基础网络配置讲解</a>
-                        <a href="./operation_tutorial_video/basic_netconfig_ACL.mp4" class="info-link" target="_blank">点击查看安全增强配置讲解</a>
+                        <p><strong>下面是分步配置的讲解视频：</strong></p>
+                        <a href="./operation_tutorial_video/zonghe_ipconfig_for_end_devices.mp4" class="info-link" target="_blank">点击查看终端设备IP配置讲解（包括DHCP）</a>
+                        <a href="./operation_tutorial_video/zonghe_ipconfig_for_routers.mp4" class="info-link" target="_blank">点击查看路由器IP配置讲解</a>
+                        <a href="./operation_tutorial_video/zonghe_ospfconfig.mp4" class="info-link" target="_blank">点击查看路由器OSPF协议配置讲解</a>
+                        <a href="./operation_tutorial_video/zonghe_vlan.mp4" class="info-link" target="_blank">点击查看交换机VLAN配置讲解</a>
+                        <a href="./operation_tutorial_video/zonghe_serverconfig.mp4" class="info-link" target="_blank">点击查看服务器配置讲解</a>
+                        <a href="./operation_tutorial_video/zonghe_ACL.mp4" class="info-link" target="_blank">点击查看ACL配置讲解</a>
                     </div>
 
                     <!-- 进阶实践文字内容（转移自右侧，无拓扑无链接） -->
@@ -1248,7 +1313,7 @@
             </div>
             
             <div class="explanation">
-                <!-- 阶段1：组件局域网 说明 -->
+                <!-- 阶段1：组建局域网 说明 -->
                 <div class="exp-stage" id="exp-stage1">
                     <h2>局域网孤岛</h2>
                     <p>极客公司创建初期，规模小巧，仅在城市一角设一间简约办公室。几名核心成员怀揣技术理想，无明确分工、并肩协作，在此开启逐梦之路。</p>
@@ -1268,6 +1333,12 @@
                         <p>交换机的"导航地图"，告诉它去往某个设备，从哪个接口转发出去。</p>
                         <a href="https://www.bilibili.com/video/BV1yY411b753/?vd_source=67a412c416b4717fee360508599d6de5" class="info-link" target="_blank">点击查看交换机的转发原理</a>
                     </div>
+                    
+                    <div class="concept-box">
+                        <div class="concept-title">🗺️ 实践要求</div>
+                        <p>掌握基于Packet tracer的局域网组建方法，PC机的IP配置方法，通过simulation模式观察交换机的数据转发过程</p>
+                    </div>
+
                 </div>
 
                 <!-- 阶段2：虚拟局域网 说明 -->
@@ -1284,32 +1355,43 @@
                         <p>将一个物理局域网在逻辑上划分成多个不同的广播域（子网络），实现隔离广播、增强网络安全性、提高带宽利用率的技术。</p>
                     </div>
                     
-                    <h3>VLAN的核心作用</h3>
-                    <ul>
-                        <li><strong>广播控制</strong>：限制广播帧只在本VLAN内传播，避免广播风暴</li>
-                        <li><strong>安全隔离</strong>：不同VLAN设备默认无法直接通信，保护敏感部门数据</li>
-                        <li><strong>灵活管理</strong>：设备可以根据部门需求划分到不同VLAN，不受物理位置限制</li>
-                    </ul>
-                    
-                    <h3>VLAN类型</h3>
-                    <div class="protocol-comparison">
-                        <div class="protocol-card">
-                            <h4>静态VLAN</h4>
-                            <p>由管理员手动将交换机接口分配给特定VLAN</p>
-                            <p>优点：安全可靠，易于监控</p>
-                            <p>缺点：设备移动时需要重新配置</p>
-                        </div>
-                        <div class="protocol-card">
-                            <h4>动态VLAN</h4>
-                            <p>基于MAC地址、IP地址或用户账号自动分配VLAN</p>
-                            <p>优点：设备移动时自动适应</p>
-                            <p>缺点：配置复杂，需要额外服务器支持</p>
-                        </div>
+                    <div class="concept-box">
+                        <h3>VLAN的核心作用</h3>
+                        <ul>
+                            <li><strong>广播控制</strong>：限制广播帧只在本VLAN内传播，避免广播风暴</li>
+                            <li><strong>安全隔离</strong>：不同VLAN设备默认无法直接通信，保护敏感部门数据</li>
+                            <li><strong>灵活管理</strong>：设备可以根据部门需求划分到不同VLAN，不受物理位置限制</li>
+                        </ul>
                     </div>
                     
-                    <h3>VLAN间通信</h3>
-                    <p>不同VLAN之间默认无法通信，需要通过路由器或三层交换机实现互通，这一过程称为"VLAN间路由"。</p>
-                     <p><strong>具体配置方法查看下一阶段“网络互联”中的"单臂路由"</strong></p>
+                    <div class="concept-box">
+                        <h3>VLAN类型</h3>
+                        <div class="protocol-comparison">
+                            <div class="protocol-card">
+                                <h4>静态VLAN</h4>
+                                <p>由管理员手动将交换机接口分配给特定VLAN</p>
+                                <p>优点：安全可靠，易于监控</p>
+                                <p>缺点：设备移动时需要重新配置</p>
+                            </div>
+                            <div class="protocol-card">
+                                <h4>动态VLAN</h4>
+                                <p>基于MAC地址、IP地址或用户账号自动分配VLAN</p>
+                                <p>优点：设备移动时自动适应</p>
+                                <p>缺点：配置复杂，需要额外服务器支持</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="concept-box">                   
+                        <h3>VLAN间通信</h3>
+                        <p>不同VLAN之间默认无法通信，需要通过路由器或三层交换机实现互通，这一过程称为"VLAN间路由"。</p>
+                         <p><strong>具体配置方法查看下一阶段“网络互联”中的"单臂路由"</strong></p>
+                    </div> 
+
+                    <div class="concept-box">
+                        <div class="concept-title">🗺️ 实践要求</div>
+                        <p>掌握VLAN的配置方法，能够查看VLAN配制结果；点击左上角“智能自测”按钮，完成vlan项目的测试。</p>
+                    </div>
 
                 </div>
 
@@ -1353,6 +1435,11 @@
                             <div class="command-comment">// 启用物理接口</div>
                             <div class="command-example">Router(config-subif)# interface fastethernet 0/0</div>
                             <div class="command-example">Router(config-if)# no shutdown</div>
+                    </div>
+                    
+                    <div class="concept-box">
+                        <div class="concept-title">🗺️ 实践要求</div>
+                        <p>下载左侧拓扑，完成单臂路由配置，实现网络连通，并利用ping测试连通性；点击左上角“智能自测”按钮，完成单臂路由项目的测试。</p>
                     </div>  
 
 
@@ -1411,7 +1498,13 @@
                     <h3>静态路由特点</h3>
                     <p><strong>优点：</strong> 简单、精确、不占用网络资源、安全。</p>
                     <p><strong>缺点：</strong> <span style="color: #e74c3c;">不能自动适应网络变化</span>。</p>
-                    </div>
+                    <div class="concept-box">
+                        <div class="concept-title">🗺️ 实践要求</div>
+                        <p>下载左侧拓扑，完成静态路由配置，并通过ping测试连通性；点击左上角“智能自测”按钮，完成静态路由项目的测试。</p>
+                    </div> 
+                </div>
+
+
 
 
                     <!-- 3.3 动态路由 说明（包含IGP/EGP子说明） -->
@@ -1461,6 +1554,15 @@
                                 <div class="routing-table-container">
                                  <img src="./fig/OSPF_routing_table.png" alt="总部网关路由器路由表" style="max-width: 100%; max-height: 100%; object-fit: contain;">   
                                 </div>
+
+                                <div class="concept-box">
+                                    <div class="concept-title">🗺️ 实践要求</div>
+                                    <p>下载左侧拓扑，完成RIP和OSPF协议的配置，并进行连通性实验。完成OSPF实践作业，并撰写报告并通过指定方式提交</p>
+                                    <a href="./homework/OSPF_dynamic_routing_experiment.docx" class="info-link">点击下载OSPF动态路由实验作业指导书（必做）</a>
+                                    <a href="./homework/report_model_ospf.docx" class="info-link">点击下载OSPF动态路由实验报告模版</a> 
+                                    <p><strong>作业实验报告提交方式：</strong>优慕课-计算机网络基础-单元学习-实验-OSPF实验</p>
+                                    <p class="text-muted" style="margin-top: var(--spacing-md);">💡 截止时间：（上次课上课之前）</p>
+                                </div>
                         </div>
 
                         <!-- EGP协议 说明 -->
@@ -1487,12 +1589,20 @@
                                 <div class="command-comment">// 4. 宣告本AS内的直连网段（mask后接子网掩码）</div>
                                 <div class="command-example">Router(config-router)# network [网段地址] mask [子网掩码]</div>
                             </div>
-                             <h3>动态路由（EGP协议）核心说明</h3>
-                            <p><strong>核心目标：</strong>理解外部网关协议（EGP）的跨自治系统路由传递原理，了解BGP协议基础配置。</p>
-                            <p><strong>关键知识点：</strong>EGP适用场景（不同自治系统之间）、BGP（边界网关协议）、AS号（自治系统号）、BGP邻居（对等体）。</p>
-                            <p><strong>操作要点：</strong>配置BGP进程和AS号，建立BGP邻居关系，宣告本自治系统的网段，验证BGP路由传递。</p>
-                            <p><strong>特点：</strong>BGP是路径矢量协议，注重路由的“可达性”而非“最短路径”，适用于互联网级路由。</p>
+
+                            <div class="concept-box">
+                                <h3>动态路由（EGP协议）核心说明</h3>
+                                <p><strong>核心目标：</strong>理解外部网关协议（EGP）的跨自治系统路由传递原理，了解BGP协议基础配置。</p>
+                                <p><strong>关键知识点：</strong>EGP适用场景（不同自治系统之间）、BGP（边界网关协议）、AS号（自治系统号）、BGP邻居（对等体）。</p>
+                                <p><strong>操作要点：</strong>配置BGP进程和AS号，建立BGP邻居关系，宣告本自治系统的网段，验证BGP路由传递。</p>
+                                <p><strong>特点：</strong>BGP是路径矢量协议，注重路由的“可达性”而非“最短路径”，适用于互联网级路由。</p>
+                            </div>
+                            <div class="concept-box">
+                                <div class="concept-title">🗺️ 实践要求</div>
+                                <p>了解BGP的配置，可参考视频进行配置实验，不做考核要求</p>
+                            </div>        
                         </div>
+
                     </div>
                 </div>
 
@@ -1533,6 +1643,7 @@
                     <div class="highlight">
                         <p><strong>实践要求：</strong>结合讲解视频，完成左侧网络中北京总部与深圳分部、上海分部与深圳分部的PPP配置。</p>    
                         <p><strong>验证方法：</strong>用不同网络中的主机进行互ping操作，看是否能够ping通。</p>
+                        <p><strong>智能自测：</strong>点击左上角的“智能自测”，完成PPP项目的测试。</p>
                     </div>                    
                 </div>
 
@@ -1541,6 +1652,12 @@
                     
                    
                     <h2>应用配置</h2>
+
+                    <div class="highlight">
+                        <p><strong>实践总要求</strong></p>    
+                        <p>按照各应用的实践要求完成实践；点击左侧“智能自测”，完成应用配置项目的自测练习。</p>
+                    </div>  
+
                     <!-- 应用配置子项目切换按钮 -->
                     <div style="margin-bottom: 15px; border-bottom: 1px solid #eaeef2; padding-bottom: 10px;">
                         <button class="substage-btn active" data-app="dhcp">DHCP服务</button>
@@ -1594,6 +1711,7 @@
                         <div class="highlight">
                             <p><strong>实践要求：</strong>结合讲解视频，完成左侧网络的DHCP服务器配置，实现分部1中主机IP的自动配置。</p>    
                             <p><strong>验证方法：</strong>电脑设置“自动获取IP”，查看是否拿到配置的IP地址。</p>
+                            
                         </div>
                     </div>
 
@@ -1699,8 +1817,8 @@
                             <div class="command-example">Mail-Server(config)# mail-server 192.168.1.101</div>
                         </div>
                         <div class="highlight">
-                        <p><strong>实践要求：</strong>结合讲解视频，完成左侧网络的EMAIL服务器配置，将服务器域名设置为jike.com,添加zhangsan@jike.com和lisi@jike.com两个账号,密码为学号后三位。选择两台电脑设置email client，进行账号和服务器设置</p>
-                        <p><strong>验证方法：</strong>用邮件客户端配置账号，能发送/接收内部邮件则成功。</p>
+                            <p><strong>实践要求：</strong>结合讲解视频，完成左侧网络的EMAIL服务器配置，将服务器域名设置为jike.com,添加zhangsan@jike.com和lisi@jike.com两个账号,密码为学号后三位。选择两台电脑设置email client，进行账号和服务器设置</p>
+                            <p><strong>验证方法：</strong>用邮件客户端配置账号，能发送/接收内部邮件则成功。</p>
                         </div>
                     </div>            
 
@@ -1709,10 +1827,16 @@
                 <!-- 阶段6：网络安全 说明（新增） -->
                 <div class="exp-stage" id="exp-stage6">
                     <h2> 网络安全</h2>
+
+                    <div class="highlight">
+                        <p><strong>实践要求：</strong>了解ACL、VPN和NAT的配置方法，下载左侧拓扑，进行相关配置练习，其中NAT留有必做作业，请通过指定方法提交实验报告；点击左侧“智能自测”，完成网络安全项目自测。</p>
+                        
+                    </div>
                     <!-- 网络安全子项目切换按钮（右侧） -->
                     <div style="margin-bottom: 15px; border-bottom: 1px solid #eaeef2; padding-bottom: 10px;">
                         <button class="substage-btn active" data-substage="6.1">防火墙ACL</button>
                         <button class="substage-btn" data-substage="6.2">VPN虚拟专用网络</button>
+                        <button class="substage-btn" data-substage="6.3">NAT技术</button>
                     </div>
                     <!-- 6.1 ACL 说明 -->
                     <div class="exp-substage active" id="exp-substage6.1">
@@ -1759,9 +1883,11 @@
                                 <li>接口方向：inbound是“数据进入接口时验证”，outbound是“数据离开接口时验证”，需根据ACL类型选择（标准ACL靠近目标，扩展ACL靠近源）。</li>
                             </ul>
                         </div>
+                        
+
                     </div>
                     
-                    <!-- 5.2 VPN 说明 -->
+                    <!-- 6.2 VPN 说明 -->
                     <div class="exp-substage" id="exp-substage6.2">
                         <h2>VPN虚拟专用网络</h2>
                         <div class="concept-box">
@@ -1772,6 +1898,11 @@
                                 <li>预共享密钥：远程客户端和服务器必须使用相同密钥，简单易配置（适合小型企业）</li>
                             </ul>
                         </div>
+
+                        <div class="concept-box">
+                            <a href="https://www.bilibili.com/video/BV18g411D7Fm?spm_id_from=333.788.videopod.episodes&vd_source=67a412c416b4717fee360508599d6de5&p=65" target="_blank" class="info-link">VPN协议原理讲解微课视频</a>
+                        </div>
+
                         
                         <h3>实验设计（极客公司场景）</h3>
                         <p>1. 场景：员工在家用电脑（公网IP：123.123.123.123）远程访问公司内部服务器（192.168.1.100）</p>
@@ -1784,6 +1915,47 @@
                         
 
                     </div>
+
+                    <!-- 6.3 NAT 说明 -->
+                    <div class="exp-substage" id="exp-substage6.3">
+                        <h2>网络地址转换(Network Address Translation,NAT)</h2>
+                        <div class="concept-box">
+                            <div class="concept-title">📚 核心知识点</div>
+                            <ul>
+                                <li>解决IPv4地址枯竭问题：多个内部设备共享一个公共IP</li>
+                                <li>隐藏内部网络拓扑：外部仅能看到公共IP，无法获取私有IP段</li>
+                                <li>提升网络安全性：隔绝外部直接访问内部设备，减少攻击面</li>
+                            </ul>
+                            <h4 style="color: #4a5568; margin: 15px 0;">二、NAT的三种常见类型</h4>
+                            <ul style="list-style: disc; padding-left: 20px; line-height: 1.8;">
+                                <li><strong>静态NAT</strong>：私有IP与公共IP一对一固定映射（适用于服务器对外提供服务）</li>
+                                <li><strong>动态NAT</strong>：私有IP从公共IP池中随机获取映射（适用于多设备访问互联网）</li>
+                                <li><strong>PAT（端口地址转换）</strong>：多私有IP共享一个公共IP，通过端口号区分（最常用，如家庭路由器）</li>
+                            </ul>
+                        </div>
+                        
+                        <!-- 配置原理部分 -->
+                        <div>
+                            <a href="https://www.bilibili.com/video/BV18g411D7Fm?spm_id_from=333.788.videopod.episodes&vd_source=67a412c416b4717fee360508599d6de5&p=65" target="_blank" class="info-link">NAT协议原理讲解微课视频</a>
+
+                            <h4 style="color: #4a5568; margin: 15px 0;">二、核心配置组件</h4>
+                            <ul style="list-style: disc; padding-left: 20px; line-height: 1.8;">
+                                <li><strong>内部接口</strong>：连接私有网络的接口（需配置ip nat inside）</li>
+                                <li><strong>外部接口</strong>：连接互联网的接口（需配置ip nat outside）</li>
+                                <li><strong>地址池</strong>：存放可分配的公共IP地址范围（动态NAT/PAT用）</li>
+                                <li><strong>访问控制列表（ACL）</strong>：定义哪些内部设备可以使用NAT转换</li>
+                            </ul>
+                        </div>
+
+                        <div class="highlight"> 
+                            <h3>实践作业：</h3>                           
+                            <a href="./homework/nat.docx" class="info-link">点击下载NAT实验指导书</a>
+                            <a href="./homework/report_model_nat.docx" class="info-link" target="_blank">点击下载NAT实验报告模版</a>
+                            <p>实验报告提交方式：优慕课-计算机网络基础-单元学习-实验-NAT实验</p>
+                        </div>       
+
+                    </div>
+                    
                 </div>
 
                 <!-- 阶段8：综合实践 说明（新增，含2个项目） -->
@@ -1872,6 +2044,8 @@
                             <button class="start-practice-btn">基于Wireshark的抓包分析</button>
                         </a>
                     </div>
+
+
                 </div>
             </div>
         </div>
