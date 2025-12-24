@@ -246,8 +246,8 @@
     <div class="container">
         <h1>IPsec VPN配置命令（公司出口路由器：bj-路由器）</h1>
         
-        <!-- 批量复制按钮 -->
-        <button class="batch-copy" onclick="copyAllCommands()">📋 批量复制所有配置命令</button>
+  <!-- 批量复制按钮 -->
+        <button class="batch-copy" onclick="copyAllCommands()">📋 批量复制所有配置命令</button>      
 
         <!-- 核心：滚动命令窗口 -->
         <div class="command-scroll-container">
@@ -290,7 +290,7 @@
                 <!-- 3：设置预共享密钥（VPN连接密码） -->
                 <h4>3. 设置预共享密钥（VPN连接密码）</h4>
                 <div class="command-comment">【3：设置预共享密钥】配置远程设备连接VPN时需要输入的“密码”，两端需一致</div>
-                <div class="command-example" id="cmd10">bj-路由器(config)# crypto isakmp key geektech123 address 20.0.1.2 255.255.255.252  // 密钥设为“geektech123”，绑定远程路由器公网IP（20.0.1.2）
+                <div class="command-example" id="cmd10">bj-路由器(config)# crypto isakmp key geektech123 address 20.0.1.2 255.255.255.0  // 密钥设为“geektech123”，绑定远程路由器公网IP（20.0.1.2）
                     <button class="copy-btn" onclick="copyCommand('cmd10')">复制</button>
                 </div>
 

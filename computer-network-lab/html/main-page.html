@@ -801,10 +801,10 @@
                         <div class="command-example">Switch(config-vlan): name yanfabu</div>
                         <div class="command-example">Switch(config-vlan): exit</div>
                         <div class="command-example">Switch(config): vlan 20</div>
-                        <div class="command-example">Switch(config-vlan): name shichangbu</div>
+                        <div class="command-example">Switch(config-vlan): name caiwubu</div>
                         <div class="command-example">Switch(config-vlan): exit</div>
                         <div class="command-example">Switch(config): vlan 30</div>
-                        <div class="command-example">Switch(config-vlan): name caiwubu</div>
+                        <div class="command-example">Switch(config-vlan): name shichangbu</div>
                         <div class="command-example">Switch(config-vlan): exit</div>
                         
                         <div class="command-comment">// 将接口划分到VLAN（接入模式）</div>
@@ -827,7 +827,7 @@
                     <div class="substage active" id="substage3.1">
                                                                                       
                         <div class="highlight">
-                                <p><strong>问题导入：</strong> "划分vlan后，不同部门（不同VLAN）的电脑的设备仍然需要相互通信（如研发部需要访问财务部服务器），如何让不同VLAN的设备跨网通信呢？"</p>
+                                <p><strong>问题导入：</strong> "划分VLAN后，不同部门（不同VLAN）的电脑的设备仍然需要相互通信（如研发部需要访问财务部服务器），如何让不同VLAN的设备跨网通信呢？"</p>
                                 <p><strong>答案：</strong>"配置单臂路由"</p> 
                         </div>
 
@@ -1045,8 +1045,8 @@
                 <div class="network-stage" id="stage4">
                     <!-- 极客公司场景需求（与其他阶段一致的highlight样式） -->
                     <div class="highlight" style="margin-bottom:20px;">
-                        <p><strong>极客科技场景需求：</strong>北京总部（192.168.1.0/24）与上海分部（192.168.2.0/24）需跨地域联网，租用运营商的专线（如SDH），但普通路由接口无法直接适配专线链路，且需要验证双方身份避免链路被冒用，如何实现安全、稳定的跨地域连接？</p>
-                        <p><strong>答案：</strong>配置广域网PPP协议（点到点协议），支持专线链路适配+身份验证（PAP/CHAP），保障跨地域连接安全。</p>
+                        <p>极客公司规模扩大后，北京总部与上海分部需跨地域传输业务数据（如研发部代码、市场部素材），但互联网传输不稳定，因此租用运营商的“专线链路”（如SDH/DDN）。普通路由器默认使用HDLC封装，无法适配专线，且缺乏身份验证，存在链路被冒用的风险，怎么办？。</p>
+                        <p><strong>核心技术：</strong>PPP协议（点到点协议），支持专线链路适配+身份验证（PAP/CHAP），保障跨地域连接安全。</p>
                     </div>
                     
                     <!-- 拓扑图（与其他阶段一致的显示方式，替换src为实际图片路径） -->
@@ -1098,7 +1098,7 @@
                     <a href="operation_tutorial_video/dhcp_on_router.mp4" class="info-link" target="_blank">点击查看路由器的DHCP配置讲解</a>
                     <a href="./operation_tutorial_video/app_server_config.mp4" class="info-link" target="_blank">点击查看DNS、WWW、FTP、Email应用服务配置讲解</a>
                     <div class="highlight">
-                    <p><strong>应用配置阶段实验作业（必做）：</strong>完成上图拓扑中应用配置，撰写实验报告</p>
+                    <p><strong>应用配置阶段实验作业（必做）：</strong>结合上面的配置讲解视频，完成上图拓扑中应用配置，撰写实验报告</p>
                     <a href="./homework/experimnt_report_model_of_appconfig.docx" class="info-link" target="_blank">点击下载应用配置实验报告模版</a>
                     <p><strong>作业实验报告提交方式：</strong>优慕课-计算机网络基础-单元学习-实验-应用配置实验</p>
                     </div>
@@ -1147,8 +1147,33 @@
                             </div>
                             <p><strong>关键说明：</strong>反掩码与子网掩码互补（如/24子网的反掩码为0.0.0.255），eq表示“等于某个端口”（如eq 80对应HTTP服务）。</p>
                         </div>
-                          <a href="./vpn_command.html" class="info-link" target="_blank">点击查看路由器的ACL配置命令示例</a>
- 
+                        <!--  <a href="./vpn_command.html" class="info-link" target="_blank">点击查看路由器的ACL配置命令示例</a>-->
+                         <!-- ACL配置命令 -->
+                        <div class="command-display">
+                            <h4>示例1：标准ACL配置（禁止市场部访问财务网段）</h4>
+                            <div class="command-comment">// 1. 创建标准ACL（编号10，属于标准ACL范围1-99）</div>
+                            <div class="command-example">Router(config)# access-list 10 permit 192.168.10.0 0.0.0.255</div> <!-- 允许研发部VLAN10 -->
+                            <div class="command-example">Router(config)# access-list 10 permit 192.168.1.0 0.0.0.255</div> <!-- 允许总部网络 -->
+                            <div class="command-example">Router(config)# access-list 10 deny 192.168.20.0 0.0.0.255</div> <!-- 拒绝市场部VLAN20 -->
+                            <div class="command-example">Router(config)# access-list 10 deny any</div> <!-- 拒绝其他所有IP -->
+                            
+                            <div class="command-comment">// 2. 应用到路由器连接财务网段的接口（假设为fastethernet 6/0，出站方向）</div>
+                            <div class="command-example">Router(config)# interface fastethernet 6/0</div> <!-- 连接财务网段的接口（需按实际拓扑调整） -->
+                            <div class="command-example">Router(config-if)# ip access-group 10 out</div> <!-- 入站流量应用ACL规则（靠近目标，符合标准ACL原则） -->
+                            
+                            <h4>示例2：扩展ACL配置（不允许市场部访问财务服务器）</h4>
+                            <div class="command-comment">// 1. 创建扩展ACL（编号100，属于扩展ACL范围100-199）</div>
+                            <div class="command-example">Router(config)# access-list 100 deny ip any host 192.168.30.10</div> <!-- 不允许访问财务服务器，其中host 192.168.30.10 完全等价于 192.168.30.10 0.0.0.0-->
+                            <div class="command-example">Router(config)# access-list 100 permit ip any any</div> <!-- 允许访问财务其他设备 -->
+                            
+                            <div class="command-comment">// 2. 应用到路由器连接市场网段的接口（假设为fastethernet 7/0，入站方向）</div>
+                            <div class="command-example">Router(config)# interface fastethernet 7/0</div> <!-- 连接研发网段的接口（靠近源，符合扩展ACL原则） -->
+                            <div class="command-example">Router(config-if)# ip access-group 100 in</div> <!-- 入站流量应用ACL规则 -->
+                            <div class="command-comment">// 3. 验证ACL配置</div>
+                            <div class="command-example">Router# show access-lists</div> <!-- 查看所有ACL规则及命中次数 -->
+                            <div class="command-example">Router# show ip access-group</div> <!-- 查看ACL应用的接口和方向 -->
+                        </div>  
+                  
                     </div>
                                       
                     <!-- 6.2 VPN虚拟专用网络 -->
@@ -1222,8 +1247,8 @@
                                 <!-- 新增：静态NAT配置命令 -->
                                 <div class="command-comment" style="margin-top: 20px; font-weight: 600;">// 静态NAT配置（一对一映射，适用于内部服务器）</div>
                                 <div class="command-comment">// 格式：ip nat inside source static 内部私有IP 外部公共IP</div>
-                                <div class="command-example">Router(config): ip nat inside source static 192.168.1.10 202.100.1.8</div>
-                                <div class="command-comment">// 说明：将内部服务器IP(192.168.1.10)固定映射为公共IP(20.0.1.8)</div>
+                                <div class="command-example">Router(config): ip nat inside source static 192.168.1.100 20.0.1.8</div>
+                                <div class="command-comment">// 说明：将内部服务器IP(192.168.1.100)固定映射为公共IP(20.0.1.8)</div>
                             </div>
 
 
@@ -1324,8 +1349,8 @@
                     
                     <div class="concept-box">
                         <div class="concept-title">💡 关键概念：交换机</div>
-                        <p>通过交换机组建局域网，实现网内电脑设备的互联互通。交换机依据MAC地址进行数据包的转发。</p>
-                        <a href="./PPT/MAC_address_and_frame_format.pptx" class="info-link" target="_blank">点击查看MAC地址与MAC帧格式介绍介绍</a>
+                        <p>通过交换机组建局域网，实现电脑设备的互联互通。交换机依据MAC地址进行数据包的转发。</p>
+                        <a href="./PPT/MAC_address_and_frame_format.pptx" class="info-link" target="_blank">点击查看MAC地址与MAC帧格式介绍（PPT）</a>
                     </div>
                     
                     <div class="concept-box">
@@ -1390,7 +1415,7 @@
 
                     <div class="concept-box">
                         <div class="concept-title">🗺️ 实践要求</div>
-                        <p>掌握VLAN的配置方法，能够查看VLAN配制结果；点击左上角“智能自测”按钮，完成vlan项目的测试。</p>
+                        <p>掌握VLAN的配置方法，能够查看VLAN配制结果；点击左上角“智能自测”按钮，完成VLAN项目测试。</p>
                     </div>
 
                 </div>
@@ -1419,16 +1444,16 @@
                         </ol>
                     </div>
                     <div class="command-display">
-                            <h4>单臂路由配置命令</h4>
+                            <h4>单臂路由配置命令示例</h4>
                             <div class="command-comment">// 路由器子接口配置（对应VLAN 10）</div>
                             <div class="command-example">Router&gt; enable</div>
                             <div class="command-example">Router# configure terminal</div>
-                            <div class="command-example">Router(config)# interface fastethernet 0/0.10</div>
+                            <div class="command-example">Router(config)# interface fastethernet 0/0.1</div>
                             <div class="command-example">Router(config-subif)# encapsulation dot1q 10</div>
                             <div class="command-example">Router(config-subif)# ip address 192.168.10.1 255.255.255.0</div>
                             
                             <div class="command-comment">// 路由器子接口配置（对应VLAN 20）</div>
-                            <div class="command-example">Router(config-subif)# interface fastethernet 0/0.20</div>
+                            <div class="command-example">Router(config-subif)# interface fastethernet 0/0.2</div>
                             <div class="command-example">Router(config-subif)# encapsulation dot1q 20</div>
                             <div class="command-example">Router(config-subif)# ip address 192.168.20.1 255.255.255.0</div>
                             
@@ -1609,7 +1634,6 @@
                 <!-- 新增阶段4：广域网PPP 说明 -->
                 <div class="exp-stage" id="exp-stage4">
                     <h2>广域网PPP协议</h2>
-                    <p>极客公司规模扩大后，北京总部与上海分部需跨地域传输业务数据（如研发部代码、市场部素材），但互联网传输不稳定，因此租用运营商的“专线链路”（如SDH/DDN）。普通路由器默认使用HDLC封装，无法适配专线，且缺乏身份验证，存在链路被冒用的风险——PPP协议正是解决这两个问题的核心技术。</p>
                     
                     <!-- 关键概念（与其他阶段一致的concept-box样式） -->
                     <div class="concept-box">
@@ -1676,7 +1700,7 @@
                                 <li>作用：自动给电脑分配IP、网关、DNS，无需手动配置</li>
                                 <li>关键参数：IP地址池、子网掩码、默认网关、DNS服务器、租约时间</li>
                                 <li>核心工作机制：</li>
-                                <img src="./fig/dhcp.png" alt="DHCP工作机制" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+                                <img src="./fig/dhcp.png" alt="DHCP工作机制" style="max-width: 30%; max-height: 30%; object-fit: contain;">
                             </ul>
                         </div>
                         <div class="concept-box">
@@ -1841,7 +1865,7 @@
                     <!-- 6.1 ACL 说明 -->
                     <div class="exp-substage active" id="exp-substage6.1">
                         <h2> 防火墙ACL</h2>
-                        <a href="https://haokan.baidu.com/v?pd=wisenatural&vid=8055023036420748851" target="_blank" class="info-link">什么是ACL？</a>
+                        
                         <div class="concept-box">
                             <div class="concept-title">📚 核心知识点</div>
                             <ul>
@@ -1849,6 +1873,9 @@
                                 <li>应用方向：inbound（入站，数据进入接口时检测）、outbound（出站，数据离开接口时检测）</li>
                                 <li>匹配顺序：ACL规则自上而下执行，一旦匹配立即生效，后续规则不再执行</li>
                             </ul>
+                        </div>
+                        <div class="highlight">
+                            <a href="https://haokan.baidu.com/v?pd=wisenatural&vid=8055023036420748851" target="_blank" class="info-link">什么是ACL？</a>
                         </div>
                         <div class="concept-box">
                             <div class="concept-title">🚨 关键概念：路由器ACL（访问控制列表）</div>
@@ -1864,14 +1891,15 @@
                         
                         <h3>实验设计</h3>
                         <p>拓扑核心信息：路由器连接4个网段，财务服务器（192.168.30.10）需限制访问，禁止市场部访问。</p>
-                        <p>1. 方案1：禁止市场部（192.168.20.0/24）访问财务网段（192.168.30.0/24）→ 用标准ACL（仅控制源IP）。</p>
-                        <p>2. 方案2：禁止市场部（192.168.10.0/24）访问财务服务器 → 用扩展ACL（控制源IP+目标IP+端口）。</p>
+                        <p>1. 需求1：禁止市场部（192.168.20.0/24）访问财务网段（192.168.30.0/24）→ 用标准ACL（仅控制源IP）。</p>
+                        <p>2. 需求2：禁止研发部（192.168.10.0/24）访问财务服务器 → 用扩展ACL（控制源IP+目标IP+80）。</p>
                         <h3>实验要求</h3>
-                        <p>下载拓扑，分别针对需求1和需求2进行ACL的配置。</p>
-                        <p>验证方法：</p>
+                        <p>下载拓扑，分别针对"需求1"和"需求2"进行ACL的配置。</p>
+                        <p><strong>验证方法：</strong></p>
                         <ul>
-                            <li>用研发部电脑（192.168.10.5）ping财务服务器（192.168.30.10），应能通；访问http://192.168.30.10，应能打开。</li>
+                            
                             <li>用市场部电脑（192.168.20.8）ping财务服务器，应不通；访问http://192.168.30.10，应拒绝。</li>
+                            <li>用研发部电脑（192.168.10.5）ping财务服务器（192.168.30.10），可以通；访问http://192.168.30.10，不能打开。</li>
                             <li>在路由器执行`show access-lists`，查看规则命中次数。</li>
                         </ul>
                         
@@ -1936,7 +1964,9 @@
                         
                         <!-- 配置原理部分 -->
                         <div>
-                            <a href="https://www.bilibili.com/video/BV18g411D7Fm?spm_id_from=333.788.videopod.episodes&vd_source=67a412c416b4717fee360508599d6de5&p=65" target="_blank" class="info-link">NAT协议原理讲解微课视频</a>
+                            <div class="highlight">
+                                <a href="https://www.bilibili.com/video/BV18g411D7Fm?spm_id_from=333.788.videopod.episodes&vd_source=67a412c416b4717fee360508599d6de5&p=65" target="_blank" class="info-link">NAT协议原理讲解微课视频</a>
+                            </div>
 
                             <h4 style="color: #4a5568; margin: 15px 0;">二、核心配置组件</h4>
                             <ul style="list-style: disc; padding-left: 20px; line-height: 1.8;">
