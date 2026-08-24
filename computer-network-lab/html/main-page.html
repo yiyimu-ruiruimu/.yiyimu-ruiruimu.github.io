@@ -744,6 +744,43 @@
 
 </head>
 <body>
+    <!-- 登录拦截：未登录自动跳回首页 -->
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+    <script src="../auth-utils.js"></script>
+    <script>
+    (async function() {
+        const identity = await initIdentity();
+        if (!identity) return;
+        const user = identity.currentUser();
+        if (!user) {
+            alert('请先登录后再进入实践平台');
+            window.location.href = '../index.html';
+            return;
+        }
+        // 在 header 右上角显示用户信息（页面加载后执行）
+        function showUserInfo() {
+            var existing = document.getElementById('userBar');
+            if (existing) return;
+            var u = identity.currentUser();
+            if (!u) return;
+            var bar = document.createElement('div');
+            bar.id = 'userBar';
+            bar.style.cssText = 'position:fixed;top:10px;right:15px;z-index:9999;background:#fff;padding:8px 16px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.12);font-size:14px;color:#333;';
+            bar.innerHTML = '当前用户：' + u.email + ' | <a href="#" onclick="logout(); return false;" style="color:#e53e3e;">退出</a>';
+            document.body.appendChild(bar);
+        }
+        // DOM 加载后显示用户栏
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', showUserInfo);
+        } else {
+            showUserInfo();
+        }
+        identity.on('logout', function() {
+            window.location.href = '../index.html';
+        });
+    })();
+    </script>
+
     <div class="container">
         <header>
             <h1>计算机网络智能实践教学平台</h1>

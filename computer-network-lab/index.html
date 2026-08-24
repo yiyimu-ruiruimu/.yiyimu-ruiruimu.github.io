@@ -108,13 +108,59 @@
                 <h3>平台目的</h3>
                 <p>通过渐进式的实践场景，将理论知识转化为实际操作能力，培养学习者分析和解决网络工程问题的能力，为从事网络设计、部署与维护工作奠定基础。</p>
                 
-                <!-- 修改2：添加按钮容器，实现按钮居中 -->
-                <div class="btn-container">
-                    <!-- 跳转链接需按之前的方法修改为你的实际文件路径 -->
-                    <a href="./html/main-page.html" class="start-practice-btn">开启实践之旅</a>
+                <!-- 按钮区域：根据登录状态动态显示 -->
+                <div class="btn-container" id="loginArea">
+                    <!-- 默认显示加载中，JS 加载后自动替换 -->
+                    <span style="color: #a0aec0; font-size: 14px;">正在加载...</span>
                 </div>
+
+                <!-- 用户信息显示区域（登录后显示） -->
+                <div id="userInfo" style="text-align: center; margin-top: 15px; font-size: 14px; color: #718096;"></div>
             </div>
         </div>
     </div>
+
+    <!-- Netlify Identity Widget（登录弹窗组件，从 Netlify CDN 加载） -->
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+    <!-- 登录工具脚本 -->
+    <script src="./auth-utils.js"></script>
+    <!-- 登录状态判断脚本 -->
+    <script>
+    document.addEventListener('DOMContentLoaded', async function() {
+        const identity = await initIdentity();
+        if (!identity) {
+            document.getElementById('loginArea').innerHTML = '<span style="color: #e53e3e;">认证服务加载失败，请刷新页面</span>';
+            return;
+        }
+
+        const loginArea = document.getElementById('loginArea');
+        const userInfo = document.getElementById('userInfo');
+
+        // 根据登录状态更新按钮
+        function updateUI() {
+            const user = identity.currentUser();
+            if (user) {
+                // 已登录：显示欢迎语 + 开启实践按钮 + 退出按钮
+                loginArea.innerHTML =
+                    '<a href="./html/main-page.html" class="start-practice-btn">开启实践之旅</a>';
+                userInfo.innerHTML =
+                    '欢迎，' + user.email +
+                    ' | <a href="#" onclick="logout(); return false;" style="color: #4299e1;">退出登录</a>';
+            } else {
+                // 未登录：显示登录 + 注册按钮
+                loginArea.innerHTML =
+                    '<a href="#" class="start-practice-btn" onclick="login(); return false;">登录</a>' +
+                    '<a href="#" class="start-practice-btn" style="margin-left: 15px; background-color: #48bb78;" onclick="register(); return false;">注册</a>';
+                userInfo.innerHTML = '';
+            }
+        }
+
+        // 初始更新 + 监听登录/退出事件
+        updateUI();
+        identity.on('init', updateUI);
+        identity.on('login', updateUI);
+        identity.on('logout', updateUI);
+    });
+    </script>
 </body>
 </html>

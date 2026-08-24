@@ -1,102 +1,110 @@
-// auth-utils.js：Auth0 通用初始化脚本
-let auth0Client = null;
+// auth-utils.js：Netlify Identity 通用初始化脚本
+// 替换原来的 Auth0 方案，改用 Netlify 内置的身份认证服务
+// 使用方法：在 HTML 中引入 Netlify Identity Widget + 本文件
 
-async function initAuth0() {
-  if (!auth0Client) {
-    try {
-      // 检查SDK是否已加载
-      if (typeof createAuth0Client === 'undefined') {
-         // 重试机制
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        if (typeof createAuth0Client === 'undefined') {
-          throw new Error('Auth0 SDK 未加载，请检查HTML中的script标签');
-        }
-      }
-      // Netlify环境适配 - 使用相对路径
-      const currentOrigin = window.location.origin;
-      const redirectPath = window.location.pathname.includes('/html/') ? 
-        '/html/main-page.html' : '/main-page.html';
-
-      auth0Client = await createAuth0Client({
-        domain: "dev-h2db85qqcj17fjnp.eu.auth0.com",
-        clientId: "8cfYo5uJGKxjFV5qe6DOz8HRWKH32BvT",
-        authorizationParams: {
-          redirect_uri: `${window.location.origin}/html/main-page.html`
-        },
-        cacheLocation: 'localstorage'
-      });
-
-      // 处理登录回调
-      if (window.location.search.includes("code=") && window.location.search.includes("state=")) {
-        await auth0Client.handleRedirectCallback();
-        window.history.replaceState({}, document.title, window.location.pathname);
-      }
-    } catch (error) {
-      console.error('Auth0初始化失败:', error);
-      alert('认证服务初始化失败: ' + error.message);
-      throw error;
+// 等待 netlify-identity-widget 加载完成
+function waitForIdentity() {
+  return new Promise((resolve) => {
+    if (window.netlifyIdentity) {
+      resolve(window.netlifyIdentity);
+      return;
     }
-  }
-  return auth0Client;
+    // 每 100ms 检查一次，最多等 5 秒
+    let attempts = 0;
+    const timer = setInterval(() => {
+      if (window.netlifyIdentity || attempts > 50) {
+        clearInterval(timer);
+        resolve(window.netlifyIdentity);
+      }
+      attempts++;
+    }, 100);
+  });
 }
 
+// 初始化 Identity
+async function initIdentity() {
+  const identity = await waitForIdentity();
+  if (!identity) {
+    console.error('Netlify Identity SDK 未加载，请检查 HTML 中的 script 标签');
+    return null;
+  }
+  identity.init();
+  return identity;
+}
+
+// 打开登录弹窗
 async function login() {
-  try {
-    const auth0 = await initAuth0();
-    await auth0.loginWithRedirect({
-      authorizationParams: { 
-        screen_hint: 'login',
-        redirect_uri: `${window.location.origin}/html/main-page.html`
-      }
-    });
-  } catch (error) {
-    console.error('登录失败:', error);
-    alert('登录失败: ' + error.message);
+  const identity = await initIdentity();
+  if (identity) {
+    identity.open('login');
   }
 }
 
+// 打开注册弹窗
 async function register() {
-  try {
-    const auth0 = await initAuth0();
-    await auth0.loginWithRedirect({
-      authorizationParams: { 
-        screen_hint: 'signup',
-        redirect_uri: `${window.location.origin}/html/main-page.html`
-      }
-    });
-  } catch (error) {
-    console.error('注册失败:', error);
-    alert('注册失败: ' + error.message);
+  const identity = await initIdentity();
+  if (identity) {
+    identity.open('signup');
   }
 }
 
+// 退出登录
 async function logout() {
-  try {
-    const auth0 = await initAuth0();
-    await auth0.logout({
-      logoutParams: {
-        returnTo: `${window.location.origin}/index.html`
+  const identity = await initIdentity();
+  if (identity) {
+    identity.logout();
+  }
+}
+
+// 检查是否已登录
+async function isLoggedIn() {
+  const identity = await initIdentity();
+  if (!identity) return false;
+  const user = identity.currentUser();
+  return !!user;
+}
+
+// 获取当前用户信息
+async function getCurrentUser() {
+  const identity = await initIdentity();
+  if (!identity) return null;
+  return identity.currentUser();
+}
+
+// 获取当前用户的邮箱（用于显示）
+async function getCurrentUserEmail() {
+  const user = await getCurrentUser();
+  return user ? user.email : null;
+}
+
+// 获取 JWT token（用于调用后端 API，后续加日志功能时用）
+async function getToken() {
+  const identity = await initIdentity();
+  if (!identity) return null;
+  const user = identity.currentUser();
+  if (!user) return null;
+  return await user.jwt();
+}
+
+// 页面加载时自动初始化
+document.addEventListener('DOMContentLoaded', function() {
+  initIdentity().then(identity => {
+    if (!identity) return;
+
+    // 登录成功事件
+    identity.on('login', (user) => {
+      console.log('登录成功:', user.email);
+    });
+
+    // 退出登录事件
+    identity.on('logout', () => {
+      console.log('已退出登录');
+      // 退出后跳回首页
+      if (window.location.pathname.includes('/html/')) {
+        window.location.href = '../index.html';
       }
     });
-  } catch (error) {
-    console.error('退出登录失败:', error);
-    alert('退出登录失败: ' + error.message);
-  }
-}
-
-async function isLoggedIn() {
-  try {
-    const auth0 = await initAuth0();
-    return await auth0.isAuthenticated();
-  } catch (error) {
-    console.error('检查登录状态失败:', error);
-    return false;
-  }
-}
-
-// 页面加载时初始化
-document.addEventListener('DOMContentLoaded', function() {
-  initAuth0().catch(error => {
-    console.error('初始化失败:', error);
+  }).catch(error => {
+    console.error('Identity 初始化失败:', error);
   });
 });

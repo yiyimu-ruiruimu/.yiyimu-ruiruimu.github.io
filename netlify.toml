@@ -1,0 +1,28 @@
+# netlify.toml - Netlify 部署配置文件
+# 放在仓库根目录，Netlify 部署时自动读取
+
+[build]
+  publish = "computer-network-lab"
+  functions = "netlify/functions"
+
+# 首页重定向
+[[redirects]]
+  from = "/"
+  to = "/index.html"
+  status = 200
+
+# html 目录路由
+[[redirects]]
+  from = "/html/*"
+  to = "/html/:splat"
+  status = 200
+
+# main-page.html 路由
+[[redirects]]
+  from = "/main-page.html"
+  to = "/html/main-page.html"
+  status = 200
+
+# Netlify Identity 配置（启用后需要在 Netlify 控制台也开启 Identity 服务）
+[build.environment]
+  NODE_VERSION = "18"
