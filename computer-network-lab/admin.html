@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>管理后台 - 课程平台日志</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+            background: #f5f7fa;
+            color: #2d3748;
+            padding: 20px;
+        }
+        .header {
+            background: #2b6cb0;
+            color: #fff;
+            padding: 18px 24px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .header h1 { font-size: 22px; }
+        .header .btns button {
+            background: #fff;
+            color: #2b6cb0;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-left: 8px;
+        }
+        .header .btns button:hover { background: #ebf8ff; }
+        .card {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+            padding: 20px;
+            margin-bottom: 20px;
+            overflow-x: auto;
+        }
+        .card h2 {
+            font-size: 17px;
+            margin-bottom: 12px;
+            color: #2b6cb0;
+            border-left: 4px solid #2b6cb0;
+            padding-left: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+        th, td {
+            border: 1px solid #e2e8f0;
+            padding: 8px 10px;
+            text-align: left;
+            white-space: nowrap;
+        }
+        th { background: #edf2f7; color: #4a5568; }
+        tr:nth-child(even) { background: #f7fafc; }
+        .status { text-align: center; padding: 40px; color: #718096; font-size: 15px; }
+        .status.error { color: #e53e3e; }
+        .tip { font-size: 13px; color: #718096; margin-bottom: 10px; }
+        .badge {
+            display: inline-block;
+            background: #c6f6d5;
+            color: #22543d;
+            border-radius: 4px;
+            padding: 2px 8px;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📊 课程平台管理后台</h1>
+        <div class="btns">
+            <span id="adminInfo" style="font-size:14px; margin-right:8px;"></span>
+            <button onclick="loadLogs()">刷新数据</button>
+            <button onclick="logout()" style="color:#e53e3e;">退出登录</button>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>① 进入平台记录（考勤）</h2>
+        <div class="tip">学生每次打开课程平台都会在这里留下一条记录</div>
+        <div id="loginTable"><div class="status">正在加载...</div></div>
+    </div>
+
+    <div class="card">
+        <h2>② 操作行为记录</h2>
+        <div class="tip">学生在平台里的学习操作（如切换学习阶段）</div>
+        <div id="opTable"><div class="status">正在加载...</div></div>
+    </div>
+
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+    <script src="auth-utils.js"></script>
+    <script>
+    // 管理员邮箱（和后端一致）
+    var ADMIN_EMAIL = '272989398@qq.com';
+
+    (async function() {
+        const identity = await initIdentity();
+        if (!identity) { showError('认证服务加载失败，请刷新页面'); return; }
+        const user = identity.currentUser();
+        if (!user) {
+            showError('请先用管理员账号 ' + ADMIN_EMAIL + ' <a href="index.html" style="color:#2b6cb0;">登录</a>');
+            return;
+        }
+        if (user.email !== ADMIN_EMAIL) {
+            showError('当前账号 ' + user.email + ' 不是管理员，无权查看日志');
+            return;
+        }
+        document.getElementById('adminInfo').innerHTML =
+            '管理员：' + user.email + ' <span class="badge">已验证</span>';
+        loadLogs();
+    })();
+
+    function showError(msg) {
+        document.getElementById('loginTable').innerHTML = '<div class="status error">' + msg + '</div>';
+        document.getElementById('opTable').innerHTML = '<div class="status error">无数据</div>';
+    }
+
+    // 时间格式化：2026-08-24 20:35:12
+    function fmtTime(iso) {
+        if (!iso) return '-';
+        var d = new Date(iso);
+        var p = function(n) { return (n < 10 ? '0' : '') + n; };
+        return d.getFullYear() + '-' + p(d.getMonth()+1) + '-' + p(d.getDate()) +
+               ' ' + p(d.getHours()) + ':' + p(d.getMinutes()) + ':' + p(d.getSeconds());
+    }
+
+    async function loadLogs() {
+        document.getElementById('loginTable').innerHTML = '<div class="status">正在加载...</div>';
+        document.getElementById('opTable').innerHTML = '<div class="status">正在加载...</div>';
+        try {
+            var token = await getToken();
+            if (!token) { showError('登录已过期，请刷新页面重新登录'); return; }
+            var res = await fetch('/.netlify/functions/get-logs', {
+                headers: { 'Authorization': 'Bearer ' + token }
+            });
+            if (!res.ok) {
+                var err = await res.json().catch(function(){ return {error:'未知错误'}; });
+                showError('加载失败：' + (err.error || res.status));
+                return;
+            }
+            var data = await res.json();
+            renderLogin(data.loginLogs || []);
+            renderOp(data.operationLogs || []);
+        } catch (e) {
+            showError('网络错误：' + e.message);
+        }
+    }
+
+    function renderLogin(logs) {
+        if (logs.length === 0) {
+            document.getElementById('loginTable').innerHTML =
+                '<div class="status">还没有记录——学生进入平台后，这里会出现记录</div>';
+            return;
+        }
+        var html = '<table><tr><th>#</th><th>学生邮箱</th><th>进入时间</th><th>IP地址</th><th>设备/浏览器</th></tr>';
+        for (var i = 0; i < logs.length; i++) {
+            var l = logs[i];
+            var ua = (l.userAgent || '').slice(0, 60);
+            html += '<tr><td>' + (i+1) + '</td><td>' + l.email + '</td><td>' +
+                    fmtTime(l.time) + '</td><td>' + (l.ip || '-') + '</td><td title="' + ua + '">' + ua + '</td></tr>';
+        }
+        html += '</table>';
+        document.getElementById('loginTable').innerHTML = html;
+    }
+
+    function renderOp(logs) {
+        if (logs.length === 0) {
+            document.getElementById('opTable').innerHTML =
+                '<div class="status">还没有记录——学生在平台里操作后，这里会出现记录</div>';
+            return;
+        }
+        var html = '<table><tr><th>#</th><th>学生邮箱</th><th>操作</th><th>对象</th><th>时间</th><th>IP地址</th></tr>';
+        for (var i = 0; i < logs.length; i++) {
+            var l = logs[i];
+            html += '<tr><td>' + (i+1) + '</td><td>' + l.email + '</td><td>' +
+                    (l.action || '-') + '</td><td>' + (l.target || '-') + '</td><td>' +
+                    fmtTime(l.time) + '</td><td>' + (l.ip || '-') + '</td></tr>';
+        }
+        html += '</table>';
+        document.getElementById('opTable').innerHTML = html;
+    }
+    </script>
+</body>
+</html>

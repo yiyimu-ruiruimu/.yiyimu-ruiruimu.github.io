@@ -1,0 +1,9 @@
+{
+  "name": "jsjwl-course-platform",
+  "version": "1.0.0",
+  "private": true,
+  "description": "计算机网络智能实践教学平台 - 后端日志依赖",
+  "dependencies": {
+    "@netlify/blobs": "^7.0.0"
+  }
+}

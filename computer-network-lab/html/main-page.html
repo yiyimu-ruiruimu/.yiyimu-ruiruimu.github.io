@@ -757,6 +757,18 @@
             window.location.href = '../index.html';
             return;
         }
+
+        // ===== 记账：进入平台（相当于考勤打卡） =====
+        trackLogin();
+
+        // ===== 记账：切换学习阶段（点击上方时间线时记录） =====
+        document.addEventListener('click', function(e) {
+            var item = e.target.closest ? e.target.closest('.timeline-item') : null;
+            if (item) {
+                trackOperation('切换学习阶段', item.textContent.trim());
+            }
+        });
+
         // 在 header 右上角显示用户信息（页面加载后执行）
         function showUserInfo() {
             var existing = document.getElementById('userBar');

@@ -77,13 +77,47 @@ async function getCurrentUserEmail() {
   return user ? user.email : null;
 }
 
-// 获取 JWT token（用于调用后端 API，后续加日志功能时用）
+// 获取 JWT token（用于调用后端 API）
 async function getToken() {
   const identity = await initIdentity();
   if (!identity) return null;
   const user = identity.currentUser();
   if (!user) return null;
   return await user.jwt();
+}
+
+// ============ 日志上报功能（第二步新增） ============
+
+// 记录"进入平台"（每次学生打开课程主页时调用一次，相当于考勤）
+async function trackLogin() {
+  try {
+    const token = await getToken();
+    if (!token) return;
+    await fetch('/.netlify/functions/track-login', {
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer ' + token }
+    });
+  } catch (e) {
+    console.warn('记录进入平台失败（不影响使用）:', e);
+  }
+}
+
+// 记录"操作行为"（在页面里调用：trackOperation('切换阶段', '阶段1-局域网')）
+async function trackOperation(action, target) {
+  try {
+    const token = await getToken();
+    if (!token) return;
+    await fetch('/.netlify/functions/track-operation', {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Bearer ' + token,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ action: action, target: target || '' })
+    });
+  } catch (e) {
+    console.warn('记录操作失败（不影响使用）:', e);
+  }
 }
 
 // 页面加载时自动初始化

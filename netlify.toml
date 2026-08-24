@@ -25,4 +25,4 @@
 
 # Netlify Identity 配置（启用后需要在 Netlify 控制台也开启 Identity 服务）
 [build.environment]
-  NODE_VERSION = "18"
+  NODE_VERSION = "20"

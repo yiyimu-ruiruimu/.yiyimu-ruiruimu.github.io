@@ -143,9 +143,14 @@
                 // 已登录：显示欢迎语 + 开启实践按钮 + 退出按钮
                 loginArea.innerHTML =
                     '<a href="./html/main-page.html" class="start-practice-btn">开启实践之旅</a>';
+                // 管理员额外显示"管理后台"入口
+                var adminLink = '';
+                if (user.email === '272989398@qq.com') {
+                    adminLink = ' | <a href="./admin.html" style="color:#805ad5;">管理后台</a>';
+                }
                 userInfo.innerHTML =
                     '欢迎，' + user.email +
-                    ' | <a href="#" onclick="logout(); return false;" style="color: #4299e1;">退出登录</a>';
+                    ' | <a href="#" onclick="logout(); return false;" style="color: #4299e1;">退出登录</a>' + adminLink;
             } else {
                 // 未登录：显示登录 + 注册按钮
                 loginArea.innerHTML =
