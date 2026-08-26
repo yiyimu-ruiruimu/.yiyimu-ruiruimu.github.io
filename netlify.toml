@@ -26,3 +26,7 @@
 # Netlify Identity 配置（启用后需要在 Netlify 控制台也开启 Identity 服务）
 [build.environment]
   NODE_VERSION = "20"
+
+# 声明日志函数需要访问的 Netlify Blob store（修复 MissingBlobsEnvironmentError）
+[functions."*"]
+  netlify_blobs = ["logs"]
